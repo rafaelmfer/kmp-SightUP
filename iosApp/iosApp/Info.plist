@@ -46,5 +46,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<key>NSCameraUsageDescription</key>
+    <string>We need access to your camera for vision tests</string>
+
 </dict>
 </plist>

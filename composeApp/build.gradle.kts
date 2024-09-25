@@ -29,15 +29,37 @@ kotlin {
             isStatic = true
         }
     }
+
+
     
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.constraintlayout)
             implementation(libs.androidx.material)
-            implementation(compose.uiTooling)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
             implementation(compose.preview)
+            implementation(compose.uiTooling)
+            implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            //
+            implementation(libs.androidx.camera.view)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.vision.common)
+
+            // CameraX
+            implementation ("androidx.camera:camera-core:1.3.4")
+            implementation (libs.androidx.camera.lifecycle.v110)
+            implementation (libs.androidx.camera.view.v100alpha31)
+            // ML Kit (para detección de rostros)
+            implementation (libs.face.detection)
+            // Otras dependencias relacionadas
+            implementation (libs.androidx.camera.extensions)
+            implementation (libs.androidx.core.ktx.v170)
 
             // Network
             implementation(libs.ktor.client.android)
