@@ -1,15 +1,19 @@
 package com.europa.sightup
 
-@OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
-class CameraActionImpl : CameraAction {
+import platform.AVFoundation.AVCaptureSession
 
+//@OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+class CameraActionImpl(
+    private val session: AVCaptureSession
+)  : CameraAction {
 
     override fun startCamera() {
-       // cameraActionImpl.startCamera()
+        session.startRunning()
     }
 
     override fun stopCamera() {
      //       cameraActionImpl.stopCamera()
+        session.stopRunning()
     }
 
 }

@@ -2,8 +2,8 @@ package com.europa.sightup
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -24,12 +24,12 @@ import platform.UIKit.UIView
 @Composable
 actual fun DistanceCameraPreview(
     distance: State<String>,
-    aspectRatio: Float
+    aspectRatio: Float,
 ): CameraAction {
 
     // Inicializar cámara
-    val device = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo).firstOrNull {
-            device -> (device as AVCaptureDevice).position == AVCaptureDevicePositionFront
+    val device = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo).firstOrNull { device ->
+        (device as AVCaptureDevice).position == AVCaptureDevicePositionFront
     }!! as AVCaptureDevice
 
     val input = AVCaptureDeviceInput.deviceInputWithDevice(device, null) as AVCaptureDeviceInput
@@ -57,16 +57,9 @@ actual fun DistanceCameraPreview(
         },
         onRelease = {
             session.stopRunning()
-        },
-        // Manejo de tamaño de la vista sin `onResize`
-//        onGloballyPositioned = { layoutCoordinates ->
-//            CATransaction.begin()
-//            CATransaction.setValue(true, kCATransactionDisableActions)
-//            cameraPreviewLayer.frame = CGRectMake(0.0, 0.0, layoutCoordinates.size.width.toDouble(), layoutCoordinates.size.height.toDouble())
-//            CATransaction.commit()
-//        }
+        }
     )
 
     // Devuelve una instancia de CameraAction para acciones adicionales
-    return remember { CameraActionImpl() }
+    return CameraActionImpl(session)
 }
