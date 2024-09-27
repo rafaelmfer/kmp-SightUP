@@ -1,6 +1,7 @@
 package com.europa.sightup
 
 // commonMain > App.kt
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
@@ -19,6 +20,7 @@ import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -30,7 +32,9 @@ fun App() {
         val distance = remember { mutableStateOf("Calculating...") }
 
         Column(
-            Modifier.fillMaxWidth().padding(16.dp),
+            Modifier.fillMaxWidth()
+                    .padding(16.dp)
+                .border(2.dp, Color.Red),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = { showCamera = !showCamera }) {
@@ -40,7 +44,11 @@ fun App() {
             Spacer(modifier = Modifier.height(16.dp))
 
             if (showCamera) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                            .border(2.dp, Color.Green)
+                ) {
                     Text("Distance: ${distance.value}", style = MaterialTheme.typography.bodyMedium)
 
 

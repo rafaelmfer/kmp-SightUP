@@ -9,6 +9,14 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
+    alias(libs.plugins.swiftKlib)
+}
+
+swiftklib {
+    create("native"){
+        path = file("../iosApp/iosApp/native")
+        packageName = "com.europa.sightup.native"
+    }
 }
 
 kotlin {
@@ -28,12 +36,18 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
+        iosTarget.compilations {
+            val main by getting {
+                cinterops {
+                    create("native")
+                }
+            }
+        }
     }
 
-
-    
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.constraintlayout)
             implementation(libs.androidx.material)
@@ -69,7 +83,6 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(libs.androidx.core.ktx)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
