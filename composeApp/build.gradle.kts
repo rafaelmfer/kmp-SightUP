@@ -39,6 +39,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
+            // Koin
+            implementation(libs.koin.android)
+
             // Network
             implementation(libs.ktor.client.android)
 
@@ -57,6 +60,7 @@ kotlin {
 
             // Lifecycle
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             // Date & Time
@@ -65,6 +69,8 @@ kotlin {
             // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
 
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
