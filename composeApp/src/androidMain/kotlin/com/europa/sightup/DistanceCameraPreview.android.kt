@@ -16,7 +16,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
-actual fun DistanceCameraPreview(distance: State<String>, aspectRatio: Float): CameraAction {
+actual fun DistanceCameraPreview(distance: State<String>, aspectRatio: Float): Camera {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val previewView = remember { PreviewView(context) }
@@ -33,9 +33,18 @@ actual fun DistanceCameraPreview(distance: State<String>, aspectRatio: Float): C
                 .aspectRatio(aspectRatio),
             factory = { previewView }
         )
-
     }
 
-    // Pass the `distanceState` to AndroidCameraAction so that the camera logic can update it
-    return AndroidCameraAction(context, previewView, lifecycleOwner, distance as MutableState<String>)
+    val cameraInstance = AndroidCamera(
+        context = context,
+        previewView = previewView,
+        lifecycleOwner = lifecycleOwner,
+        distanceState = distance as MutableState<String>
+    )
+
+    return object : Camera {
+        override val distanceToCamera: State<String>
+            get() = cameraInstance.distanceState
+    }
 }
+

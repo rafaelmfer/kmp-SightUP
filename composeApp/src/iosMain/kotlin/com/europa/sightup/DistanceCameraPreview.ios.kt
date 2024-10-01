@@ -1,7 +1,5 @@
 package com.europa.sightup
-// file DistanceCameraPreview.ios.kt
 
-//import androidx.compose.ui.viewinterop.UIKitView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +27,16 @@ import platform.AVFoundation.authorizationStatusForMediaType
 import platform.AVFoundation.requestAccessForMediaType
 import com.europa.sightup.native.CameraViewController
 
+@OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+class CameraImpl : Camera {
+
+    private var _distanceToCamera = mutableStateOf("Unknown")
+    override val distanceToCamera: State<String> get() = _distanceToCamera
+
+    fun updateDistance(newDistance: String) {
+        _distanceToCamera.value = newDistance
+    }
+}
 
 private sealed interface CameraAccess {
     data object Undefined : CameraAccess
@@ -40,9 +48,10 @@ private sealed interface CameraAccess {
 actual fun DistanceCameraPreview(
     distance: State<String>,
     aspectRatio: Float,
-): CameraAction {
+): Camera {
 
     var cameraAccess by remember { mutableStateOf<CameraAccess>(CameraAccess.Undefined) }
+    val cameraImpl = remember { CameraImpl() }
 
     LaunchedEffect(Unit) {
         when (AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)) {
@@ -73,21 +82,25 @@ actual fun DistanceCameraPreview(
             }
 
             CameraAccess.Authorized -> {
-                DisplayCamera()
+                DisplayCamera(cameraImpl = cameraImpl)
             }
         }
     }
 
-    return CameraActionImpl()
+    return CameraImpl()
 }
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-private fun DisplayCamera() {
+private fun DisplayCamera(cameraImpl: CameraImpl) {
     UIKitView(
         modifier = Modifier.fillMaxSize(),
         factory = {
             val viewController = CameraViewController()
+
+           val distance = viewController.onDistanceUpdate()
+           cameraImpl.updateDistance(distance.toString())
+
             viewController.view
         }
     )
