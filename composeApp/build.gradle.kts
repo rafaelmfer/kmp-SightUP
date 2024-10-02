@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
+    alias(libs.plugins.buildConfig)
 }
 
 kotlin {
@@ -18,7 +20,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,7 +31,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
@@ -81,8 +83,10 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-
             implementation(libs.kotlinx.serialization.json)
+
+            // KVault - Encrypted Cache Storage
+            implementation(libs.kvault)
         }
 
         iosMain.dependencies {
@@ -134,3 +138,16 @@ android {
     }
 }
 
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+buildConfig {
+    packageName("com.europa.sightup")
+    buildConfigField("APP_NAME", "SightUP")
+    buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
+    buildConfigField("BASE_URL", localProperties.getProperty("BASE_URL"))
+}
