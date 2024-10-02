@@ -31,10 +31,14 @@ ktorfitVersion = "2.1.0"
 # Serialization
 kotlinx-serialization = "1.7.2"
 
+# BuildConfig
+build-config = "5.5.0"
+
 # Tests
 androidx-espresso-core = "3.6.1"
 androidx-test-junit = "1.2.1"
 junit = "4.13.2"
+kvault = "1.12.0"
 
 
 [libraries]
@@ -75,6 +79,10 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 # Serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
+# Kvault - Secure Encrypted Storage
+kvault = { module = "com.liftric:kvault", version.ref = "kvault" }
+
+
 ## Libraries for Tests
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -82,7 +90,6 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -99,3 +106,6 @@ ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfitVersion" }
 
 # Serialization
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+buildConfig = {id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
