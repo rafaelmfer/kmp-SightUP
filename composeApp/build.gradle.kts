@@ -137,6 +137,9 @@ android {
         debugImplementation(compose.uiTooling)
     }
 }
+dependencies {
+    implementation(libs.androidx.navigation.compose)
+}
 
 val localProperties = Properties().apply {
     val localPropertiesFile = rootProject.file("local.properties")
