@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.buildConfig)
 }
@@ -27,8 +28,10 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
+            freeCompilerArgs += listOf("-Xbinary=bundleId=com.europa.sightup")
             baseName = "ComposeApp"
             isStatic = true
+            export(libs.kmpnotifier)
         }
     }
 
@@ -87,6 +90,10 @@ kotlin {
 
             // KVault - Encrypted Cache Storage
             implementation(libs.kvault)
+
+            // Notifications
+            api(libs.kmpnotifier)
+            implementation(libs.kmpnotifier.benasher44uuid)
         }
 
         iosMain.dependencies {
