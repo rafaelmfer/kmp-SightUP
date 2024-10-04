@@ -21,8 +21,8 @@ class MainActivity : ComponentActivity() {
 
         permissionUtil.askNotificationPermission()
         setContent {
-//            App()
-            PostsWithState()
+           App()
+            //PostsWithState()
         }
     }
 }

@@ -7,6 +7,6 @@ import com.europa.sightup.utils.PostsWithState
 fun MainViewController() = ComposeUIViewController(
     configure = { initializeKoin() }
 ) {
-//    App()
-    PostsWithState()
+     App()
+    //PostsWithState()
 }

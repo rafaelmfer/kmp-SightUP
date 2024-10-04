@@ -94,6 +94,9 @@ kotlin {
             // Notifications
             api(libs.kmpnotifier)
             implementation(libs.kmpnotifier.benasher44uuid)
+
+            // Navigation CMP
+            implementation(libs.navigation.compose)
         }
 
         iosMain.dependencies {
