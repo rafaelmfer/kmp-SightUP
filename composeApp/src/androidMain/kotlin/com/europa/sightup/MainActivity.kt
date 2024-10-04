@@ -9,13 +9,17 @@ import com.europa.sightup.data.remote.response.PostResponse
 import com.europa.sightup.utils.PostsScreen
 import com.europa.sightup.utils.PostsWithState
 import com.europa.sightup.utils.UIState
+import com.mmk.kmpnotifier.permission.permissionUtil
 import org.koin.compose.KoinApplication
 
 class MainActivity : ComponentActivity() {
 
+    private val permissionUtil by permissionUtil()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        permissionUtil.askNotificationPermission()
         setContent {
 //            App()
             PostsWithState()

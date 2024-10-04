@@ -5,14 +5,17 @@ android-targetSdk = "34"
 
 agp = "8.5.2"
 kotlin = "2.0.20"
-googleKsp = "2.0.20-1.0.24"
 androidx-core-ktx = "1.13.1"
+
+# Google
+googleGms = "4.4.2"
+googleKsp = "2.0.20-1.0.24"
 
 androidx-appcompat = "1.7.0"
 androidx-material = "1.12.0"
 androidx-constraintlayout = "2.1.4"
 androidx-activityCompose = "1.9.2"
-compose = "1.7.0-beta02"
+compose = "1.7.0-rc01"
 
 androidx-lifecycle = "2.8.2"
 
@@ -28,17 +31,21 @@ coroutines = "1.9.0"
 ktor = "2.3.12"
 ktorfitVersion = "2.1.0"
 
+# BuildConfig
+build-config = "5.5.0"
+
 # Serialization
 kotlinx-serialization = "1.7.2"
 
-# BuildConfig
-build-config = "5.5.0"
+# KMP Push Notifications
+kmp-notifier = "1.2.1"
 
 # Tests
 androidx-espresso-core = "3.6.1"
 androidx-test-junit = "1.2.1"
 junit = "4.13.2"
 kvault = "1.12.0"
+uuid = "0.8.4"
 
 
 [libraries]
@@ -82,6 +89,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 # Kvault - Secure Encrypted Storage
 kvault = { module = "com.liftric:kvault", version.ref = "kvault" }
 
+# KMP Notifications
+kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmp-notifier" }
+kmpnotifier-benasher44uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
 ## Libraries for Tests
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -95,7 +105,10 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+
+# Google
 ksp = { id = "com.google.devtools.ksp", version.ref = "googleKsp" }
+google-gms = {id = "com.google.gms.google-services", version.ref = "googleGms"}
 
 # Compose
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose" }
@@ -107,5 +120,5 @@ ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfitVersion" }
 # Serialization
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+# BuildConfig
 buildConfig = {id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }

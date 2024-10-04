@@ -2,12 +2,22 @@ package com.europa.sightup.data.local
 
 import com.liftric.kvault.KVault
 
+@Deprecated(
+    "Use koin injection instead",
+    ReplaceWith(
+        expression = "val kVaultStorage: KVaultStorage by inject() OR val kVaultStorage: KVaultStorage = koinInject()",
+        imports = arrayOf(
+            "import org.koin.android.ext.android.inject",
+            "import org.koin.compose.koinInject"
+        )
+    )
+)
 expect fun getKVaultStorage(context: Any? = null): KVaultStorage
 
 interface KVaultStorage {
     val kVault: KVault
 
-    fun <Type> save(key: String, value: Type) {
+    fun <Type> set(key: String, value: Type) {
         when (value) {
             is String -> kVault.set(key, value)
             is Int -> kVault.set(key, value)
@@ -27,6 +37,10 @@ interface KVaultStorage {
     fun clear() {
         kVault.clear()
     }
+
+    fun get(key: String): String {
+        return kVault.string(key) ?: ""
+    }
 }
 
 inline fun <reified Type> KVaultStorage.get(key: String, defaultValue: Type): Type {
@@ -40,8 +54,4 @@ inline fun <reified Type> KVaultStorage.get(key: String, defaultValue: Type): Ty
         ByteArray::class -> (kVault.data(key) ?: defaultValue) as Type
         else -> defaultValue
     }
-}
-
-inline fun KVaultStorage.get(key: String): String {
-    return kVault.string(key) ?: ""
 }

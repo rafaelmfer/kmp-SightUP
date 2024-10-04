@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.europa.sightup.data.local.KVaultStorage
-import com.europa.sightup.data.local.get
 import com.europa.sightup.data.remote.response.PostResponse
 import com.europa.sightup.presentation.MainViewModel
+import com.mmk.kmpnotifier.notification.NotifierManager
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,6 +44,10 @@ fun PostsWithState() {
         }
         val state by viewModel.products.collectAsStateWithLifecycle()
 
+        val token = "Token dkfjhksjdhfjdsfjksdbkjfbskjdbfnds"
+        kVaultStorage.set("token", token)
+        println("Token saved: $token")
+
         PostsScreen(state, kVaultStorage = kVaultStorage)
     }
 }
@@ -56,11 +60,9 @@ fun PostsScreen(state: UIState<List<PostResponse>>, kVaultStorage: KVaultStorage
             .padding(16.dp)
     ) {
         ActionButtons(
-            onSaveClick = {
-                val token = "Token dkfjhksjdhfjdsfjksdbkjfbskjdbfnds"
-                kVaultStorage?.save("token", token)
-                println("Token saved: $token")
-                println()
+            sendLocalNotification = {
+                val notifier = NotifierManager.getLocalNotifier()
+                notifier.notify(1, "Title", "Body")
             },
             onGetClick = {
                 val tokenRetrieved = kVaultStorage?.get("token")
@@ -74,11 +76,12 @@ fun PostsScreen(state: UIState<List<PostResponse>>, kVaultStorage: KVaultStorage
             is UIState.Loading -> {
                 CircularProgressIndicator()
             }
+
             is UIState.Error -> {
                 Text(text = "Error: ${state.message}")
             }
+
             is UIState.Success -> {
-                // Exibe os dados
                 val posts = state.data
                 PostList(
                     posts = posts,
@@ -91,7 +94,7 @@ fun PostsScreen(state: UIState<List<PostResponse>>, kVaultStorage: KVaultStorage
 
 @Composable
 fun ActionButtons(
-    onSaveClick: () -> Unit,
+    sendLocalNotification: () -> Unit,
     onGetClick: () -> Unit
 ) {
     Row(
@@ -100,10 +103,10 @@ fun ActionButtons(
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = onSaveClick,
+            onClick = sendLocalNotification,
             modifier = Modifier.padding(end = 8.dp)
         ) {
-            Text(text = "Save")
+            Text(text = "Send Local Notification")
         }
         Button(
             onClick = onGetClick,
