@@ -9,7 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.europa.sightup.presentation.navigation.LeafScreen
+import com.europa.sightup.presentation.navigation.HomeExample
+
 
 @Composable
 fun HomeScreen(
@@ -27,7 +28,7 @@ fun HomeScreen(
                     .padding(top = 100.dp)
                     .align(Alignment.Center),
                 onClick = {
-                    navController.navigate(LeafScreen.HomeExample.route)  // Navigate to the example screen
+                    navController.navigate(HomeExample)  // Navigate to the example screen
                 }
             ) {
                 Text("Go to Posts with States")

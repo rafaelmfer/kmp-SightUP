@@ -7,13 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.europa.sightup.data.remote.response.PostResponse
 import com.europa.sightup.utils.PostsScreen
-import com.europa.sightup.utils.PostsWithState
 import com.europa.sightup.utils.UIState
 import com.mmk.kmpnotifier.permission.permissionUtil
 import org.koin.compose.KoinApplication
 
-class MainActivity : ComponentActivity() {
 
+class MainActivity : ComponentActivity() {
     private val permissionUtil by permissionUtil()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +20,7 @@ class MainActivity : ComponentActivity() {
 
         permissionUtil.askNotificationPermission()
         setContent {
-           App()
+            App()
             //PostsWithState()
         }
     }

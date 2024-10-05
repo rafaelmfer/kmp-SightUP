@@ -1,35 +1,40 @@
 package com.europa.sightup.presentation.navigation
 
-/** Each route has to have a unique name.
-    On RootScreen we will defined the main tabs and the onboarding screen
-    Below on leafScreen we defined the screens inside each main tab
+import kotlinx.serialization.Serializable
+
+/**
+    All screen will be defined in here.
+    All screens will be at the same level, so make sure to give them a unique name.
 **/
+// Home Routes
+@Serializable
+object Home
 
-sealed class RootScreen(val route: String) {
-    data object Home : RootScreen("home_root")
-    data object Exercise: RootScreen("exercise_root")
-    data object Test : RootScreen("test_root")
-    data object Record : RootScreen("record_root")
-    data object Account : RootScreen("account_root")
-    data object Onboarding : RootScreen("onboarding_root")
-}
+@Serializable
+object HomeExample
 
-sealed class LeafScreen(val route: String) {
-    data object Home : LeafScreen("home")
-    data object HomeExample : LeafScreen("home_example")
+// Exercise Routes
+@Serializable
+object Exercise
 
+@Serializable
+object ExerciseDetail
 
-    data object Exercise : LeafScreen("exercise")
-    data object ExerciseDetail : LeafScreen("exercise_detail")
+// Test Routes
+@Serializable
+object Test
 
-    data object Test : LeafScreen("test")
-    // Add in here nested routes for each screen
+// Record Routes
+@Serializable
+object Record
 
-    data object Record : LeafScreen("record")
+// Account Routes
+@Serializable
+object Account
 
-    data object Account : LeafScreen("account")
+// Onboarding Routes
+@Serializable
+object Onboarding
 
-    data object Onboarding : LeafScreen("onboarding")
-}
 
 /** After a new route is added it has to be called from the NavigationGraph.kt file **/
