@@ -10,40 +10,40 @@ import androidx.navigation.NavHostController
 @Composable
 fun BottomNavBar(
     navController: NavHostController,
-    currentSelectedScreen: RootScreen
+    currentSelectedScreen: Any
 ) {
     NavigationBar {
         NavigationBarItem(
-            selected = currentSelectedScreen == RootScreen.Home,
-            onClick = { navController.navigateToRootScreen(RootScreen.Home) },
+            selected = currentSelectedScreen == Home,
+            onClick = { navController.navigateToRootScreen(Home) },
             alwaysShowLabel = true,
             label = { Text(text = "Home") },
             icon = {  }
         )
         NavigationBarItem(
-            selected = currentSelectedScreen == RootScreen.Exercise,
-            onClick = { navController.navigateToRootScreen(RootScreen.Exercise) },
+            selected = currentSelectedScreen == Exercise,
+            onClick = { navController.navigateToRootScreen(Exercise) },
             alwaysShowLabel = true,
             label = { Text(text = "Exercise") },
             icon = {  }
         )
         NavigationBarItem(
-            selected = currentSelectedScreen == RootScreen.Test,
-            onClick = { navController.navigateToRootScreen(RootScreen.Test) },
+            selected = currentSelectedScreen == Test,
+            onClick = { navController.navigateToRootScreen(Test) },
             alwaysShowLabel = true,
             label = { Text(text = "Test") },
             icon = {  }
         )
         NavigationBarItem(
-            selected = currentSelectedScreen == RootScreen.Record,
-            onClick = { navController.navigateToRootScreen(RootScreen.Record) },
+            selected = currentSelectedScreen == Record,
+            onClick = { navController.navigateToRootScreen(Record) },
             alwaysShowLabel = true,
             label = { Text(text = "Record") },
             icon = {  }
         )
         NavigationBarItem(
-            selected = currentSelectedScreen == RootScreen.Account,
-            onClick = { navController.navigateToRootScreen(RootScreen.Account) },
+            selected = currentSelectedScreen == Account,
+            onClick = { navController.navigateToRootScreen(Account) },
             alwaysShowLabel = true,
             label = { Text(text = "Account") },
             icon = {  }
@@ -52,8 +52,8 @@ fun BottomNavBar(
 }
 
 
-private fun NavHostController.navigateToRootScreen(rootScreen: RootScreen) {
-    navigate(rootScreen.route) {
+private fun NavHostController.navigateToRootScreen(rootScreen: Any) {
+    navigate(rootScreen) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true
         }

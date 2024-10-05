@@ -12,9 +12,15 @@ import androidx.compose.foundation.layout.*
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.europa.sightup.presentation.navigation.Account
 import com.europa.sightup.presentation.navigation.BottomNavBar
+import com.europa.sightup.presentation.navigation.Exercise
+import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.NavigationGraph
-import com.europa.sightup.presentation.navigation.RootScreen
+import com.europa.sightup.presentation.navigation.Onboarding
+import com.europa.sightup.presentation.navigation.Record
+import com.europa.sightup.presentation.navigation.Test
+
 
 @Composable
 @Preview
@@ -25,7 +31,7 @@ fun App() {
     Scaffold(
         //topBar = {},
         bottomBar = {
-            BottomNavBar(navController = navController, currentSelectedScreen = currentSelectedScreen)
+          BottomNavBar(navController = navController, currentSelectedScreen = currentSelectedScreen)
         },
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -35,28 +41,27 @@ fun App() {
                 .padding(it)
         ) {
             // The screens will be drawn inside this
-            NavigationGraph(navController = navController)
+           NavigationGraph(navController = navController)
         }
     }
 }
 
-// Helper functions
+// Helper functions ---------------
 
 @Stable
 @Composable
-private fun NavHostController.currentScreenAsState(): State<RootScreen> {
-    // TODO: Fix the listener to mark the current tab selected
-    val selectedItem = remember { mutableStateOf<RootScreen>(RootScreen.Home) }
+private fun NavHostController.currentScreenAsState(): State<Any> {
+    val selectedItem = remember { mutableStateOf<Any>(Home) }
 
     DisposableEffect(this) {
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
             when (destination.route) {
-                RootScreen.Home.route -> selectedItem.value = RootScreen.Home
-                RootScreen.Exercise.route -> selectedItem.value = RootScreen.Exercise
-                RootScreen.Test.route -> selectedItem.value = RootScreen.Test
-                RootScreen.Record.route -> selectedItem.value = RootScreen.Record
-                RootScreen.Account.route -> selectedItem.value = RootScreen.Account
-                RootScreen.Onboarding.route -> selectedItem.value = RootScreen.Onboarding
+                Home.serializer().descriptor.serialName -> selectedItem.value = Home
+                Exercise.serializer().descriptor.serialName -> selectedItem.value = Exercise
+                Test.serializer().descriptor.serialName -> selectedItem.value = Test
+                Record.serializer().descriptor.serialName -> selectedItem.value = Record
+                Account.serializer().descriptor.serialName -> selectedItem.value = Account
+                Onboarding.serializer().descriptor.serialName -> selectedItem.value = Onboarding
             }
         }
         addOnDestinationChangedListener(listener)
@@ -64,6 +69,7 @@ private fun NavHostController.currentScreenAsState(): State<RootScreen> {
             removeOnDestinationChangedListener(listener)
         }
     }
+
     return selectedItem
 }
 

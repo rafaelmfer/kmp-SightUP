@@ -52,6 +52,9 @@ kotlin {
 
             // Coroutines
             implementation(libs.kotlinx.coroutines.android)
+
+            // Navigation CMP
+            implementation(libs.navigation.compose)
         }
 
         commonMain.dependencies {

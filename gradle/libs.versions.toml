@@ -16,7 +16,7 @@ androidx-material = "1.12.0"
 androidx-constraintlayout = "2.1.4"
 androidx-activityCompose = "1.9.2"
 compose = "1.7.0-rc01"
-navigationCompose = "2.7.0-alpha07"
+navigationCompose = "2.8.0-alpha09"
 
 androidx-lifecycle = "2.8.2"
 
