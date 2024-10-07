@@ -5,17 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.europa.sightup.data.remote.response.PostResponse
 import com.europa.sightup.utils.PostsScreen
 import com.europa.sightup.utils.UIState
 import com.mmk.kmpnotifier.permission.permissionUtil
 import org.koin.compose.KoinApplication
 
-
 class MainActivity : ComponentActivity() {
+
     private val permissionUtil by permissionUtil()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         permissionUtil.askNotificationPermission()
