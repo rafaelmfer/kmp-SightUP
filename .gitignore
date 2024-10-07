@@ -204,8 +204,6 @@ xcuserdata/
 *.xccheckout
 
 ### Xcode Patch ###
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
