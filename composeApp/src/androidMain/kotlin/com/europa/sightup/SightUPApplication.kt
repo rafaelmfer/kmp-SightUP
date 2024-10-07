@@ -7,6 +7,7 @@ import com.europa.sightup.di.initializeKoin
 import com.europa.sightup.utils.FIREBASE_NOTIFICATION_TOKEN
 import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
+import multiplatform.network.cmptoast.AppContext
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -18,6 +19,9 @@ class SightUPApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Provide context for CMPToast lib (multiplatform.network.cmptoast)
+        AppContext.set(this)
+
         initializeKoin {
             androidLogger(level = Level.DEBUG)
             androidContext(this@SightUPApplication)

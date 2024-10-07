@@ -5,20 +5,24 @@ android-targetSdk = "34"
 
 agp = "8.5.2"
 kotlin = "2.0.20"
-androidx-core-ktx = "1.13.1"
+
+# AndroidX Core
+core-ktx = "1.13.1"
+core-splash-screen = "1.1.0-rc01"
 
 # Google
 googleGms = "4.4.2"
 googleKsp = "2.0.20-1.0.24"
 
+# Design
 androidx-appcompat = "1.7.0"
 androidx-material = "1.12.0"
 androidx-constraintlayout = "2.1.4"
+androidx-lifecycle = "2.8.2"
 androidx-activityCompose = "1.9.2"
 compose = "1.7.0-rc01"
 navigationCompose = "2.8.0-alpha09"
-
-androidx-lifecycle = "2.8.2"
+cmptoast = "1.0.1"
 
 # Library for Date and Time
 date-time = "0.6.1"
@@ -26,6 +30,7 @@ date-time = "0.6.1"
 # Koin - Dependecy Injection
 koin = "4.0.0"
 
+# Coroutines - Asynchronous calls
 coroutines = "1.9.0"
 
 # Ktorfit & Ktor - Network
@@ -52,7 +57,10 @@ junit = "4.13.2"
 
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splash-screen" }
+
+# Design
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
@@ -60,6 +68,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+cmptoast = { module = "network.chaintech:cmptoast", version.ref = "cmptoast" }
 
 # Library for Date and Time
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "date-time" }
@@ -103,7 +113,6 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

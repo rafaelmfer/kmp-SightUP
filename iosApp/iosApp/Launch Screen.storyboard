@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AdaptiveLogo" translatesAutoresizingMaskIntoConstraints="NO" id="BAN-vk-q3k">
+                                <rect key="frame" x="75.666666666666671" y="306.66666666666669" width="241.66666666666663" height="238.66666666666669"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SightUP is designed to support your eye health." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3a9-bT-hX8">
+                                <rect key="frame" x="16" y="569.33333333333337" width="361" height="26.666666666666629"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="BAN-vk-q3k" firstAttribute="centerX" secondItem="3a9-bT-hX8" secondAttribute="centerX" id="28D-Hm-Nwo"/>
+                            <constraint firstItem="3a9-bT-hX8" firstAttribute="top" secondItem="BAN-vk-q3k" secondAttribute="bottom" constant="24" id="4Bu-jW-J7l"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="3a9-bT-hX8" secondAttribute="bottom" constant="222" id="5HC-ao-ykb"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="3a9-bT-hX8" secondAttribute="trailing" constant="16" id="Cz3-KF-Dls"/>
+                            <constraint firstItem="BAN-vk-q3k" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Luq-Ct-6JY"/>
+                            <constraint firstItem="BAN-vk-q3k" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="75.729559748425004" id="Vnj-qT-FBZ"/>
+                            <constraint firstItem="BAN-vk-q3k" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="247.68050314464381" id="cBS-1o-Yjf"/>
+                            <constraint firstItem="3a9-bT-hX8" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="16" id="cii-vS-zRY"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="AdaptiveLogo" width="1024" height="1024"/>
+    </resources>
+</document>

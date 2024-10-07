@@ -37,6 +37,10 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.core.splashscreen)
+
+            // Design
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.constraintlayout)
             implementation(libs.androidx.material)
@@ -58,13 +62,16 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(libs.androidx.core.ktx)
+            // Design
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            // CMP Toast
+            implementation(libs.cmptoast)
 
             // Lifecycle
             implementation(libs.androidx.lifecycle.viewmodel)
