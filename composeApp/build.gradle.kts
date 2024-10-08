@@ -107,6 +107,9 @@ kotlin {
 
             // Navigation CMP
             implementation(libs.navigation.compose)
+
+            // Coil - Image loader
+            implementation(libs.landscapist.coil3)
         }
 
         iosMain.dependencies {
@@ -170,4 +173,5 @@ buildConfig {
     buildConfigField("APP_NAME", "SightUP")
     buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
     buildConfigField("BASE_URL", localProperties.getProperty("BASE_URL"))
+    buildConfigField("BASE_URL_BACKEND", localProperties.getProperty("BASE_URL_BACKEND"))
 }
