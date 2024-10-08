@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.europa.sightup.presentation.screens.exercise.ExerciseScreen
 import com.europa.sightup.presentation.screens.home.HomeScreen
+import com.europa.sightup.presentation.screens.test.TestScreenWithState
 import com.europa.sightup.utils.PostsWithState
 
 /** This file links the navigation routes with the corresponding UI screens **/
@@ -28,6 +29,10 @@ fun NavigationGraph(
 
         composable<Exercise> {
             ExerciseScreen(navController = navController)
+        }
+
+        composable<Test> {
+            TestScreenWithState(navController = navController)
         }
     }
 }
