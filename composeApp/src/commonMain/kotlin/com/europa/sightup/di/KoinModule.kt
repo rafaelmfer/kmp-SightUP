@@ -1,9 +1,10 @@
 package com.europa.sightup.di
 
-import com.europa.sightup.BuildConfig
+import com.europa.sightup.BuildConfigKMP
 import com.europa.sightup.data.network.NetworkClient
 import com.europa.sightup.data.remote.api.JsonPlaceholderApiService
 import com.europa.sightup.data.remote.api.SightUpApiService
+import com.europa.sightup.data.remote.api.createSightUpApiService
 import com.europa.sightup.data.repository.JsonPlaceholderRepository
 import com.europa.sightup.data.repository.SightUpApiRespository
 import com.europa.sightup.presentation.MainViewModel
@@ -22,15 +23,15 @@ val commonModule = module {
     single<HttpClient> { NetworkClient.provideHttpClient(kVaultStorage = get()) }
     single<JsonPlaceholderApiService> {
         NetworkClient.provideKtorfit(
-            baseUrl = BuildConfig.BASE_URL,
+            baseUrl = BuildConfigKMP.BASE_URL,
             httpClient = get()
         ).create()
     }
     single<SightUpApiService>{
         NetworkClient.provideKtorfit(
-            baseUrl = BuildConfig.BASE_URL_BACKEND,
+            baseUrl = BuildConfigKMP.BASE_URL_BACKEND,
             httpClient = get()
-        ).create()
+        ).createSightUpApiService()
     }
 
     // Repositories

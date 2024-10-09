@@ -20,7 +20,6 @@ import com.europa.sightup.presentation.navigation.BottomNavBar
 import com.europa.sightup.presentation.navigation.Exercise
 import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.NavigationGraph
-import com.europa.sightup.presentation.navigation.Onboarding
 import com.europa.sightup.presentation.navigation.Record
 import com.europa.sightup.presentation.navigation.Test
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -64,7 +63,6 @@ private fun NavHostController.currentScreenAsState(): State<Any> {
                 Test.serializer().descriptor.serialName -> selectedItem.value = Test
                 Record.serializer().descriptor.serialName -> selectedItem.value = Record
                 Account.serializer().descriptor.serialName -> selectedItem.value = Account
-                Onboarding.serializer().descriptor.serialName -> selectedItem.value = Onboarding
             }
         }
         addOnDestinationChangedListener(listener)

@@ -1,8 +1,8 @@
 package com.europa.sightup.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.europa.sightup.presentation.screens.exercise.ExerciseScreen
 import com.europa.sightup.presentation.screens.home.HomeScreen
@@ -16,7 +16,7 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home // RootScreen.Home
+        startDestination = Home
     ){
         composable<Home> {
             HomeScreen(navController = navController)

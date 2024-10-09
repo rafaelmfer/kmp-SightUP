@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">SightUP</string>
+
+    <!-- Onboarding -->
+    <!-- Disclaimer Screen -->
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="disclaimer_content">SightUP does not replace professional eye exams. Always consult with a licensed eye care provider for accurate diagnosis and prescription needs.</string>
+    <string name="disclaimer_button">Let's Get Started</string>
 </resources>

@@ -17,6 +17,10 @@ import androidx.navigation.compose.rememberNavController
 import com.europa.sightup.presentation.AppNavHost
 import com.europa.sightup.presentation.components.DesignSystemSamples
 import com.europa.sightup.presentation.components.designSystemNavGraph
+import com.europa.sightup.presentation.navigation.OnboardingScreens
+import com.europa.sightup.presentation.navigation.onboardingNavGraph
+import com.europa.sightup.presentation.screens.FlowSeparator
+import com.europa.sightup.presentation.screens.FlowSeparatorScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import kotlinx.serialization.Serializable
 
@@ -39,11 +43,16 @@ fun InitNavGraph(
     SightUPTheme {
         NavHost(
             navController = navController,
-            startDestination = AppInit
+            startDestination = if (getPlatform().isDebug) AppInit else OnboardingScreens.OnboardingInit
         ) {
             composable<AppInit> {
                 AppEntryPoint(navController = navController)
             }
+            composable<FlowSeparator> {
+                FlowSeparatorScreen(navController = navController)
+            }
+            onboardingNavGraph(navController)
+
             composable<SightUPApp> {
                 AppNavHost()
             }
@@ -62,7 +71,7 @@ fun AppEntryPoint(navController: NavHostController) {
     ) {
         Button(
             onClick = {
-                navController.navigate(SightUPApp)
+                navController.navigate(FlowSeparator)
             },
             modifier = Modifier.padding(16.dp)
         ) {
