@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 sealed interface DesignSystemSamples {
 
     @Serializable
-    data object DesignSystemInit : DesignSystemSamples
+    data object DesignSystemInit: DesignSystemSamples
 
     @Serializable
     data object Home : DesignSystemSamples
