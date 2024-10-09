@@ -9,14 +9,17 @@ import kotlinx.serialization.Serializable
 sealed interface DesignSystemSamples {
 
     @Serializable
-    data object Home
+    data object DesignSystemInit : DesignSystemSamples
 
     @Serializable
-    data object TextStyles
+    data object Home : DesignSystemSamples
+
+    @Serializable
+    data object TextStyles : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
-    navigation<DesignSystemSamples>(
+    navigation<DesignSystemSamples.DesignSystemInit>(
         startDestination = DesignSystemSamples.Home,
     ) {
         composable<DesignSystemSamples.Home> {

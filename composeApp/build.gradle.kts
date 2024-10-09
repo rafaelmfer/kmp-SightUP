@@ -144,6 +144,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -153,6 +154,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
@@ -170,8 +172,10 @@ val localProperties = Properties().apply {
 
 buildConfig {
     packageName("com.europa.sightup")
-    buildConfigField("APP_NAME", "SightUP")
-    buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
-    buildConfigField("BASE_URL", localProperties.getProperty("BASE_URL"))
-    buildConfigField("BASE_URL_BACKEND", localProperties.getProperty("BASE_URL_BACKEND"))
+    forClass("BuildConfigKMP") {
+        buildConfigField("APP_NAME", "SightUP")
+        buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
+        buildConfigField("BASE_URL", localProperties.getProperty("BASE_URL"))
+        buildConfigField("BASE_URL_BACKEND", localProperties.getProperty("BASE_URL_BACKEND"))
+    }
 }

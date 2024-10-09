@@ -33,8 +33,15 @@ object Record
 object Account
 
 // Onboarding Routes
-@Serializable
-object Onboarding
+sealed interface OnboardingScreens {
+
+    @Serializable
+    data object OnboardingInit : OnboardingScreens
+
+    @Serializable
+    data object Disclaimer : OnboardingScreens
+
+}
 
 
 /** After a new route is added it has to be called from the NavigationGraph.kt file **/
