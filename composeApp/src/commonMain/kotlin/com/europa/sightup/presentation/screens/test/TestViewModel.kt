@@ -1,6 +1,6 @@
 package com.europa.sightup.presentation.screens.test
 
-import com.europa.sightup.data.repository.SightUpApiRespository
+import com.europa.sightup.data.repository.SightUpRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.europa.sightup.data.remote.response.TestResponse
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
-class TestViewModel(private val repository: SightUpApiRespository) : ViewModel() {
+class TestViewModel(private val repository: SightUpRepository) : ViewModel() {
 
     private val _tests = MutableStateFlow<UIState<List<TestResponse>>>(UIState.InitialState())
     val test: StateFlow<UIState<List<TestResponse>>> = _tests.asStateFlow()
