@@ -4,8 +4,7 @@
 Explain the problem this PR solves or the functionality it implements.*
 
 TASK: #JIRA_NUMBER_ID_HERE
-
-- 
+-
 
 ## Type of change
 
@@ -33,8 +32,7 @@ TASK: #JIRA_NUMBER_ID_HERE
 - [ ] I have performed a self-review of my own code
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+- [ ] Both platforms are working (Android and IOS)
 
 
 ## Additional Information

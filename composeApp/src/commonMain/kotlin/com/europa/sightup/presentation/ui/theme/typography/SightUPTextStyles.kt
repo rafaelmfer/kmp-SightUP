@@ -8,17 +8,83 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 
 @Immutable
 data class SightUPTextStyles(
+    /**
+     * @property h1 is a TextStyle property that represents the h1 text style. Where:
+     * @property fontFamily is Larken
+     * @property fontSize is 36sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val h1: TextStyle,
+    /**
+     * @property h2 is a TextStyle property that represents the h2 text style. Where:
+     * @property fontFamily is Larken
+     * @property fontSize is 32sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val h2: TextStyle,
+    /**
+     * @property h3 is a TextStyle property that represents the h3 text style. Where:
+     * @property fontFamily is Larken
+     * @property fontSize is 28.sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val h3: TextStyle,
+    /**
+     * @property h4 is a TextStyle property that represents the h4 text style. Where:
+     * @property fontFamily is Larken
+     * @property fontSize is 24.sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val h4: TextStyle,
+    /**
+     * @property h5 is a TextStyle property that represents the h5 text style. Where:
+     * @property fontFamily is Larken
+     * @property fontSize is 20.sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val h5: TextStyle,
 
+    /**
+     * @property large is a TextStyle property that represents the large text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 18.sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val large: TextStyle,
+    /**
+     * @property subtitle is a TextStyle property that represents the subtitle text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 16.sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val subtitle: TextStyle,
+    /**
+     * @property body is a TextStyle property that represents the body text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 14.sp
+     * @property fontWeight is FontWeight.Regular
+     */
     val body: TextStyle,
+    /**
+     * @property small is a TextStyle property that represents the small text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 12.sp
+     * @property fontWeight is FontWeight.Bold
+     */
     val small: TextStyle,
+    /**
+     * @property caption is a TextStyle property that represents the caption text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 10.sp
+     * @property fontWeight is FontWeight.Regular
+     */
     val caption: TextStyle,
+    /**
+     * @property footnote is a TextStyle property that represents the footnote text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 10.sp
+     * @property fontWeight is FontWeight.Regular
+     */
     val footnote: TextStyle,
 )
 
