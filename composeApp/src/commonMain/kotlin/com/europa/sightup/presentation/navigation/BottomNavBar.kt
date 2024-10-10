@@ -27,8 +27,8 @@ fun BottomNavBar(
             icon = {  }
         )
         NavigationBarItem(
-            selected = currentSelectedScreen == Test,
-            onClick = { navController.navigateToRootScreen(Test) },
+            selected = currentSelectedScreen == TestScreens.TestRoot,
+            onClick = { navController.navigateToRootScreen(TestScreens.TestRoot) },
             alwaysShowLabel = true,
             label = { Text(text = "Test") },
             icon = {  }
