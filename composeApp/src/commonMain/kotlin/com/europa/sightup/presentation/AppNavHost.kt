@@ -21,7 +21,7 @@ import com.europa.sightup.presentation.navigation.Exercise
 import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.NavigationGraph
 import com.europa.sightup.presentation.navigation.Record
-import com.europa.sightup.presentation.navigation.Test
+import com.europa.sightup.presentation.navigation.TestScreens
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -60,7 +60,7 @@ private fun NavHostController.currentScreenAsState(): State<Any> {
             when (destination.route) {
                 Home.serializer().descriptor.serialName -> selectedItem.value = Home
                 Exercise.serializer().descriptor.serialName -> selectedItem.value = Exercise
-                Test.serializer().descriptor.serialName -> selectedItem.value = Test
+                TestScreens.TestRoot.serializer().descriptor.serialName -> selectedItem.value = TestScreens.TestRoot
                 Record.serializer().descriptor.serialName -> selectedItem.value = Record
                 Account.serializer().descriptor.serialName -> selectedItem.value = Account
             }
