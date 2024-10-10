@@ -176,6 +176,7 @@ buildConfig {
         buildConfigField("APP_NAME", "SightUP")
         buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
         buildConfigField("BASE_URL", localProperties.getProperty("BASE_URL"))
-        buildConfigField("BASE_URL_BACKEND", localProperties.getProperty("BASE_URL_BACKEND"))
+        buildConfigField("BASE_URL_BACKEND_ANDROID_EMU", localProperties.getProperty("BASE_URL_BACKEND_ANDROID_EMU"))
+        buildConfigField("BASE_URL_BACKEND_IOS_EMU", localProperties.getProperty("BASE_URL_BACKEND_IOS_EMU"))
     }
 }

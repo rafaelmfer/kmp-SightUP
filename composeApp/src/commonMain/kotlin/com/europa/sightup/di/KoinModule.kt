@@ -7,9 +7,11 @@ import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.api.createSightUpApiService
 import com.europa.sightup.data.repository.JsonPlaceholderRepository
 import com.europa.sightup.data.repository.SightUpRepository
+import com.europa.sightup.getPlatform
 import com.europa.sightup.presentation.MainViewModel
-import com.europa.sightup.presentation.screens.test.TestViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
+import com.europa.sightup.presentation.screens.test.TestViewModel
+import com.europa.sightup.utils.ANDROID
 import io.ktor.client.HttpClient
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -28,9 +30,9 @@ val commonModule = module {
             httpClient = get()
         ).create()
     }
-    single<SightUpApiService>{
+    single<SightUpApiService> {
         NetworkClient.provideKtorfit(
-            baseUrl = BuildConfigKMP.BASE_URL_BACKEND,
+            baseUrl = if (getPlatform().name == ANDROID) BuildConfigKMP.BASE_URL_BACKEND_ANDROID_EMU else BuildConfigKMP.BASE_URL_BACKEND_IOS_EMU,
             httpClient = get()
         ).createSightUpApiService()
     }
@@ -42,11 +44,11 @@ val commonModule = module {
     // ViewModels
     viewModel { MainViewModel(repository = get()) }
     viewModel { TestViewModel(repository = get()) }
-    viewModel { ExerciseViewModel( repository = get())}
+    viewModel { ExerciseViewModel(repository = get()) }
 }
 
 fun initializeKoin(
-    config: (KoinApplication.() -> Unit)? = null
+    config: (KoinApplication.() -> Unit)? = null,
 ) {
     startKoin {
         config?.invoke(this)
