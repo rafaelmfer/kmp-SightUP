@@ -56,7 +56,7 @@ fun InitNavGraph(
             composable<SightUPApp> {
                 AppNavHost()
             }
-           designSystemNavGraph(navController)
+            designSystemNavGraph(navController)
         }
     }
 }

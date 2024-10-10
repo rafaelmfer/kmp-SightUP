@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,32 +34,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.europa.sightup.data.local.KVaultStorage
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.UIState
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TestScreenWithState(
     navController: NavController,
 ) {
-    val kVaultStorage = koinInject<KVaultStorage>()
-
     val viewModel = koinViewModel<TestViewModel>()
     LaunchedEffect(Unit) {
         viewModel.getTests()
     }
     val state by viewModel.test.collectAsStateWithLifecycle()
-
-    val token = "Token dkfjhksjdhfjdsfjksdbkjfbskjdbfnds"
-    kVaultStorage.set("token", token)
-    println("Token saved: $token")
 
     TestScreen(navController, state)
 }
@@ -74,7 +66,7 @@ fun TestScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -113,30 +105,38 @@ fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navContro
 
 @Composable
 fun SectionHeaderWithIcon(title: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = SightUPTheme.spacing.spacing_md,
+                bottom = SightUPTheme.spacing.spacing_lg
+            )
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.weight(1f),
+            style = SightUPTheme.textStyles.subtitle,
+            modifier = Modifier.align(Alignment.Center),
             textAlign = TextAlign.Center
         )
+
         Icon(
             imageVector = Icons.Default.Info,
             contentDescription = "Get more information",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .size(24.dp)
         )
     }
 }
+
 
 @Composable
 fun TestItemCard(test: TestResponse, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp)
+            .padding(bottom = SightUPTheme.spacing.spacing_base)
             .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .clickable {

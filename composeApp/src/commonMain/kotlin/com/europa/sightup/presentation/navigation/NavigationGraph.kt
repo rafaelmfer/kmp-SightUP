@@ -40,17 +40,5 @@ fun NavigationGraph(
     }
 }
 
-private fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
-    navigation<TestScreens.TestInit>( startDestination = TestScreens.TestRoot){
 
-        composable<TestScreens.TestRoot> {
-            TestScreenWithState(navController = navController)
-        }
-
-        composable<TestScreens.TestIndividual> {
-            val arguments = it.toRoute<TestScreens.TestIndividual>()
-            IndividualTestScreen(navController = navController, taskId = arguments.id)
-        }
-    }
-}
 
