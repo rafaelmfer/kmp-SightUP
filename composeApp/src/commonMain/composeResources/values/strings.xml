@@ -6,4 +6,18 @@
     <string name="disclaimer_title">Disclaimer</string>
     <string name="disclaimer_content">SightUP does not replace professional eye exams. Always consult with a licensed eye care provider for accurate diagnosis and prescription needs.</string>
     <string name="disclaimer_button">Let's Get Started</string>
+
+    <!-- Tutorial Screen   -->
+    <string name="tutorial_one_title">Checkup Daily Eye Condition</string>
+    <string name="tutorial_one_content">Monitor your eye health daily with quick assessments to detect potential issues early.</string>
+    <string name="tutorial_two_title">Vision Tests</string>
+    <string name="tutorial_two_content">Conduct convenient vision tests to track changes in eyesight without needing a clinic visit.</string>
+    <string name="tutorial_three_title">Vision History Tracker</string>
+    <string name="tutorial_three_content">Keep a record of your vision status over time, including naked eye, glasses, and contact lens use.</string>
+    <string name="tutorial_four_title">Personalized Eye Health Activities</string>
+    <string name="tutorial_four_content">Engage in tailored exercises designed to improve and maintain your vision health.</string>
+    <string name="tutorial_secondary_button">Skip All</string>
+    <string name="tutorial_primary_button">Next</string>
+    <string name="tutorial_secondary_button_last_step">Start as Guest</string>
+    <string name="tutorial_primary_button_last_step">Login / Signup</string>
 </resources>

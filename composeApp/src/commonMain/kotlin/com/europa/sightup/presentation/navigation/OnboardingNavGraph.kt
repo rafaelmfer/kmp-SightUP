@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.europa.sightup.presentation.screens.onboarding.DisclaimerScreen
+import com.europa.sightup.presentation.screens.onboarding.TutorialScreen
 
 fun NavGraphBuilder.onboardingNavGraph(navController: NavHostController) {
     navigation<OnboardingScreens.OnboardingInit>(
@@ -12,6 +13,9 @@ fun NavGraphBuilder.onboardingNavGraph(navController: NavHostController) {
     ) {
         composable<OnboardingScreens.Disclaimer> {
             DisclaimerScreen(navController = navController)
+        }
+        composable<OnboardingScreens.Tutorial> {
+            TutorialScreen(navController = navController)
         }
     }
 }

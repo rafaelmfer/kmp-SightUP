@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.europa.sightup.presentation.navigation.OnboardingScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -54,15 +56,14 @@ fun DisclaimerScreen(navController: NavController? = null) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    start = SightUPTheme.spacing.spacing_side_margin,
                     top = SightUPTheme.spacing.spacing_xs,
-                    end = SightUPTheme.spacing.spacing_side_margin,
                     bottom = SightUPTheme.spacing.spacing_lg
                 )
         ) {
             Text(
                 text = stringResource(Res.string.disclaimer_title),
-                style = SightUPTheme.textStyles.h3
+                style = SightUPTheme.textStyles.h3,
+                textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(SightUPTheme.sizes.size_24))
             Text(
@@ -71,8 +72,7 @@ fun DisclaimerScreen(navController: NavController? = null) {
             Spacer(modifier = Modifier.height(SightUPTheme.sizes.size_32))
             Button(
                 onClick = {
-                    // TODO: Navigate to next screen
-//                    navController?.navigate()
+                    navController?.navigate(OnboardingScreens.Tutorial)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),

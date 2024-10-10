@@ -1,6 +1,5 @@
 package com.europa.sightup.presentation.navigation
 
-import com.europa.sightup.data.remote.response.TaskResponse
 import kotlinx.serialization.Serializable
 
 /**
@@ -50,6 +49,9 @@ sealed interface OnboardingScreens {
 
     @Serializable
     data object Disclaimer : OnboardingScreens
+
+    @Serializable
+    data object Tutorial : OnboardingScreens
 
 }
 
