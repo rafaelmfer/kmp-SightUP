@@ -33,11 +33,13 @@ fun CardExercise(modifier: Modifier, exercise: ExerciseResponse) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(
-                width = 2.dp,
-                color = Color(0xFFD9D9D9),
-                shape = RoundedCornerShape(8.dp)
-            )
+//            .border(
+//                width = 2.dp,
+//                color = Color(0xFFD9D9D9),
+//                shape = RoundedCornerShape(8.dp)
+//            )
+//            .padding(16.dp)
+            .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
     ) {
         Image(
