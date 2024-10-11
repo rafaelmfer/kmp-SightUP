@@ -2,6 +2,7 @@ package com.europa.sightup.presentation.designsystem
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -12,7 +13,10 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 
 @Composable
-fun DesignSystemSamplesScreen(navController: NavHostController) {
+fun SDSSamplesScreen(navController: NavHostController) {
+    val buttonModifier = Modifier
+        .padding(SightUPTheme.spacing.spacing_base)
+        .fillMaxWidth()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -20,10 +24,17 @@ fun DesignSystemSamplesScreen(navController: NavHostController) {
     ) {
         Button(
             onClick = {
+                navController.navigate(DesignSystemSamples.AudioVisualizer)
+            },
+            modifier = buttonModifier
+        ) {
+            Text("Audio Visualizer")
+        }
+        Button(
+            onClick = {
                 navController.navigate(DesignSystemSamples.Countdown)
             },
-            modifier = Modifier
-                .padding(SightUPTheme.spacing.spacing_base)
+            modifier = buttonModifier
         ) {
             Text("Countdown")
         }
@@ -31,8 +42,7 @@ fun DesignSystemSamplesScreen(navController: NavHostController) {
             onClick = {
                 navController.navigate(DesignSystemSamples.TextStyles)
             },
-            modifier = Modifier
-                .padding(SightUPTheme.spacing.spacing_base)
+            modifier = buttonModifier
         ) {
             Text("Text Styles")
         }

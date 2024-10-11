@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScreen
 import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
 import com.europa.sightup.presentation.designsystem.screens.TextStylesScreen
 import kotlinx.serialization.Serializable
@@ -21,6 +22,9 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object Countdown : DesignSystemSamples
+
+    @Serializable
+    data object AudioVisualizer : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -28,13 +32,16 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         startDestination = DesignSystemSamples.Home,
     ) {
         composable<DesignSystemSamples.Home> {
-            DesignSystemSamplesScreen(navController = navController)
+            SDSSamplesScreen(navController = navController)
         }
         composable<DesignSystemSamples.TextStyles> {
             TextStylesScreen()
         }
         composable<DesignSystemSamples.Countdown> {
             CountdownScreen()
+        }
+        composable<DesignSystemSamples.AudioVisualizer> {
+            AudioVisualizerScreen()
         }
     }
 }
