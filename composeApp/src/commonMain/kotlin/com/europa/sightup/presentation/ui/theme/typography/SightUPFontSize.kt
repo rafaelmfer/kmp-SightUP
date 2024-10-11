@@ -18,6 +18,7 @@ data class SightUPFontSize(
     val fontSize_3xl: TextUnit = 28.sp,
     val fontSize_4xl: TextUnit = 32.sp,
     val fontSize_huge: TextUnit = 36.sp,
+    val fontSize_extra_huge: TextUnit = 40.sp,
 ) {
     internal companion object {
         val default = SightUPFontSize(
@@ -70,7 +71,12 @@ data class SightUPFontSize(
              * @property fontSize_huge is a TextUnit property that represents the huge font size value.
              * The value is set to 36.sp.
              */
-            fontSize_huge = 36.sp
+            fontSize_huge = 36.sp,
+            /**
+             * @property fontSize_extra_huge is a TextUnit property that represents the extra huge font size value.
+             * The value is set to 40.sp.
+             */
+            fontSize_extra_huge = 40.sp,
         )
     }
 }

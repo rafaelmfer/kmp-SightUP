@@ -1,3 +1,5 @@
+package com.europa.sightup.presentation.designsystem.components
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +27,6 @@ import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.clock
 import sightupkmpapp.composeapp.generated.resources.pone
-
 
 @Composable
 fun CardExercise(modifier: Modifier, exercise: ExerciseResponse) {

@@ -1,46 +1,33 @@
 package com.europa.sightup.presentation.screens.exercise
 
-import CardExercise
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.europa.sightup.data.local.KVaultStorage
 import com.europa.sightup.data.remote.response.ExerciseResponse
-import com.europa.sightup.data.remote.response.TestResponse
-import com.europa.sightup.presentation.screens.test.SectionHeaderWithIcon
-import com.europa.sightup.presentation.screens.test.TestItemCard
-import com.europa.sightup.presentation.screens.test.TestList
-import com.europa.sightup.presentation.screens.test.TestScreen
-import com.europa.sightup.presentation.screens.test.TestViewModel
-import com.europa.sightup.utils.PostsScreen
+import com.europa.sightup.presentation.designsystem.components.CardExercise
 import com.europa.sightup.utils.UIState
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 fun ExerciseScreen(
-    navController: NavController
+    navController: NavController,
 ) {
     val viewModel = koinViewModel<ExerciseViewModel>()
     LaunchedEffect(Unit) {
@@ -54,43 +41,40 @@ fun ExerciseScreen(
 @Composable
 fun CardExerciseScreen(
     navController: NavController,
-    state: UIState<List<ExerciseResponse>>
+    state: UIState<List<ExerciseResponse>>,
 ) {
-    Scaffold {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp)
-            ) {
-                Text(
-                    text = "Execise",
-                    fontSize = 28.sp
-                )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+        ) {
+            Text(
+                text = "Execise",
+                fontSize = 28.sp
+            )
 
-                when (state) {
-                    is UIState.Error -> {
-                        Text(text = "Error: ${state.message}")
-                    }
-
-                    is UIState.InitialState -> {}
-                    is UIState.Loading -> {
-                        CircularProgressIndicator()
-                    }
-
-                    is UIState.Success -> {
-                        val exercises = state.data
-                        ExerciseList(
-                            exercises = exercises,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
+            when (state) {
+                is UIState.InitialState -> {}
+                is UIState.Loading -> {
+                    CircularProgressIndicator()
                 }
 
+                is UIState.Success -> {
+                    val exercises = state.data
+                    ExerciseList(
+                        exercises = exercises,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                is UIState.Error -> {
+                    Text(text = "Error: ${state.message}")
+                }
             }
+
         }
     }
 }
-
 
 @Composable
 fun ExerciseList(exercises: List<ExerciseResponse>, modifier: Modifier = Modifier) {
@@ -101,7 +85,6 @@ fun ExerciseList(exercises: List<ExerciseResponse>, modifier: Modifier = Modifie
     }
 }
 
-
 @Composable
 fun ExerciseItemCard(exercise: ExerciseResponse) {
     Box(
@@ -111,8 +94,6 @@ fun ExerciseItemCard(exercise: ExerciseResponse) {
             .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
     ) {
-
         CardExercise(Modifier, exercise)
-
     }
 }
