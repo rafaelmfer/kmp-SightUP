@@ -31,6 +31,8 @@ sealed interface TestScreens {
     @Serializable
     data class TestIndividual(val id: String) : TestScreens
 
+    @Serializable
+    data class TestExecution(val id: String) : TestScreens
 }
 
 // Record Routes
