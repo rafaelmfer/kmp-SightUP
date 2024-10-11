@@ -30,11 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.presentation.components.TitleBar
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -95,41 +95,18 @@ fun TestScreen(
 
 @Composable
 fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
-    SectionHeaderWithIcon(title = "Vision Tests")
+    TitleBar(
+        title="Vision Tests",
+        rightIcon = Icons.Default.Info,
+        rightButton = true,
+        modifier = Modifier.padding(top= SightUPTheme.spacing.spacing_md ,bottom = SightUPTheme.spacing.spacing_md))
+
     LazyColumn(modifier = modifier) {
         items(tests) { test ->
             TestItemCard(navController = navController, test = test)
         }
     }
 }
-
-@Composable
-fun SectionHeaderWithIcon(title: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                top = SightUPTheme.spacing.spacing_md,
-                bottom = SightUPTheme.spacing.spacing_lg
-            )
-    ) {
-        Text(
-            text = title,
-            style = SightUPTheme.textStyles.subtitle,
-            modifier = Modifier.align(Alignment.Center),
-            textAlign = TextAlign.Center
-        )
-
-        Icon(
-            imageVector = Icons.Default.Info,
-            contentDescription = "Get more information",
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .size(24.dp)
-        )
-    }
-}
-
 
 @Composable
 fun TestItemCard(test: TestResponse, navController: NavController) {

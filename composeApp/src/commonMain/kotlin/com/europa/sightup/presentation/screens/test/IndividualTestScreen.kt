@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -105,13 +106,14 @@ fun BackgroundImageScreen(
                     contentDescription = "Back",
                     )
             }
-            BottomCard(test, modifier = Modifier.align(Alignment.BottomCenter))
+            BottomCard(navController, test, modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 }
 
 @Composable
 fun BottomCard (
+    navController: NavController,
     test: TestResponse,
     modifier: Modifier = Modifier
 ){
@@ -148,7 +150,7 @@ fun BottomCard (
                     )
             ) {
                 Text(text = test.title, style = SightUPTheme.textStyles.h1)
-                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
+                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
 
                 Text(text = test.description, style = SightUPTheme.textStyles.body)
                 Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
@@ -165,7 +167,7 @@ fun BottomCard (
                         .fillMaxWidth()
                         .padding(top = SightUPTheme.spacing.spacing_md),
                     shape = SightUPTheme.shapes.small,
-                    onClick = { }
+                    onClick = { navController.navigate(TestScreens.TestExecution(test.taskId))}
                 ) {
                     Text(text = "Start", style = SightUPTheme.textStyles.small)
                 }

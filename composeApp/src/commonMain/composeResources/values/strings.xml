@@ -7,6 +7,10 @@
     <string name="disclaimer_content">SightUP does not replace professional eye exams. Always consult with a licensed eye care provider for accurate diagnosis and prescription needs.</string>
     <string name="disclaimer_button">Let's Get Started</string>
 
+    <!-- Test Screens -->
+    <string name="test_mode_title">Select the mode</string>
+    <string name="test_mode_subtitle">Choose the mode that suits you best.</string>
+
     <!-- Tutorial Screen   -->
     <string name="tutorial_one_title">Checkup Daily Eye Condition</string>
     <string name="tutorial_one_content">Monitor your eye health daily with quick assessments to detect potential issues early.</string>
