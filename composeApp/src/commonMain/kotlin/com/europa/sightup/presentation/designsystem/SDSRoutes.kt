@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.europa.sightup.presentation.designsystem.components.SdsButtonScreen
 import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScreen
 import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
 import com.europa.sightup.presentation.designsystem.screens.TextStylesScreen
@@ -25,6 +26,9 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object AudioVisualizer : DesignSystemSamples
+
+    @Serializable
+    data object SDSButton : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -42,6 +46,10 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         }
         composable<DesignSystemSamples.AudioVisualizer> {
             AudioVisualizerScreen()
+        }
+
+        composable<DesignSystemSamples.SDSButton> {
+            SdsButtonScreen()
         }
     }
 }
