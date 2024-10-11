@@ -2,6 +2,7 @@ package com.europa.sightup.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
 import com.europa.sightup.presentation.screens.onboarding.DisclaimerScreen
 import com.europa.sightup.presentation.screens.onboarding.TutorialScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -19,5 +20,13 @@ fun Disclaimer() {
 fun Tutorial() {
     SightUPTheme {
         TutorialScreen()
+    }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun Countdown() {
+    SightUPTheme {
+        CountdownScreen()
     }
 }

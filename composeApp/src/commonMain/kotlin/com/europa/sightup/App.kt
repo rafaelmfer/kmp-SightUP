@@ -15,8 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.europa.sightup.presentation.AppNavHost
-import com.europa.sightup.presentation.components.DesignSystemSamples
-import com.europa.sightup.presentation.components.designSystemNavGraph
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples
+import com.europa.sightup.presentation.designsystem.designSystemNavGraph
 import com.europa.sightup.presentation.navigation.OnboardingScreens
 import com.europa.sightup.presentation.navigation.onboardingNavGraph
 import com.europa.sightup.presentation.screens.FlowSeparator
@@ -38,7 +38,7 @@ fun Init() {
 
 @Composable
 fun InitNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     SightUPTheme {
         NavHost(
@@ -88,4 +88,3 @@ fun AppEntryPoint(navController: NavHostController) {
         }
     }
 }
-
