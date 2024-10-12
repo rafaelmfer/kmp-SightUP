@@ -16,5 +16,8 @@ data class TestResponse(
     @SerialName("images") val images: String,
     @SerialName("checkList") val checkList: List<String>,
     @SerialName("howItWorks") val howItWorks: List<String>,
-)
-
+) {
+    override fun toString(): String {
+        return TestResponse::class.simpleName.toString()
+    }
+}

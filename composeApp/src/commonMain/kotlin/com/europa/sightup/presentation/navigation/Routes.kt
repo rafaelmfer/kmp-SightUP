@@ -1,11 +1,12 @@
 package com.europa.sightup.presentation.navigation
 
+import com.europa.sightup.data.remote.response.TestResponse
 import kotlinx.serialization.Serializable
 
 /**
-    All screen will be defined in here.
-    All screens will be at the same level, so make sure to give them a unique name.
-**/
+All screen will be defined in here.
+All screens will be at the same level, so make sure to give them a unique name.
+ **/
 // Home Routes
 @Serializable
 object Home
@@ -29,7 +30,11 @@ sealed interface TestScreens {
     data object TestRoot : TestScreens
 
     @Serializable
-    data class TestIndividual(val id: String) : TestScreens
+    data class TestIndividual(val testResponse: String? = TestResponse.toString()) : TestScreens {
+        override fun toString(): String {
+            return TestIndividual::class.simpleName.toString()
+        }
+    }
 
     @Serializable
     data class TestExecution(val id: String) : TestScreens
@@ -56,7 +61,6 @@ sealed interface OnboardingScreens {
     data object Tutorial : OnboardingScreens
 
 }
-
 
 
 /** After a new route is added it has to be called from the NavigationGraph.kt file **/

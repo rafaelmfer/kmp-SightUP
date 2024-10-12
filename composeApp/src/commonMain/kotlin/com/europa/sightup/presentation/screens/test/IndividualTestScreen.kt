@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -33,50 +32,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
-import com.europa.sightup.utils.UIState
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.coroutines.delay
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun IndividualTestScreen(
     navController: NavController,
-    taskId: String?,
+    test: TestResponse,
 ) {
-    val viewModel = koinViewModel<TestViewModel>()
-    LaunchedEffect(Unit) {
-        viewModel.getTests()
-    }
-
-    val state by viewModel.test.collectAsStateWithLifecycle()
-
-    when (state) {
-        is UIState.InitialState -> {}
-        is UIState.Loading -> { CircularProgressIndicator() }
-
-        is UIState.Success -> {
-            val tests = (state as UIState.Success<List<TestResponse>>).data
-            val selectedTest = tests.find { it.taskId == taskId }
-
-            if (selectedTest != null) {
-                BackgroundImageScreen(navController, selectedTest)
-            }
-        }
-
-        is UIState.Error -> {
-            Text(text = "Error: ${(state as UIState.Error<List<TestResponse>>).message}")
-        }
-    }
+    BackgroundImageScreen(navController, test)
 }
-
 
 @Composable
 fun BackgroundImageScreen(
@@ -98,13 +70,13 @@ fun BackgroundImageScreen(
             IconButton(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier.padding(16.dp)
-                            .align(Alignment.TopStart)
-                            .size(24.dp)
+                    .align(Alignment.TopStart)
+                    .size(24.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    )
+                )
             }
             BottomCard(navController, test, modifier = Modifier.align(Alignment.BottomCenter))
         }
@@ -112,11 +84,11 @@ fun BackgroundImageScreen(
 }
 
 @Composable
-fun BottomCard (
+fun BottomCard(
     navController: NavController,
     test: TestResponse,
-    modifier: Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+) {
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -133,46 +105,44 @@ fun BottomCard (
     )
 
     Box(
-            modifier = modifier
+        modifier = modifier
+            .fillMaxWidth()
+            .offset(y = offsetY)
+            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+            .background(SightUPTheme.colors.background),
+    ) {
+        Column(
+            modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = offsetY)
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(SightUPTheme.colors.background),
+                .padding(
+                    top = SightUPTheme.spacing.spacing_lg,
+                    end = SightUPTheme.spacing.spacing_side_margin,
+                    start = SightUPTheme.spacing.spacing_side_margin,
+                    bottom = SightUPTheme.spacing.spacing_base
+                )
         ) {
-            Column(
+            Text(text = test.title, style = SightUPTheme.textStyles.h1)
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+            Text(text = test.description, style = SightUPTheme.textStyles.body)
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+            Text("How it works")
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
+
+            test.howItWorks.forEach { item ->
+                Text(text = "• $item", style = SightUPTheme.textStyles.caption)
+            }
+
+            Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        top = SightUPTheme.spacing.spacing_lg,
-                        end = SightUPTheme.spacing.spacing_side_margin,
-                        start = SightUPTheme.spacing.spacing_side_margin,
-                        bottom = SightUPTheme.spacing.spacing_base
-                    )
+                    .padding(top = SightUPTheme.spacing.spacing_md),
+                shape = SightUPTheme.shapes.small,
+                onClick = { navController.navigate(TestScreens.TestExecution(test.taskId)) }
             ) {
-                Text(text = test.title, style = SightUPTheme.textStyles.h1)
-                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
-
-                Text(text = test.description, style = SightUPTheme.textStyles.body)
-                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
-
-                Text("How it works")
-                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
-
-                test.howItWorks.forEach { item ->
-                    Text(text = "• $item", style = SightUPTheme.textStyles.caption)
-                }
-
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = SightUPTheme.spacing.spacing_md),
-                    shape = SightUPTheme.shapes.small,
-                    onClick = { navController.navigate(TestScreens.TestExecution(test.taskId))}
-                ) {
-                    Text(text = "Start", style = SightUPTheme.textStyles.small)
-                }
+                Text(text = "Start", style = SightUPTheme.textStyles.small)
             }
+        }
     }
 }
-
-
