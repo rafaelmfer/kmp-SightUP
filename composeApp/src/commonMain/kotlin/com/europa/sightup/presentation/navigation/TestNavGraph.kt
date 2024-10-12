@@ -4,26 +4,26 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.toRoute
-import com.europa.sightup.presentation.screens.test.ExecutionTestScreen
+import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.presentation.navigation.TestScreens.TestIndividual
+import com.europa.sightup.presentation.navigation.TestScreens.TestInit
+import com.europa.sightup.presentation.navigation.TestScreens.TestRoot
 import com.europa.sightup.presentation.screens.test.IndividualTestScreen
 import com.europa.sightup.presentation.screens.test.TestScreenWithState
+import com.europa.sightup.utils.getObjectFromArgs
 
 fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
-    navigation<TestScreens.TestInit>( startDestination = TestScreens.TestRoot){
+    navigation<TestInit>(startDestination = TestRoot) {
 
-        composable<TestScreens.TestRoot> {
+        composable<TestRoot> {
             TestScreenWithState(navController = navController)
         }
 
-        composable<TestScreens.TestIndividual> {
-            val arguments = it.toRoute<TestScreens.TestIndividual>()
-            IndividualTestScreen(navController = navController, taskId = arguments.id)
-        }
-
-        composable<TestScreens.TestExecution> {
-            val arguments = it.toRoute<TestScreens.TestExecution>()
-            ExecutionTestScreen(navController = navController, taskId = arguments.id)
+        composable(
+            route = "$TestIndividual/{${TestIndividual().testResponse}}"
+        ) { navBackStackEntry ->
+            val testResponse = navBackStackEntry.getObjectFromArgs<TestResponse>(TestIndividual().testResponse)
+            testResponse?.let { IndividualTestScreen(navController = navController, test = testResponse) }
         }
     }
 }
