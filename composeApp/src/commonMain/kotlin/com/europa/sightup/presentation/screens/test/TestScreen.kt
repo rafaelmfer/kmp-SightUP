@@ -40,6 +40,7 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.UIState
+import com.europa.sightup.utils.navigate
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import org.koin.compose.viewmodel.koinViewModel
@@ -96,10 +97,11 @@ fun TestScreen(
 @Composable
 fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
     TitleBar(
-        title="Vision Tests",
+        title = "Vision Tests",
         rightIcon = Icons.Default.Info,
         rightButton = true,
-        modifier = Modifier.padding(top= SightUPTheme.spacing.spacing_md ,bottom = SightUPTheme.spacing.spacing_md))
+        modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_md)
+    )
 
     LazyColumn(modifier = modifier) {
         items(tests) { test ->
@@ -117,9 +119,11 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
             .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .clickable {
-                navController.navigate(TestScreens.TestIndividual(test.taskId))
+                navController.navigate(
+                    route = TestScreens.TestIndividual.toString(),
+                    objectToSerialize = test
+                )
             }
-
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
