@@ -34,10 +34,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.navigate
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.coroutines.delay
@@ -78,7 +80,8 @@ fun BackgroundImageScreen(
                     contentDescription = "Back",
                 )
             }
-            BottomCard(navController, test, modifier = Modifier.align(Alignment.BottomCenter))
+
+            BottomCard(navController, test = test, modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 }
@@ -134,15 +137,16 @@ fun BottomCard(
                 Text(text = "• $item", style = SightUPTheme.textStyles.caption)
             }
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = SightUPTheme.spacing.spacing_md),
-                shape = SightUPTheme.shapes.small,
-                onClick = { navController.navigate(TestScreens.TestExecution(test.taskId)) }
-            ) {
-                Text(text = "Start", style = SightUPTheme.textStyles.small)
-            }
+            SDSButton(
+                text= "Start",
+                onClick = {
+                    navController.navigate(
+                        route = TestScreens.TestTutorial.toString(),
+                        objectToSerialize = test
+                    )},
+                modifier = Modifier.fillMaxWidth().padding(top = SightUPTheme.spacing.spacing_md),
+                textStyle = SightUPTheme.textStyles.small,
+            )
         }
     }
 }

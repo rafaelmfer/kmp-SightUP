@@ -37,7 +37,11 @@ sealed interface TestScreens {
     }
 
     @Serializable
-    data class TestExecution(val id: String) : TestScreens
+    data class TestTutorial(val testResponse: String? = TestResponse.toString()) : TestScreens {
+        override fun toString(): String {
+            return TestTutorial::class.simpleName.toString()
+        }
+    }
 }
 
 // Record Routes

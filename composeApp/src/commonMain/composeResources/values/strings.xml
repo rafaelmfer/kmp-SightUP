@@ -8,8 +8,8 @@
     <string name="disclaimer_button">Let's Get Started</string>
 
     <!-- Test Screens -->
-    <string name="test_mode_title">Select the mode</string>
-    <string name="test_mode_subtitle">Choose the mode that suits you best.</string>
+    <string name="test_mode_title">Select Mode</string>
+    <string name="test_mode_subtitle">Choose the mode that suits you. Mode options will appear during the test and can be changed at any time.</string>
 
     <!-- Tutorial Screen   -->
     <string name="tutorial_one_title">Checkup Daily Eye Condition</string>
