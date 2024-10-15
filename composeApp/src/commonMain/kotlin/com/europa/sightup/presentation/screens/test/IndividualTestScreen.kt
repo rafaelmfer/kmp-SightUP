@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -45,6 +46,14 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun IndividualTestScreen(
+    navController: NavController,
+    test: TestResponse,
+) {
+    BackgroundImageScreen(navController, test)
+}
+
+@Composable
+fun BackgroundImageScreen(
     navController: NavController,
     test: TestResponse,
 ) {
@@ -141,5 +150,3 @@ fun BottomCard(
         }
     }
 }
-
-
