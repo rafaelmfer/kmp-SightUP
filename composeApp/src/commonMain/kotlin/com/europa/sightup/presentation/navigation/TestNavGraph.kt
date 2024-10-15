@@ -8,6 +8,8 @@ import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.navigation.TestScreens.TestIndividual
 import com.europa.sightup.presentation.navigation.TestScreens.TestInit
 import com.europa.sightup.presentation.navigation.TestScreens.TestRoot
+import com.europa.sightup.presentation.navigation.TestScreens.TestTutorial
+import com.europa.sightup.presentation.screens.test.ExecutionTestScreen
 import com.europa.sightup.presentation.screens.test.IndividualTestScreen
 import com.europa.sightup.presentation.screens.test.TestScreenWithState
 import com.europa.sightup.utils.getObjectFromArgs
@@ -24,6 +26,13 @@ fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
         ) { navBackStackEntry ->
             val testResponse = navBackStackEntry.getObjectFromArgs<TestResponse>(TestIndividual().testResponse)
             testResponse?.let { IndividualTestScreen(navController = navController, test = testResponse) }
+        }
+
+        composable(
+            route = "$TestTutorial/{${TestTutorial().testResponse}}"
+        ) {
+            val testResponse = it.getObjectFromArgs<TestResponse>(TestTutorial().testResponse)
+            testResponse?.let { ExecutionTestScreen(navController = navController, test = testResponse) }
         }
     }
 }

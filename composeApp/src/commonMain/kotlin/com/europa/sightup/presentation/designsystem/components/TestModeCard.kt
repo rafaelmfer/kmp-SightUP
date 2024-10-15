@@ -62,6 +62,7 @@ fun ModeSelectionCard(mode: Mode, isSelected: Boolean, onClick: () -> Unit) {
             Text(
                 text = mode.description,
                 style = SightUPTheme.textStyles.small
+                    .copy(color = SightUPTheme.colors.tertiary)
             )
         }
 
@@ -72,5 +73,5 @@ fun ModeSelectionCard(mode: Mode, isSelected: Boolean, onClick: () -> Unit) {
 enum class Mode(val displayName: String, val description: String) {
     Touch("Touch mode", "Use mobile screen"),
     Voice("Voice mode", "Use voice commands"),
-    SmartWatch("Smart watch mode", "Use smart watch screen. Link by bluetooth")
+    SmartWatch("Smartwatch mode", "Use smartwatch screen by connecting via Bluetooth. You need a pairing process.")
 }
