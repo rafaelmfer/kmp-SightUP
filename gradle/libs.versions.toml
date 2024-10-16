@@ -24,6 +24,8 @@ compose = "1.7.0-rc01"
 navigationCompose = "2.8.0-alpha09"
 cmptoast = "1.0.1"
 landscapistCoil3 = "2.4.0"
+compottie="2.0.0-rc01"
+
 
 # Library for Date and Time
 date-time = "0.6.1"
@@ -73,6 +75,12 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 cmptoast = { module = "network.chaintech:cmptoast", version.ref = "cmptoast" }
 # Coil - image-loading library
 landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapistCoil3" }
+
+# Compottie - Lottie library
+compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
+compottie-dot = { module = "io.github.alexzhirkevich:compottie-dot", version.ref = "compottie" }
+compottie-network = { module = "io.github.alexzhirkevich:compottie-network", version.ref = "compottie" }
+compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
 
 # Library for Date and Time
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "date-time" }

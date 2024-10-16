@@ -110,6 +110,12 @@ kotlin {
 
             // Coil - Image loader
             implementation(libs.landscapist.coil3)
+
+            // Compottie - Lottie animation
+            implementation(libs.compottie)
+            implementation(libs.compottie.dot)
+            implementation(libs.compottie.network)
+            implementation(libs.compottie.resources)
         }
 
         iosMain.dependencies {
