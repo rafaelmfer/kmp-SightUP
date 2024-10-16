@@ -32,6 +32,14 @@ fun SDSSamplesScreen(navController: NavHostController) {
         }
         Button(
             onClick = {
+                navController.navigate(DesignSystemSamples.SDSBottomSheet)
+            },
+            modifier = buttonModifier
+        ) {
+            Text("BottomSheet")
+        }
+        Button(
+            onClick = {
                 navController.navigate(DesignSystemSamples.Countdown)
             },
             modifier = buttonModifier
