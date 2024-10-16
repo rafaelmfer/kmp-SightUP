@@ -19,10 +19,9 @@ import com.europa.sightup.presentation.components.Mode
 import com.europa.sightup.presentation.components.ModeSelectionCard
 import com.europa.sightup.presentation.components.StepProgressBar
 import com.europa.sightup.presentation.components.TitleBar
-import com.europa.sightup.presentation.designsystem.components.CardWithIcon
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
-import com.europa.sightup.presentation.designsystem.components.VideoCard
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -30,7 +29,6 @@ import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
-
 
 @Composable
 fun ExecutionTestScreen(
@@ -126,11 +124,14 @@ fun ExecutionTestScreen(
                 }
             }
         }
+
 @Composable
 fun FirstStep(
     selectedMode: Mode,
     onModeSelected: (Mode) -> Unit
-){
+) {
+    val modes = listOf(Mode.Touch, Mode.Voice, Mode.SmartWatch)
+
     Column {
         Text(
             text = stringResource(Res.string.test_mode_subtitle),
@@ -139,69 +140,50 @@ fun FirstStep(
         )
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
 
-        // Touch Mode
-        ModeSelectionCard(
-            mode = Mode.Touch,
-            isSelected = selectedMode == Mode.Touch,
-            onClick = { onModeSelected(Mode.Touch) }
-        )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
-
-        // Voice Mode
-        ModeSelectionCard(
-            mode = Mode.Voice,
-            isSelected = selectedMode == Mode.Voice,
-            onClick = { onModeSelected(Mode.Voice) }
-        )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
-
-        // SmartWatch Mode
-        ModeSelectionCard(
-            mode = Mode.SmartWatch,
-            isSelected = selectedMode == Mode.SmartWatch,
-            onClick = { onModeSelected(Mode.SmartWatch) }
-        )
+        modes.forEach { mode ->
+            ModeSelectionCard(
+                mode = mode,
+                isSelected = selectedMode == mode,
+                onClick = { onModeSelected(mode) }
+            )
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+        }
     }
 }
 
 @Composable
 fun SecondStep(){
-    Column {
-        VideoCard()
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_lg))
-        CardWithIcon(
-            text = "Place yourself and your phone parallel and set the distance to 30cm.",
-        )
-    }
+    StepScreenWithAnimation(
+        animationPath = "drawable/Animation-DELETE_ME.json",
+        instructionText = "Place yourself and your phone parallel and set the distance to 30cm.",
+        speed = 0.8f,
+        backgroundColor = SightUPTheme.sightUPColors.neutral_100
+
+    )
 }
 
 @Composable
-fun ThirdStep(
-    test: TestResponse,
-    selectedMode: Mode
-) {
+fun ThirdStep(test: TestResponse, selectedMode: Mode) {
     val modeText = when (selectedMode) {
         Mode.Touch -> test.testMode.touch
         Mode.Voice -> test.testMode.voice
         Mode.SmartWatch -> test.testMode.smartwatch
     }
 
-    Column {
-        VideoCard()
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_lg))
-        CardWithIcon(
-            text = modeText,
-        )
-    }
+    StepScreenWithAnimation(
+        animationPath = "drawable/Animation-DELETE_ME.json",
+        instructionText = modeText,
+        speed = 0.8f,
+        backgroundColor = SightUPTheme.sightUPColors.neutral_100
+    )
 }
 
 @Composable
 fun FourthStep(){
-    Column {
-        VideoCard()
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_lg))
-        CardWithIcon(
-            text = "Start with your right eye. Take off your glasses and cover your left eye.",
-        )
-    }
+    StepScreenWithAnimation(
+        animationPath = "drawable/Animation-DELETE_ME.json",
+        instructionText = "Start with your right eye. Take off your glasses and cover your left eye.",
+        speed = 0.8f,
+        backgroundColor = SightUPTheme.sightUPColors.neutral_100
+    )
 }
