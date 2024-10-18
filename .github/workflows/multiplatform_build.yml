@@ -1,8 +1,6 @@
 name: Multiplatform Build
 
 on:
-  push:
-    branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
 
@@ -58,7 +56,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        architecture: [x64, arm64, simulatorArm64]
+        architecture: [arm64, simulatorArm64]
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
