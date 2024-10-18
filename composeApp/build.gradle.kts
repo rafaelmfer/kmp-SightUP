@@ -116,6 +116,10 @@ kotlin {
             implementation(libs.compottie.dot)
             implementation(libs.compottie.network)
             implementation(libs.compottie.resources)
+
+            implementation("io.github.mirzemehdi:kmpauth-google:2.1.0") //Google One Tap Sign-In
+            implementation("io.github.mirzemehdi:kmpauth-firebase:2.1.0") //Integrated Authentications with Firebase
+            implementation("io.github.mirzemehdi:kmpauth-uihelper:2.1.0") //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
         }
 
         iosMain.dependencies {
@@ -181,6 +185,7 @@ buildConfig {
     forClass("BuildConfigKMP") {
         buildConfigField("APP_NAME", "SightUP")
         buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
+        buildConfigField("WEB_CLIENT_ID", "456640147314-m366mh0tmfobu4hcldhdu0tm9ndkkc3o.apps.googleusercontent.com")
         buildConfigField("BASE_URL", localProperties.getProperty("BASE_URL"))
         buildConfigField("BASE_URL_BACKEND_ANDROID_EMU", localProperties.getProperty("BASE_URL_BACKEND_ANDROID_EMU"))
         buildConfigField("BASE_URL_BACKEND_IOS_EMU", localProperties.getProperty("BASE_URL_BACKEND_IOS_EMU"))
