@@ -27,18 +27,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.europa.sightup.presentation.components.CardVision
-import com.europa.sightup.presentation.designsystem.components.CardGlasses
+import com.europa.sightup.presentation.designsystem.components.CardPrescription
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.edit
 
-
-// ##################################################################################################
-// NavigationGraph.kt --- devolver a rota do exercise e nao esquecer de apagar a rota do prescription
-// ##################################################################################################
 
 @Composable
 fun PrescriptionScreen(
@@ -146,14 +141,92 @@ fun PrescriptionScreen(
                 )
             }
         }
-        CardVision()
+
+        val userOne = CardPrescriptionModel(
+            title = "Vision",
+            badge = "SightUP",
+            visionTest = "Vision Test on Sep 27, 2024",
+            prescriptionDate = "Prescription Date is on Sep 27, 2024",
+            expiration = "Expiration is on Sep 27, 2024",
+            manufacture = "Coopervision",
+            productName = "Biofinity Toric 6pk",
+            replacement = "1 month daily wear",
+            subTitleMessage = "You Have no significant vision problems at this time.",
+            visualAcuity = VisualAcuity(left = "20/200", right = "20/200"),
+            astigmatism = Astigmatism(left = "180", right = "180"),
+            sph = Sph(left = "30", right = "138"),
+            axis = Axis(left = "30", right = "138"),
+            cyl = Cyl(left = "-0.75", right = "-0.75"),
+            va = Va(left = "-0.75", right = "-0.75"),
+            pd = Pd(left = "-0.75", right = "-0.75"),
+            add = Add(left = "-0.75", right = "-0.75"),
+            prism = Prism(left = "-", right = "-"),
+            base = Base(left = "-", right = "-"),
+            dia = Dia(left = "-", right = "-"),
+            note = arrayOf("Note line one", "Note line two")
+        )
+
+        val userTwo = CardPrescriptionModel(
+            title = "Glasses",
+            badge = "",
+            visionTest = "Vision Test on Sep 27, 2024",
+            prescriptionDate = "Prescription Date is on Sep 27, 2024",
+            expiration = "Expiration is on Sep 27, 2024",
+            manufacture = "Coopervision",
+            productName = "Biofinity Toric 6pk",
+            replacement = "1 month daily wear",
+            subTitleMessage = "You Have no significant vision problems at this time.",
+            visualAcuity = VisualAcuity(left = "20/200", right = "20/200"),
+            astigmatism = Astigmatism(left = "180", right = "180"),
+            sph = Sph(left = "30", right = "138"),
+            axis = Axis(left = "30", right = "138"),
+            cyl = Cyl(left = "-0.75", right = "-0.75"),
+            va = Va(left = "-0.75", right = "-0.75"),
+            pd = Pd(left = "-0.75", right = "-0.75"),
+            add = Add(left = "-0.75", right = "-0.75"),
+            prism = Prism(left = "-", right = "-"),
+            base = Base(left = "-", right = "-"),
+            dia = Dia(left = "-", right = "-"),
+            note = arrayOf( )
+        )
+
+        val userThree = CardPrescriptionModel(
+            title = "Contact Lenses",
+            badge = "",
+            visionTest = "Vision Test on Sep 27, 2024",
+            prescriptionDate = "Prescription Date is on Sep 27, 2024",
+            expiration = "Expiration is on Sep 27, 2024",
+            manufacture = "Coopervision",
+            productName = "Biofinity Toric 6pk",
+            replacement = "1 month daily wear",
+            subTitleMessage = "You Have no significant vision problems at this time.",
+            visualAcuity = VisualAcuity(left = "20/200", right = "20/200"),
+            astigmatism = Astigmatism(left = "180", right = "180"),
+            sph = Sph(left = "30", right = "138"),
+            axis = Axis(left = "30", right = "138"),
+            cyl = Cyl(left = "-0.75", right = "-0.75"),
+            va = Va(left = "-0.75", right = "-0.75"),
+            pd = Pd(left = "-0.75", right = "-0.75"),
+            add = Add(left = "-0.75", right = "-0.75"),
+            prism = Prism(left = "-", right = "-"),
+            base = Base(left = "-", right = "-"),
+            dia = Dia(left = "-", right = "-"),
+            note = arrayOf("Note line one", "Note line two")
+        )
+
+
+//        CardVision()
         Spacer(modifier = Modifier.height(10.dp))
-        CardGlasses("Glasses", "Glasses")
+        CardPrescription("Glassesa", "Glassesa", userOne)
         Spacer(modifier = Modifier.height(10.dp))
-        CardGlasses("ContactLenses", "ContactLenses")
+        CardPrescription("ContactLenses", "ContactLenses", userTwo)
+        Spacer(modifier = Modifier.height(10.dp))
+        CardPrescription("ContactLenses", "ContactLenses", userThree)
         Spacer(modifier = Modifier.height(10.dp))
     }
 }
+
+
 
 
 

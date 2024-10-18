@@ -19,6 +19,9 @@ object HomeExample
 object Exercise
 
 @Serializable
+object Prescription
+
+@Serializable
 object ExerciseDetail
 
 // Test Routes
