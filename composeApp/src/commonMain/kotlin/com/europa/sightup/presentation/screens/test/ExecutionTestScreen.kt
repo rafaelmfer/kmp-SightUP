@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.screens.test
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,16 +25,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
-import com.europa.sightup.presentation.components.StepProgressBar
-import com.europa.sightup.presentation.components.TitleBar
 import com.europa.sightup.presentation.designsystem.components.Mode
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
+import com.europa.sightup.presentation.components.StepProgressBar
+import com.europa.sightup.presentation.components.TitleBar
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.lineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -44,6 +46,7 @@ fun ExecutionTestScreen(
     navController: NavController,
     test: TestResponse,
     ) {
+    val numberOfSteps = 4
     var currentStep by remember { mutableStateOf(1) }
     var selectedMode by remember { mutableStateOf(Mode.Touch) }
 
@@ -53,15 +56,12 @@ fun ExecutionTestScreen(
         scrollState.animateScrollTo(0)
     }
 
-    val numberOfSteps = 4
-
     val titles = listOf("Select Mode", "Distance set-up", "How to answer", "Ready to test!")
-    val btnText = listOf("Next", "Set Distance", "Next" , "Start")
 
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
+           .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
         ){
                 Column {
                     if (currentStep > 1) {
@@ -98,7 +98,6 @@ fun ExecutionTestScreen(
                         .verticalScroll(scrollState),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-
                     // Heading text
                     Text(
                         text = titles[currentStep - 1],
@@ -110,26 +109,12 @@ fun ExecutionTestScreen(
                     AnimatedContent(targetState = currentStep) {
                             targetState ->
                         when (targetState) {
-                            1 -> FirstStep(selectedMode, onModeSelected = { selectedMode = it })
-                            2 -> SecondStep()
-                            3 -> ThirdStep(selectedMode = selectedMode, test = test)
-                            4 -> FourthStep()
+                            1 -> FirstStep(selectedMode, onModeSelected = { selectedMode = it }, onClick = { currentStep++ })
+                            2 -> SecondStep(onClick = { currentStep++ })
+                            3 -> ThirdStep(selectedMode = selectedMode, test = test, onClick = { currentStep++ })
+                            4 -> FourthStep(onClick = { currentStep=1 })
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xl))
-                    SwitchAudio()
-
-                    Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xl))
-                    SDSButton(
-                        text = btnText[currentStep - 1],
-                        onClick = {
-                            // Increment the current step, looping back to 1 after reaching the max
-                            currentStep = if (currentStep < numberOfSteps) currentStep + 1 else 1
-                        },
-                        modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
-                        textStyle = SightUPTheme.textStyles.button,
-                    )
                 }
             }
         }
@@ -137,62 +122,150 @@ fun ExecutionTestScreen(
 @Composable
 fun FirstStep(
     selectedMode: Mode,
-    onModeSelected: (Mode) -> Unit
+    onModeSelected: (Mode) -> Unit,
+    onClick: () -> Unit,
 ) {
     val modes = listOf(Mode.Touch, Mode.Voice, Mode.SmartWatch)
 
-    Column {
-        Text(
-            text = stringResource(Res.string.test_mode_subtitle),
-            style = SightUPTheme.textStyles.body,
-            textAlign = TextAlign.Center,
-        )
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    )  {
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+        ){
+            Text(
+                text = stringResource(Res.string.test_mode_subtitle),
+                style = SightUPTheme.textStyles.body,
+                lineHeight = SightUPTheme.lineHeight.lineHeight_md,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+
+            modes.forEach { mode ->
+                ModeSelectionCard(
+                    mode = mode,
+                    isSelected = selectedMode == mode,
+                    onClick = { onModeSelected(mode) }
+                )
+                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+            }
+        }
+
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        SwitchAudio()
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
 
-        modes.forEach { mode ->
-            ModeSelectionCard(
-                mode = mode,
-                isSelected = selectedMode == mode,
-                onClick = { onModeSelected(mode) }
+        SDSButton(
+            text = "Next",
+            onClick = onClick ,
+            modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
+            textStyle = SightUPTheme.textStyles.button,
+        )
+    }
+}
+
+@Composable
+fun SecondStep(
+    onClick: () -> Unit,
+){
+    var showCamera by remember { mutableStateOf(false) }
+
+    if (showCamera) {
+        SetDistanceScreen(onClick = onClick)
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            StepScreenWithAnimation(
+                animationPath = "drawable/Animation-DELETE_ME.json",
+                instructionText = "Place yourself and your phone parallel and set the distance to 30cm.",
+                speed = 0.8f,
+                backgroundColor = SightUPTheme.sightUPColors.neutral_100,
             )
-            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+            SwitchAudio()
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+
+            SDSButton(
+                text = "Set Distance",
+                onClick = {showCamera = true},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = SightUPTheme.spacing.spacing_base),
+                textStyle = SightUPTheme.textStyles.button,
+            )
         }
     }
 }
 
 @Composable
-fun SecondStep(){
-    StepScreenWithAnimation(
-        animationPath = "drawable/Animation-DELETE_ME.json",
-        instructionText = "Place yourself and your phone parallel and set the distance to 30cm.",
-        speed = 0.8f,
-        backgroundColor = SightUPTheme.sightUPColors.neutral_100
-
-    )
-}
-
-@Composable
-fun ThirdStep(test: TestResponse, selectedMode: Mode) {
+fun ThirdStep(
+    test: TestResponse,
+    selectedMode: Mode,
+    onClick: () -> Unit
+    ) {
     val modeText = when (selectedMode) {
         Mode.Touch -> test.testMode.touch
         Mode.Voice -> test.testMode.voice
         Mode.SmartWatch -> test.testMode.smartwatch
     }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ){
+        StepScreenWithAnimation(
+            animationPath = "drawable/Animation-DELETE_ME.json",
+            instructionText = modeText,
+            speed = 0.8f,
+            backgroundColor = SightUPTheme.sightUPColors.neutral_100,
+        )
 
-    StepScreenWithAnimation(
-        animationPath = "drawable/Animation-DELETE_ME.json",
-        instructionText = modeText,
-        speed = 0.8f,
-        backgroundColor = SightUPTheme.sightUPColors.neutral_100
-    )
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+        SwitchAudio()
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+
+        SDSButton(
+            text = "Next",
+            onClick = onClick ,
+            modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
+            textStyle = SightUPTheme.textStyles.button,
+        )
+    }
 }
 
 @Composable
-fun FourthStep(){
-    StepScreenWithAnimation(
-        animationPath = "drawable/Animation-DELETE_ME.json",
-        instructionText = "Start with your right eye. Take off your glasses and cover your left eye.",
-        speed = 0.8f,
-        backgroundColor = SightUPTheme.sightUPColors.neutral_100
-    )
+fun FourthStep(
+    onClick: () -> Unit,
+){
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ){
+        StepScreenWithAnimation(
+            animationPath = "drawable/Animation-DELETE_ME.json",
+            instructionText = "Start with your right eye. Take off your glasses and cover your left eye.",
+            speed = 0.8f,
+            backgroundColor = SightUPTheme.sightUPColors.neutral_100,
+        )
+
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+        SwitchAudio()
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+
+        SDSButton(
+            text = "Start",
+            onClick = onClick ,
+            modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
+            textStyle = SightUPTheme.textStyles.button,
+        )
+    }
 }
