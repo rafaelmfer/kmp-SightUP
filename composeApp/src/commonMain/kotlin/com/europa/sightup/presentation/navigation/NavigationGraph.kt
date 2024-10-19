@@ -9,8 +9,6 @@ import com.europa.sightup.presentation.screens.home.HomeScreen
 import com.europa.sightup.presentation.screens.prescription.PrescriptionScreen
 import com.europa.sightup.utils.PostsWithState
 
-
-/** This file links the navigation routes with the corresponding UI screens **/
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
@@ -39,6 +37,3 @@ fun NavigationGraph(
         testNavGraph(navController)
     }
 }
-
-
-
