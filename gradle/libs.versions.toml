@@ -6,6 +6,10 @@ android-targetSdk = "34"
 agp = "8.5.2"
 kotlin = "2.0.20"
 
+# Camera Android
+cameraCore = "1.3.4"
+faceDetection = "16.1.7"
+
 # AndroidX Core
 core-ktx = "1.13.1"
 core-splash-screen = "1.1.0-rc01"
@@ -20,7 +24,7 @@ androidx-material = "1.12.0"
 androidx-constraintlayout = "2.1.4"
 androidx-lifecycle = "2.8.2"
 androidx-activityCompose = "1.9.2"
-compose = "1.7.0-rc01"
+compose = "1.7.0"
 navigationCompose = "2.8.0-alpha09"
 cmptoast = "1.0.1"
 landscapistCoil3 = "2.4.0"
@@ -116,6 +120,16 @@ kvault = { module = "com.liftric:kvault", version.ref = "kvault" }
 # KMP Notifications
 kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmp-notifier" }
 kmpnotifier-benasher44uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
+
+# Android
+# Camera X
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCore" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCore" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCore" }
+
+# ML Kit
+face-detection = { module = "com.google.mlkit:face-detection", version.ref = "faceDetection" }
 
 ## Libraries for Tests
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

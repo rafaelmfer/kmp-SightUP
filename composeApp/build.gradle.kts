@@ -59,6 +59,15 @@ kotlin {
 
             // Navigation CMP
             implementation(libs.navigation.compose)
+
+            // Camera X
+            implementation (libs.androidx.camera.core)
+            implementation (libs.androidx.camera.camera2)
+            implementation (libs.androidx.camera.lifecycle)
+            implementation (libs.androidx.camera.view)
+
+            // ML Kit - Face detector
+            implementation (libs.face.detection)
         }
 
         commonMain.dependencies {

@@ -42,7 +42,8 @@ fun ModeSelectionCard(mode: Mode, isSelected: Boolean, onClick: () -> Unit) {
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable(onClick = onClick)
-            .padding(SightUPTheme.spacing.spacing_base),
+            .padding(SightUPTheme.spacing.spacing_base)
+            .height(72.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -64,7 +65,6 @@ fun ModeSelectionCard(mode: Mode, isSelected: Boolean, onClick: () -> Unit) {
                     .copy(color = SightUPTheme.colors.tertiary)
             )
         }
-
     }
 }
 

@@ -29,6 +29,7 @@ fun StepScreenWithAnimation(
     animationPath: String,
     instructionText: String,
     speed: Float = 1f,
+    modifier: Modifier = Modifier,
     backgroundColor: androidx.compose.ui.graphics.Color = SightUPTheme.sightUPColors.neutral_0
 ) {
     val composition by rememberLottieComposition {
@@ -45,7 +46,7 @@ fun StepScreenWithAnimation(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize().then(modifier),
     ) {
 
         Image(
