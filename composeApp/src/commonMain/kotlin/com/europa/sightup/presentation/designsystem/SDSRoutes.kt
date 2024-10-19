@@ -9,6 +9,7 @@ import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScree
 import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
 import com.europa.sightup.presentation.designsystem.screens.SDSBottomSheetScreen
 import com.europa.sightup.presentation.designsystem.screens.SDSControlEScreen
+import com.europa.sightup.presentation.designsystem.screens.SDSInputScreen
 import com.europa.sightup.presentation.designsystem.screens.TextStylesScreen
 import kotlinx.serialization.Serializable
 
@@ -37,6 +38,9 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object SDSControlE : DesignSystemSamples
+
+    @Serializable
+    data object SDSInput : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -61,8 +65,11 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         composable<DesignSystemSamples.SDSBottomSheet> {
             SDSBottomSheetScreen()
         }
-        composable<DesignSystemSamples.SDSControlE>() {
+        composable<DesignSystemSamples.SDSControlE> {
             SDSControlEScreen()
+        }
+        composable<DesignSystemSamples.SDSInput> {
+            SDSInputScreen()
         }
     }
 }

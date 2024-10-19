@@ -12,5 +12,6 @@ object SightUPContextColor {
     val text_disabled = SightUPColorPalette.neutral_500
 
     val border_default = SightUPColorPalette.neutral_200
+    val border_primary = SightUPColorPalette.primary_600
     val border_disabled = SightUPColorPalette.neutral_400
 }

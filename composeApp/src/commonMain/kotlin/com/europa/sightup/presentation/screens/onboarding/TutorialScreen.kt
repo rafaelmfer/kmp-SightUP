@@ -13,12 +13,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +33,7 @@ import com.europa.sightup.SightUPApp
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSInput
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -172,6 +172,8 @@ fun TutorialScreen(navController: NavController? = null) {
         }
     }
 
+    var inputText by remember { mutableStateOf("") }
+
     if (isBottomSheetVisible) {
         SDSBottomSheet(
             isVisible = isBottomSheetVisible,
@@ -184,11 +186,14 @@ fun TutorialScreen(navController: NavController? = null) {
                 ) {
                     Text("Login or Signup", style = SightUPTheme.textStyles.h4)
                     Spacer(modifier = Modifier.height(16.dp))
-                    TextField(
-                        value = "",
-                        onValueChange = {},
-                        label = { Text("Email") },
-                        modifier = Modifier.fillMaxWidth()
+                    SDSInput(
+                        value = inputText,
+                        onValueChange = { newText -> inputText = newText },
+                        label = "Email",
+                        hint = "Email",
+                        isError = false,
+                        isEnabled = true,
+                        fullWidth = true
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
@@ -199,7 +204,7 @@ fun TutorialScreen(navController: NavController? = null) {
                         Text("Continue")
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f), thickness = 1.dp)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f), thickness = 1.dp)
                     Spacer(modifier = Modifier.height(16.dp))
                     GoogleButtonUiContainer(
                         modifier = Modifier.fillMaxWidth(),
