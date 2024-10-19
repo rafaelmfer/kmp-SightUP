@@ -72,7 +72,7 @@ fun BottomSheet(
                 Text(text = description, style = SightUPTheme.textStyles.body)
                 Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
 
-                Text(text = subtitle, style = SightUPTheme.textStyles.small)
+                Text(text = subtitle, style = SightUPTheme.textStyles.button)
                 Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
 
                 list.forEach { item ->
@@ -86,7 +86,7 @@ fun BottomSheet(
                     shape = SightUPTheme.shapes.small,
                     onClick = { showSheet = false }
                 ) {
-                    Text(text = buttonText, style = SightUPTheme.textStyles.small)
+                    Text(text = buttonText, style = SightUPTheme.textStyles.button)
                 }
             }
         }

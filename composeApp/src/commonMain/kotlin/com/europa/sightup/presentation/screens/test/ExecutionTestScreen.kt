@@ -1,24 +1,33 @@
 package com.europa.sightup.presentation.screens.test
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
-import com.europa.sightup.presentation.components.Mode
-import com.europa.sightup.presentation.components.ModeSelectionCard
 import com.europa.sightup.presentation.components.StepProgressBar
 import com.europa.sightup.presentation.components.TitleBar
+import com.europa.sightup.presentation.designsystem.components.Mode
+import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
@@ -119,7 +128,7 @@ fun ExecutionTestScreen(
                             currentStep = if (currentStep < numberOfSteps) currentStep + 1 else 1
                         },
                         modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
-                        textStyle = SightUPTheme.textStyles.small,
+                        textStyle = SightUPTheme.textStyles.button,
                     )
                 }
             }

@@ -70,5 +70,13 @@ fun SDSSamplesScreen(navController: NavHostController) {
         ) {
             Text("SDS Control E")
         }
+        Button(
+            onClick = {
+                navController.navigate(DesignSystemSamples.SDSInput)
+            },
+            modifier = buttonModifier,
+        ) {
+            Text("SDS Input")
+        }
     }
 }

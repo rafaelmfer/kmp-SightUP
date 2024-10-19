@@ -32,14 +32,14 @@ data class SightUPTextStyles(
     /**
      * @property h4 is a TextStyle property that represents the h4 text style. Where:
      * @property fontFamily is Larken
-     * @property fontSize is 24.sp
+     * @property fontSize is 26.sp
      * @property fontWeight is FontWeight.Bold
      */
     val h4: TextStyle,
     /**
      * @property h5 is a TextStyle property that represents the h5 text style. Where:
      * @property fontFamily is Larken
-     * @property fontSize is 20.sp
+     * @property fontSize is 24.sp
      * @property fontWeight is FontWeight.Bold
      */
     val h5: TextStyle,
@@ -47,35 +47,42 @@ data class SightUPTextStyles(
     /**
      * @property large is a TextStyle property that represents the large text style. Where:
      * @property fontFamily is Lato
-     * @property fontSize is 18.sp
+     * @property fontSize is 20.sp
      * @property fontWeight is FontWeight.Bold
      */
     val large: TextStyle,
     /**
      * @property subtitle is a TextStyle property that represents the subtitle text style. Where:
      * @property fontFamily is Lato
-     * @property fontSize is 16.sp
+     * @property fontSize is 18.sp
      * @property fontWeight is FontWeight.Bold
      */
     val subtitle: TextStyle,
     /**
      * @property body is a TextStyle property that represents the body text style. Where:
      * @property fontFamily is Lato
-     * @property fontSize is 14.sp
+     * @property fontSize is 16.sp
      * @property fontWeight is FontWeight.Regular
      */
     val body: TextStyle,
     /**
-     * @property small is a TextStyle property that represents the small text style. Where:
+     * @property body2 is a TextStyle property that represents the body text style. Where:
      * @property fontFamily is Lato
-     * @property fontSize is 12.sp
+     * @property fontSize is 14.sp
+     * @property fontWeight is FontWeight.Regular
+     */
+    val body2: TextStyle,
+    /**
+     * @property button is a TextStyle property that represents the small text style. Where:
+     * @property fontFamily is Lato
+     * @property fontSize is 14.sp
      * @property fontWeight is FontWeight.Bold
      */
-    val small: TextStyle,
+    val button: TextStyle,
     /**
      * @property caption is a TextStyle property that represents the caption text style. Where:
      * @property fontFamily is Lato
-     * @property fontSize is 10.sp
+     * @property fontSize is 12.sp
      * @property fontWeight is FontWeight.Regular
      */
     val caption: TextStyle,
@@ -119,20 +126,25 @@ val SightUPTheme.textStyles: SightUPTextStyles
 
         large = MaterialTheme.typography.bodyLarge.copy(
             fontFamily = SightUPTheme.latoFontFamily,
-            fontSize = SightUPFontSize.default.fontSize_xl,
+            fontSize = SightUPFontSize.default.fontSize_lg,
             fontWeight = SightUPFontWeight.default.fontWeight_bold,
         ),
         subtitle = MaterialTheme.typography.bodyLarge.copy(
             fontFamily = SightUPTheme.latoFontFamily,
-            fontSize = SightUPFontSize.default.fontSize_lg,
+            fontSize = SightUPFontSize.default.fontSize_md,
             fontWeight = SightUPFontWeight.default.fontWeight_bold,
         ),
         body = MaterialTheme.typography.bodyLarge.copy(
             fontFamily = SightUPTheme.latoFontFamily,
-            fontSize = SightUPFontSize.default.fontSize_md,
+            fontSize = SightUPFontSize.default.fontSize_base,
             fontWeight = SightUPFontWeight.default.fontWeight_regular,
         ),
-        small = MaterialTheme.typography.bodyLarge.copy(
+        body2 = MaterialTheme.typography.bodyLarge.copy(
+            fontFamily = SightUPTheme.latoFontFamily,
+            fontSize = SightUPFontSize.default.fontSize_sm,
+            fontWeight = SightUPFontWeight.default.fontWeight_regular,
+        ),
+        button = MaterialTheme.typography.bodyLarge.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_sm,
             fontWeight = SightUPFontWeight.default.fontWeight_bold,

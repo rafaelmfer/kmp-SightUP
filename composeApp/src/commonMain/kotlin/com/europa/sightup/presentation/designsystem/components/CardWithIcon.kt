@@ -35,7 +35,7 @@ fun CardWithIcon(
     ) {
         Text(
             text = text,
-            style = SightUPTheme.textStyles.small,
+            style = SightUPTheme.textStyles.button,
             modifier = Modifier.weight(1f)
         )
 

@@ -33,7 +33,7 @@ fun SDSButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     buttonStyle: ButtonStyle = ButtonStyle.PRIMARY,
-    textStyle: TextStyle = SightUPTheme.textStyles.body,
+    textStyle: TextStyle = SightUPTheme.textStyles.button,
     shape: Shape = SightUPTheme.shapes.small,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     enabled: Boolean = true,

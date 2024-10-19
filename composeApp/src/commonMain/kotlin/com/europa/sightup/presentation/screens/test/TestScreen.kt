@@ -165,7 +165,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = test.shortDescription,
-                style = SightUPTheme.textStyles.small,
+                style = SightUPTheme.textStyles.button,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -174,7 +174,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
 
             Text(
                 text = "Check List for test",
-                style = SightUPTheme.textStyles.small,
+                style = SightUPTheme.textStyles.button,
             )
             Spacer(modifier = Modifier.height(8.dp))
 
