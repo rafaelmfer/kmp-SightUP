@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.components
+package com.europa.sightup.presentation.designsystem.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement

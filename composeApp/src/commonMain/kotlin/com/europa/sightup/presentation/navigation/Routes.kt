@@ -3,26 +3,39 @@ package com.europa.sightup.presentation.navigation
 import com.europa.sightup.data.remote.response.TestResponse
 import kotlinx.serialization.Serializable
 
+@Serializable
+object HomeExample
+
 /**
-All screen will be defined in here.
-All screens will be at the same level, so make sure to give them a unique name.
+ * All screen will be defined in here.
+ * All screens will be at the same level, so make sure to give them a unique name.
  **/
+
+// Onboarding Routes
+sealed interface OnboardingScreens {
+    @Serializable
+    data object OnboardingInit : OnboardingScreens
+
+    @Serializable
+    data object Disclaimer : OnboardingScreens
+
+    @Serializable
+    data object Tutorial : OnboardingScreens
+
+}
+
 // Home Routes
 @Serializable
 object Home
 
-@Serializable
-object HomeExample
-
 // Exercise Routes
-@Serializable
-object Exercise
+sealed interface ExerciseScreens {
+    @Serializable
+    data object ExerciseInit : ExerciseScreens
 
-@Serializable
-object Prescription
-
-@Serializable
-object ExerciseDetail
+    @Serializable
+    data object ExerciseRoot : ExerciseScreens
+}
 
 // Test Routes
 sealed interface TestScreens {
@@ -47,26 +60,23 @@ sealed interface TestScreens {
     }
 }
 
-// Record Routes
-@Serializable
-object Record
+// Prescriptions Routes
+sealed interface PrescriptionsScreens {
+    @Serializable
+    data object PrescriptionsInit : PrescriptionsScreens
+
+    @Serializable
+    data object PrescriptionsRoot : PrescriptionsScreens
+}
 
 // Account Routes
 @Serializable
-object Account
-
-// Onboarding Routes
-sealed interface OnboardingScreens {
+sealed interface AccountScreens {
+    @Serializable
+    data object AccountInit : AccountScreens
 
     @Serializable
-    data object OnboardingInit : OnboardingScreens
-
-    @Serializable
-    data object Disclaimer : OnboardingScreens
-
-    @Serializable
-    data object Tutorial : OnboardingScreens
-
+    data object AccountRoot : AccountScreens
 }
 
 
