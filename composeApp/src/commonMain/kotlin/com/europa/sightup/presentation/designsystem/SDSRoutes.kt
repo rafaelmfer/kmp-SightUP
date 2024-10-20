@@ -4,6 +4,17 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.AudioVisualizer
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Countdown
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.DesignSystemInit
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Home
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBottomSheet
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
+import com.europa.sightup.presentation.designsystem.components.SDSTopBarScreen
 import com.europa.sightup.presentation.designsystem.components.SdsButtonScreen
 import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScreen
 import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
@@ -41,35 +52,41 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object SDSInput : DesignSystemSamples
+
+    @Serializable
+    data object SDSTopBar : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
-    navigation<DesignSystemSamples.DesignSystemInit>(
-        startDestination = DesignSystemSamples.Home,
+    navigation<DesignSystemInit>(
+        startDestination = Home,
     ) {
-        composable<DesignSystemSamples.Home> {
+        composable<Home> {
             SDSSamplesScreen(navController = navController)
         }
-        composable<DesignSystemSamples.TextStyles> {
+        composable<TextStyles> {
             TextStylesScreen()
         }
-        composable<DesignSystemSamples.Countdown> {
+        composable<Countdown> {
             CountdownScreen()
         }
-        composable<DesignSystemSamples.AudioVisualizer> {
+        composable<AudioVisualizer> {
             AudioVisualizerScreen()
         }
-        composable<DesignSystemSamples.SDSButton> {
+        composable<SDSButton> {
             SdsButtonScreen()
         }
-        composable<DesignSystemSamples.SDSBottomSheet> {
+        composable<SDSBottomSheet> {
             SDSBottomSheetScreen()
         }
-        composable<DesignSystemSamples.SDSControlE> {
+        composable<SDSControlE> {
             SDSControlEScreen()
         }
-        composable<DesignSystemSamples.SDSInput> {
+        composable<SDSInput> {
             SDSInputScreen()
+        }
+        composable<SDSTopBar> {
+            SDSTopBarScreen()
         }
     }
 }

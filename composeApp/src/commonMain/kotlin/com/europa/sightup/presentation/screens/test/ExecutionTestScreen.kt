@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,10 +23,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.components.StepProgressBar
-import com.europa.sightup.presentation.components.TitleBar
 import com.europa.sightup.presentation.designsystem.components.Mode
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
 import com.europa.sightup.presentation.navigation.TestScreens
@@ -39,6 +36,7 @@ import com.europa.sightup.presentation.ui.theme.typography.lineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
 
 @Composable
@@ -65,21 +63,20 @@ fun ExecutionTestScreen(
     ) {
         Column {
             if (currentStep > 1) {
-                TitleBar(
+                SDSTopBar(
                     title = test.title,
-                    rightIcon = Icons.Default.Close,
-                    rightButton = true,
+                    iconRight = Res.drawable.close,
+                    iconRightVisible = true,
                     onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
-                    leftIcon = Icons.Default.ArrowBack,
-                    leftButton = true,
+                    iconLeftVisible = true,
                     onLeftButtonClick = { currentStep-- },
                     modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
                 )
             } else {
-                TitleBar(
+                SDSTopBar(
                     title = test.title,
-                    rightIcon = Icons.Default.Close,
-                    rightButton = true,
+                    iconRight = Res.drawable.close,
+                    iconRightVisible = true,
                     onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
                     modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
                 )
