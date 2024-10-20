@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
-import com.europa.sightup.presentation.designsystem.components.Mode
-import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.components.StepProgressBar
 import com.europa.sightup.presentation.components.TitleBar
+import com.europa.sightup.presentation.designsystem.components.Mode
+import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
@@ -45,7 +45,7 @@ import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
 fun ExecutionTestScreen(
     navController: NavController,
     test: TestResponse,
-    ) {
+) {
     val numberOfSteps = 4
     var currentStep by remember { mutableStateOf(1) }
     var selectedMode by remember { mutableStateOf(Mode.Touch) }
@@ -58,66 +58,79 @@ fun ExecutionTestScreen(
 
     val titles = listOf("Select Mode", "Distance set-up", "How to answer", "Ready to test!")
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
-           .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
-        ){
-                Column {
-                    if (currentStep > 1) {
-                        TitleBar(
-                            title = test.title,
-                            rightIcon = Icons.Default.Close,
-                            rightButton = true,
-                            onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
-                            leftIcon = Icons.Default.ArrowBack,
-                            leftButton = true,
-                            onLeftButtonClick = { currentStep-- },
-                            modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
-                        )
-                    } else {
-                        TitleBar(
-                            title = test.title,
-                            rightIcon = Icons.Default.Close,
-                            rightButton = true,
-                            onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
-                            modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
-                        )
-                    }
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
+    ) {
+        Column {
+            if (currentStep > 1) {
+                TitleBar(
+                    title = test.title,
+                    rightIcon = Icons.Default.Close,
+                    rightButton = true,
+                    onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
+                    leftIcon = Icons.Default.ArrowBack,
+                    leftButton = true,
+                    onLeftButtonClick = { currentStep-- },
+                    modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
+                )
+            } else {
+                TitleBar(
+                    title = test.title,
+                    rightIcon = Icons.Default.Close,
+                    rightButton = true,
+                    onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
+                    modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
+                )
+            }
 
-                    StepProgressBar(
-                        numberOfSteps = numberOfSteps,
-                        currentStep = currentStep,
-                        modifier = Modifier.padding(bottom = SightUPTheme.spacing.spacing_md)
+            StepProgressBar(
+                numberOfSteps = numberOfSteps,
+                currentStep = currentStep,
+                modifier = Modifier.padding(bottom = SightUPTheme.spacing.spacing_md)
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            // Heading text
+            Text(
+                text = titles[currentStep - 1],
+                style = SightUPTheme.textStyles.h1
+            )
+
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+            AnimatedContent(targetState = currentStep) { targetState ->
+                when (targetState) {
+                    1 -> FirstStep(
+                        selectedMode,
+                        onModeSelected = { selectedMode = it },
+                        onClick = { currentStep++ })
+
+                    2 -> SecondStep(
+                        onClick = { currentStep++ }
                     )
-                }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    // Heading text
-                    Text(
-                        text = titles[currentStep - 1],
-                        style = SightUPTheme.textStyles.h1
+                    3 -> ThirdStep(
+                        selectedMode = selectedMode,
+                        test = test,
+                        onClick = { currentStep++ }
                     )
 
-                    Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
-
-                    AnimatedContent(targetState = currentStep) {
-                            targetState ->
-                        when (targetState) {
-                            1 -> FirstStep(selectedMode, onModeSelected = { selectedMode = it }, onClick = { currentStep++ })
-                            2 -> SecondStep(onClick = { currentStep++ })
-                            3 -> ThirdStep(selectedMode = selectedMode, test = test, onClick = { currentStep++ })
-                            4 -> FourthStep(onClick = { currentStep=1 })
-                        }
-                    }
+                    4 -> FourthStep(
+                        onClick = { currentStep = 1 },
+                    )
                 }
             }
         }
+    }
+}
 
 @Composable
 fun FirstStep(
@@ -131,11 +144,11 @@ fun FirstStep(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
-    )  {
+    ) {
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-        ){
+        ) {
             Text(
                 text = stringResource(Res.string.test_mode_subtitle),
                 style = SightUPTheme.textStyles.body,
@@ -160,7 +173,7 @@ fun FirstStep(
 
         SDSButton(
             text = "Next",
-            onClick = onClick ,
+            onClick = onClick,
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
             textStyle = SightUPTheme.textStyles.button,
         )
@@ -170,7 +183,7 @@ fun FirstStep(
 @Composable
 fun SecondStep(
     onClick: () -> Unit,
-){
+) {
     var showCamera by remember { mutableStateOf(false) }
 
     if (showCamera) {
@@ -183,7 +196,7 @@ fun SecondStep(
         ) {
 
             StepScreenWithAnimation(
-                animationPath = "drawable/Animation-DELETE_ME.json",
+                animationPath = "files/animation_delete_me.json",
                 instructionText = "Place yourself and your phone parallel and set the distance to 30cm.",
                 speed = 0.8f,
                 backgroundColor = SightUPTheme.sightUPColors.neutral_100,
@@ -195,7 +208,7 @@ fun SecondStep(
 
             SDSButton(
                 text = "Set Distance",
-                onClick = {showCamera = true},
+                onClick = { showCamera = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = SightUPTheme.spacing.spacing_base),
@@ -209,8 +222,8 @@ fun SecondStep(
 fun ThirdStep(
     test: TestResponse,
     selectedMode: Mode,
-    onClick: () -> Unit
-    ) {
+    onClick: () -> Unit,
+) {
     val modeText = when (selectedMode) {
         Mode.Touch -> test.testMode.touch
         Mode.Voice -> test.testMode.voice
@@ -220,9 +233,9 @@ fun ThirdStep(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         StepScreenWithAnimation(
-            animationPath = "drawable/Animation-DELETE_ME.json",
+            animationPath = "files/animation_delete_me.json",
             instructionText = modeText,
             speed = 0.8f,
             backgroundColor = SightUPTheme.sightUPColors.neutral_100,
@@ -234,7 +247,7 @@ fun ThirdStep(
 
         SDSButton(
             text = "Next",
-            onClick = onClick ,
+            onClick = onClick,
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
             textStyle = SightUPTheme.textStyles.button,
         )
@@ -244,14 +257,14 @@ fun ThirdStep(
 @Composable
 fun FourthStep(
     onClick: () -> Unit,
-){
-    Column (
+) {
+    Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         StepScreenWithAnimation(
-            animationPath = "drawable/Animation-DELETE_ME.json",
+            animationPath = "files/animation_delete_me.json",
             instructionText = "Start with your right eye. Take off your glasses and cover your left eye.",
             speed = 0.8f,
             backgroundColor = SightUPTheme.sightUPColors.neutral_100,
@@ -263,7 +276,7 @@ fun FourthStep(
 
         SDSButton(
             text = "Start",
-            onClick = onClick ,
+            onClick = onClick,
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
             textStyle = SightUPTheme.textStyles.button,
         )
