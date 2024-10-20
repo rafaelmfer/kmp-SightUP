@@ -61,7 +61,7 @@ fun CardExercise(modifier: Modifier, exercise: ExerciseResponse) {
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
                 fontSize = 20.sp,
-                color = Color(0xFF1E1E1E)
+                color = Color(0xFF235E86)
             )
 
             Box(
