@@ -19,6 +19,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBotto
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -34,6 +35,7 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSButton to SDSButton::class.simpleName!!,
         SDSControlE to SDSControlE::class.simpleName!!,
         SDSInput to SDSInput::class.simpleName!!,
+        SDSTopBar to SDSTopBar::class.simpleName!!,
     )
 
     Column(
