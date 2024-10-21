@@ -220,6 +220,11 @@ data class SightUPColors(
      */
     val border_default: Color = SightUPContextColor.border_default,
     /**
+     * Border primary color is the color #2C76A8
+     * @see SightUPContextColor.border_primary
+     */
+    val border_primary: Color = SightUPContextColor.border_primary,
+    /**
      * Border disabled color is the color #AAB4BD
      * @see SightUPContextColor.border_disabled
      */

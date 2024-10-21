@@ -11,10 +11,11 @@ data class SightUPFontSize(
     val fontSize_2xs: TextUnit = 10.sp,
     val fontSize_xs: TextUnit = 12.sp,
     val fontSize_sm: TextUnit = 14.sp,
-    val fontSize_md: TextUnit = 16.sp,
-    val fontSize_lg: TextUnit = 18.sp,
-    val fontSize_xl: TextUnit = 20.sp,
-    val fontSize_2xl: TextUnit = 24.sp,
+    val fontSize_base: TextUnit = 16.sp,
+    val fontSize_md: TextUnit = 18.sp,
+    val fontSize_lg: TextUnit = 20.sp,
+    val fontSize_xl: TextUnit = 24.sp,
+    val fontSize_2xl: TextUnit = 26.sp,
     val fontSize_3xl: TextUnit = 28.sp,
     val fontSize_4xl: TextUnit = 32.sp,
     val fontSize_huge: TextUnit = 36.sp,
@@ -41,22 +42,27 @@ data class SightUPFontSize(
              * @property fontSize_md is a TextUnit property that represents the md font size value.
              * The value is set to 16.sp.
              */
-            fontSize_md = 16.sp,
+            fontSize_base = 16.sp,
             /**
-             * @property fontSize_lg is a TextUnit property that represents the lg font size value.
+             * @property fontSize_md is a TextUnit property that represents the md font size value.
              * The value is set to 18.sp.
              */
-            fontSize_lg = 18.sp,
+            fontSize_md = 18.sp,
             /**
-             * @property fontSize_xl is a TextUnit property that represents the xl font size value.
+             * @property fontSize_lg is a TextUnit property that represents the lg font size value.
              * The value is set to 20.sp.
              */
-            fontSize_xl = 20.sp,
+            fontSize_lg = 20.sp,
             /**
-             * @property fontSize_2xl is a TextUnit property that represents the 2xl font size value.
+             * @property fontSize_xl is a TextUnit property that represents the xl font size value.
              * The value is set to 24.sp.
              */
-            fontSize_2xl = 24.sp,
+            fontSize_xl = 24.sp,
+            /**
+             * @property fontSize_2xl is a TextUnit property that represents the 2xl font size value.
+             * The value is set to 26.sp.
+             */
+            fontSize_2xl = 26.sp,
             /**
              * @property fontSize_3xl is a TextUnit property that represents the 3xl font size value.
              * The value is set to 28.sp.

@@ -3,6 +3,7 @@ package com.europa.sightup.presentation.designsystem.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,8 +33,9 @@ fun SDSButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     buttonStyle: ButtonStyle = ButtonStyle.PRIMARY,
-    textStyle: TextStyle = SightUPTheme.textStyles.body,
+    textStyle: TextStyle = SightUPTheme.textStyles.button,
     shape: Shape = SightUPTheme.shapes.small,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     enabled: Boolean = true,
 ) {
     when (buttonStyle) {
@@ -52,7 +54,7 @@ fun SDSButton(
                 color = if (enabled) SightUPTheme.sightUPColors.white else SightUPTheme.sightUPColors.neutral_400
             ),
             shape = shape,
-            contentPadding = ButtonDefaults.ContentPadding,
+            contentPadding = contentPadding,
         ) {
             Text(text = text, style = textStyle)
         }
@@ -72,7 +74,7 @@ fun SDSButton(
                 color = if (enabled) SightUPTheme.sightUPColors.white else SightUPTheme.sightUPColors.neutral_400
             ),
             shape = shape,
-            contentPadding = ButtonDefaults.ContentPadding,
+            contentPadding = contentPadding,
         ) {
             Text(text = text, style = textStyle)
         }
@@ -92,7 +94,7 @@ fun SDSButton(
                 color = if (enabled) SightUPTheme.sightUPColors.primary_600 else SightUPTheme.sightUPColors.neutral_400
             ),
             shape = shape,
-            contentPadding = ButtonDefaults.ContentPadding,
+            contentPadding = contentPadding,
         ) {
             Text(text = text, style = textStyle)
         }

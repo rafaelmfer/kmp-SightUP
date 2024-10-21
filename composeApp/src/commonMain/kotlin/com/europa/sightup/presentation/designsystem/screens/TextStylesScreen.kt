@@ -57,7 +57,7 @@ fun TextStylesScreen() {
         Text(
             modifier = modifier,
             text = "Small Lato Bold - 14dp",
-            style = SightUPTheme.textStyles.small
+            style = SightUPTheme.textStyles.button
         )
         Text(
             modifier = modifier,

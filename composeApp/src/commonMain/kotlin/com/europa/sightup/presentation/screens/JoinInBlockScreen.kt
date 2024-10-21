@@ -34,7 +34,7 @@ import androidx.navigation.NavHostController
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.SwitchContainer
+import sightupkmpapp.composeapp.generated.resources.switch_container
 
 
 @Composable
@@ -72,7 +72,7 @@ fun JoinInBlockLoadScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(53.dp))
 
             Image(
-                painter = painterResource(Res.drawable.SwitchContainer),
+                painter = painterResource(Res.drawable.switch_container),
                 contentDescription = "",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)

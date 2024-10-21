@@ -4,63 +4,88 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.AudioVisualizer
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Countdown
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBottomSheet
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
+import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 
 @Composable
 fun SDSSamplesScreen(navController: NavHostController) {
-    val buttonModifier = Modifier
-        .padding(SightUPTheme.spacing.spacing_base)
-        .fillMaxWidth()
+    val destinations = listOf(
+        AudioVisualizer to AudioVisualizer::class.simpleName!!,
+        SDSBottomSheet to SDSBottomSheet::class.simpleName!!,
+        Countdown to Countdown::class.simpleName!!,
+        TextStyles to TextStyles::class.simpleName!!,
+        SDSButton to SDSButton::class.simpleName!!,
+        SDSControlE to SDSControlE::class.simpleName!!,
+        SDSInput to SDSInput::class.simpleName!!,
+        SDSTopBar to SDSTopBar::class.simpleName!!,
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(SightUPTheme.spacing.spacing_base)
     ) {
-        Button(
+        IconButton(
             onClick = {
-                navController.navigate(DesignSystemSamples.AudioVisualizer)
+                navController.popBackStack()
             },
-            modifier = buttonModifier
+            modifier = Modifier
         ) {
-            Text("Audio Visualizer")
+            Icon(
+                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                contentDescription = "Back"
+            )
         }
-        Button(
-            onClick = {
-                navController.navigate(DesignSystemSamples.SDSBottomSheet)
-            },
-            modifier = buttonModifier
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text("BottomSheet")
-        }
-        Button(
-            onClick = {
-                navController.navigate(DesignSystemSamples.Countdown)
-            },
-            modifier = buttonModifier
-        ) {
-            Text("Countdown")
-        }
-        Button(
-            onClick = {
-                navController.navigate(DesignSystemSamples.TextStyles)
-            },
-            modifier = buttonModifier
-        ) {
-            Text("Text Styles")
-        }
-        Button(
-            onClick = {
-                navController.navigate(DesignSystemSamples.SDSButton)
-            },
-            modifier = buttonModifier,
-        ) {
-            Text("SDS Buttons")
+            items(items = destinations, key = { it.second }) { (destination, label) ->
+                val buttonModifier = Modifier
+                    .padding(horizontal = SightUPTheme.spacing.spacing_base)
+                    .fillMaxWidth()
+
+                NavigationButton(
+                    navController = navController,
+                    destination = destination,
+                    label = label,
+                    modifier = buttonModifier
+                )
+            }
         }
     }
+}
+
+@Composable
+fun NavigationButton(
+    navController: NavHostController,
+    destination: Any,
+    label: String,
+    modifier: Modifier,
+) {
+    SDSButton(
+        onClick = {
+            navController.navigate(destination)
+        },
+        text = label,
+        modifier = modifier
+    )
 }

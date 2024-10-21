@@ -22,6 +22,8 @@ import com.europa.sightup.presentation.navigation.onboardingNavGraph
 import com.europa.sightup.presentation.screens.FlowSeparator
 import com.europa.sightup.presentation.screens.FlowSeparatorScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.mmk.kmpauth.google.GoogleAuthCredentials
+import com.mmk.kmpauth.google.GoogleAuthProvider
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,6 +36,12 @@ data object AppInit
 fun Init() {
     val navController = rememberNavController()
     InitNavGraph(navController = navController)
+
+    GoogleAuthProvider.create(
+        credentials = GoogleAuthCredentials(
+            serverId = BuildConfigKMP.WEB_CLIENT_ID
+        )
+    )
 }
 
 @Composable

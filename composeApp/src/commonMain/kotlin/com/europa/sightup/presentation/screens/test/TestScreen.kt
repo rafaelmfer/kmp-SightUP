@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
-import com.europa.sightup.presentation.components.TitleBar
+import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -96,10 +96,10 @@ fun TestScreen(
 
 @Composable
 fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
-    TitleBar(
+    SDSTopBar(
         title = "Vision Tests",
-        rightIcon = Icons.Default.Info,
-        rightButton = true,
+        iconRight = Icons.Default.Info,
+        iconRightVisible = true,
         modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_md)
     )
 
@@ -165,7 +165,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = test.shortDescription,
-                style = SightUPTheme.textStyles.small,
+                style = SightUPTheme.textStyles.button,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -174,7 +174,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
 
             Text(
                 text = "Check List for test",
-                style = SightUPTheme.textStyles.small,
+                style = SightUPTheme.textStyles.button,
             )
             Spacer(modifier = Modifier.height(8.dp))
 
