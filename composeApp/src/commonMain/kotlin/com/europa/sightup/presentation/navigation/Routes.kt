@@ -32,6 +32,12 @@ sealed interface ExerciseScreens {
 
     @Serializable
     data object ExerciseRoot : ExerciseScreens
+
+    @Serializable
+    object Prescription
+
+    @Serializable
+    object ExerciseDetail
 }
 
 // Test Routes
