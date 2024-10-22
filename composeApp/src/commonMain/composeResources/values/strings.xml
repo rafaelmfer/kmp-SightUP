@@ -1,15 +1,24 @@
 <resources>
     <string name="app_name">SightUP</string>
 
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
+    <string name="save">Save</string>
+    <string name="close">Close</string>
+    <string name="continue_string">Continue</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
     <!-- Onboarding -->
     <!-- Disclaimer Screen -->
     <string name="disclaimer_title">Disclaimer</string>
     <string name="disclaimer_content">SightUP does not replace professional eye exams. Always consult with a licensed eye care provider for accurate diagnosis and prescription needs.</string>
     <string name="disclaimer_button">Let's Get Started</string>
-
-    <!-- Test Screens -->
-    <string name="test_mode_title">Select Mode</string>
-    <string name="test_mode_subtitle">Choose the mode that suits you. Mode options will appear during the test and can be changed at any time.</string>
 
     <!-- Tutorial Screen   -->
     <string name="tutorial_one_title">Checkup Daily Eye Condition</string>
@@ -21,7 +30,20 @@
     <string name="tutorial_four_title">Personalized Eye Health Activities</string>
     <string name="tutorial_four_content">Engage in tailored exercises designed to improve and maintain your vision health.</string>
     <string name="tutorial_secondary_button">Skip All</string>
-    <string name="tutorial_primary_button">Next</string>
+    <string name="tutorial_primary_button">Next (%1$s/4)</string>
     <string name="tutorial_secondary_button_last_step">Start as Guest</string>
     <string name="tutorial_primary_button_last_step">Login / Signup</string>
+
+    <!-- Login & SignUp Screens -->
+    <string name="login_title">Login or Signup</string>
+    <string name="sign_up_title">Login</string>
+    <string name="sign_up_welcome">Welcome to SightUP</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password</string>
+
+
+    <!-- Test Screens -->
+    <string name="test_mode_title">Select Mode</string>
+    <string name="test_mode_subtitle">Choose the mode that suits you. Mode options will appear during the test and can be changed at any time.</string>
+
 </resources>

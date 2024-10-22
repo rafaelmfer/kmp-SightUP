@@ -10,6 +10,7 @@ import com.europa.sightup.data.repository.SightUpRepository
 import com.europa.sightup.getPlatform
 import com.europa.sightup.presentation.MainViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
+import com.europa.sightup.presentation.screens.onboarding.LoginViewModel
 import com.europa.sightup.presentation.screens.test.TestViewModel
 import com.europa.sightup.utils.ANDROID
 import io.ktor.client.HttpClient
@@ -39,10 +40,11 @@ val commonModule = module {
 
     // Repositories
     single<JsonPlaceholderRepository> { JsonPlaceholderRepository(api = get()) }
-    single<SightUpRepository> { SightUpRepository(api = get()) }
+    single<SightUpRepository> { SightUpRepository(api = get(), kVaultStorage = get()) }
 
     // ViewModels
     viewModel { MainViewModel(repository = get()) }
+    viewModel { LoginViewModel(repository = get()) }
     viewModel { TestViewModel(repository = get()) }
     viewModel { ExerciseViewModel(repository = get()) }
 }

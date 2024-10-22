@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.navigation.OnboardingScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
@@ -70,16 +70,14 @@ fun DisclaimerScreen(navController: NavController? = null) {
                 text = stringResource(Res.string.disclaimer_content),
             )
             Spacer(modifier = Modifier.height(SightUPTheme.sizes.size_32))
-            Button(
+            SDSButton(
+                text = stringResource(Res.string.disclaimer_button),
                 onClick = {
                     navController?.navigate(OnboardingScreens.Tutorial)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
-                shape = SightUPTheme.shapes.small
-            ) {
-                Text(text = stringResource(Res.string.disclaimer_button))
-            }
+            )
         }
     }
 }
