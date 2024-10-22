@@ -20,6 +20,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBotto
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSConditions
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSEyeClock
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
@@ -46,6 +47,7 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSSwitch to SDSSwitch::class.simpleName!!,
         SDSBadgeTime to SDSBadgeTime::class.simpleName!!,
         SDSFilterChip to SDSFilterChip::class.simpleName!!,
+        SDSEyeClock to SDSEyeClock::class.simpleName!!,
     )
 
     Column(
