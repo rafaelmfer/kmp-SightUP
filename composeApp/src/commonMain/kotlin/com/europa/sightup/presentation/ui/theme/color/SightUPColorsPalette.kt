@@ -47,4 +47,8 @@ object SightUPColorPalette {
     val info_100 = Color(0xFFDEF5FF)
     val info_200 = Color(0xFF23B4F6)
     val info_300 = Color(0xFF11719C)
+
+    val purple_100 = Color(0xFFEDE6FF)
+    val purple_200 = Color(0xFF7D4CF8)
+    val purple_300 = Color(0xFF360D9C)
 }

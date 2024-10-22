@@ -15,10 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.AudioVisualizer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Countdown
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBadgeTime
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSConditions
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -36,6 +41,11 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSControlE to SDSControlE::class.simpleName!!,
         SDSInput to SDSInput::class.simpleName!!,
         SDSTopBar to SDSTopBar::class.simpleName!!,
+        SDSConditions to SDSConditions::class.simpleName!!,
+        SDSTimer to SDSTimer::class.simpleName!!,
+        SDSSwitch to SDSSwitch::class.simpleName!!,
+        SDSBadgeTime to SDSBadgeTime::class.simpleName!!,
+        SDSFilterChip to SDSFilterChip::class.simpleName!!,
     )
 
     Column(

@@ -1,8 +1,10 @@
 package com.europa.sightup.presentation.designsystem.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.typography.fontSize
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import kotlinx.coroutines.delay
+import multiplatform.network.cmptoast.showToast
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun startTimer(
@@ -53,9 +57,9 @@ fun SDSTimer(
     var secondsLeft by remember { mutableStateOf(seconds) }
     var minutesLeft by remember { mutableStateOf(minutes) }
 
-    startTimer(seconds, minutes, { minutes, seconds ->
-        minutesLeft = minutes
-        secondsLeft = seconds
+    startTimer(seconds, minutes, { min, sec ->
+        minutesLeft = min
+        secondsLeft = sec
     }, {
         onTimerFinish()
     })
@@ -65,7 +69,7 @@ fun SDSTimer(
             .fillMaxWidth()
     ) {
         Text(
-            text = title,
+            text = "$title ",
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = SightUPTheme.textStyles.body
         )
@@ -74,9 +78,9 @@ fun SDSTimer(
         ) {
             if (minutesLeft > 0) {
                 Text(
-                    text = minutesLeft.toString() + "\'",
+                    text = "$minutesLeft’",
                     style = SightUPTheme.textStyles.large.copy(
-                        fontSize = 48.sp
+                        fontSize = SightUPTheme.fontSize.fontSize_extra_huge
                     ),
                     modifier = Modifier.clickable {
                         onTimerFinish()
@@ -88,14 +92,36 @@ fun SDSTimer(
                     "0$secondsLeft"
                 } else {
                     secondsLeft.toString()
-                } + "\"",
+                } + "”",
                 style = SightUPTheme.textStyles.large.copy(
-                    fontSize = 48.sp
+                    fontSize = SightUPTheme.fontSize.fontSize_extra_huge
                 ),
                 modifier = Modifier.clickable {
                     onTimerFinish()
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun SDSTimerScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        SDSTimer(
+            title = "Duration",
+            seconds = 10,
+            minutes = 2,
+            onTimerFinish = {
+                showToast(
+                    "Timer finished",
+                    bottomPadding = 40
+                )
+            }
+        )
     }
 }

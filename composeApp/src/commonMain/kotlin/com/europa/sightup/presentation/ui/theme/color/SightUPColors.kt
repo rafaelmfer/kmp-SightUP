@@ -181,6 +181,23 @@ data class SightUPColors(
      */
     val info_300: Color = SightUPColorPalette.info_300,
 
+    // Purple Colors
+    /**
+     * Purple color is the color #EDE6FF
+     * @see SightUPColorPalette.purple_100
+     */
+    val purple_100: Color = SightUPColorPalette.purple_100,
+    /**
+     * Purple color is the color #7D4CF8
+     * @see SightUPColorPalette.purple_200
+     */
+    val purple_200: Color = SightUPColorPalette.purple_200,
+    /**
+     * Purple color is the color #360D9C
+     * @see SightUPColorPalette.purple_300
+     */
+    val purple_300: Color = SightUPColorPalette.purple_300,
+
 
     // Divider Color
     /**
