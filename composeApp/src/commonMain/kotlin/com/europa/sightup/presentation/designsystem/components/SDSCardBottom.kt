@@ -32,7 +32,6 @@ import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.clock
 
-
 @Composable
 fun CardExerciseBottom(
     audio: Boolean,

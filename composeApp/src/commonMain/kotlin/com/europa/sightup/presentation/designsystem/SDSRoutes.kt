@@ -8,12 +8,22 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.AudioVis
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Countdown
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.DesignSystemInit
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Home
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBadgeTime
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSConditions
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
+import com.europa.sightup.presentation.designsystem.components.SDSBadgeTimeScreen
+import com.europa.sightup.presentation.designsystem.components.SDSConditionsScreen
+import com.europa.sightup.presentation.designsystem.components.SDSFilterChipScreen
+import com.europa.sightup.presentation.designsystem.components.SDSSwitchScreen
+import com.europa.sightup.presentation.designsystem.components.SDSTimerScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTopBarScreen
 import com.europa.sightup.presentation.designsystem.components.SdsButtonScreen
 import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScreen
@@ -55,6 +65,21 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object SDSTopBar : DesignSystemSamples
+
+    @Serializable
+    data object SDSConditions : DesignSystemSamples
+
+    @Serializable
+    data object SDSTimer : DesignSystemSamples
+
+    @Serializable
+    data object SDSSwitch : DesignSystemSamples
+
+    @Serializable
+    data object SDSBadgeTime : DesignSystemSamples
+
+    @Serializable
+    data object SDSFilterChip : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -87,6 +112,21 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         }
         composable<SDSTopBar> {
             SDSTopBarScreen()
+        }
+        composable<SDSConditions> {
+            SDSConditionsScreen()
+        }
+        composable<SDSTimer> {
+            SDSTimerScreen()
+        }
+        composable<SDSSwitch> {
+            SDSSwitchScreen()
+        }
+        composable<SDSBadgeTime> {
+            SDSBadgeTimeScreen()
+        }
+        composable<SDSFilterChip> {
+            SDSFilterChipScreen()
         }
     }
 }
