@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
+import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import multiplatform.network.cmptoast.showToast
@@ -41,7 +43,10 @@ fun SDSButton(
     when (buttonStyle) {
         ButtonStyle.PRIMARY -> Button(
             onClick = onClick,
-            modifier = modifier,
+            modifier = modifier
+                .defaultMinSize(
+                    minHeight = SightUPTheme.sizes.size_48
+                ),
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = SightUPTheme.sightUPColors.primary_600,
@@ -61,7 +66,10 @@ fun SDSButton(
 
         ButtonStyle.TEXT -> TextButton(
             onClick = onClick,
-            modifier = modifier,
+            modifier = modifier
+                .defaultMinSize(
+                    minHeight = SightUPTheme.sizes.size_48
+                ),
             enabled = enabled,
             colors = ButtonDefaults.textButtonColors(
                 containerColor = SightUPTheme.sightUPColors.white,
@@ -81,7 +89,10 @@ fun SDSButton(
 
         ButtonStyle.OUTLINED -> OutlinedButton(
             onClick = onClick,
-            modifier = modifier,
+            modifier = modifier
+                .defaultMinSize(
+                    minHeight = SightUPTheme.sizes.size_48
+                ),
             enabled = enabled,
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = SightUPTheme.sightUPColors.white,

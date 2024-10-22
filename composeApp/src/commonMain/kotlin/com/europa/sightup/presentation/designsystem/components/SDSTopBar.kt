@@ -31,7 +31,6 @@ import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.arrow_back
 import sightupkmpapp.composeapp.generated.resources.guide_book
 
-
 @Preview
 @Composable
 fun SDSTopBar(
@@ -41,13 +40,13 @@ fun SDSTopBar(
     /**
      * @param iconLeft can be a DrawableResource or an ImageVector
      */
-    iconLeft: Any = Res.drawable.arrow_back,
+    iconLeft: Any? = Res.drawable.arrow_back,
     onLeftButtonClick: () -> Unit = {},
     iconRightVisible: Boolean = false,
     /**
      * @param iconRight can be a DrawableResource or an ImageVector
      */
-    iconRight: Any = Res.drawable.guide_book,
+    iconRight: Any? = Res.drawable.guide_book,
     onRightButtonClick: () -> Unit = {},
 ) {
     val spaceModifier = Modifier.width(48.dp)

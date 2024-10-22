@@ -10,13 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,26 +22,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.europa.sightup.SightUPApp
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
-import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
-import com.europa.sightup.presentation.designsystem.components.SDSInput
+import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
-import com.mmk.kmpauth.firebase.apple.AppleButtonUiContainer
-import com.mmk.kmpauth.google.GoogleButtonUiContainer
-import com.mmk.kmpauth.uihelper.apple.AppleSignInButton
-import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
-import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.arrow_back
 import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
 import sightupkmpapp.composeapp.generated.resources.tutorial_four_content
 import sightupkmpapp.composeapp.generated.resources.tutorial_four_title
@@ -64,7 +53,7 @@ import sightupkmpapp.composeapp.generated.resources.tutorial_two_title
 @Composable
 fun TutorialScreen(navController: NavController? = null) {
     var currentStep by remember { mutableStateOf(1) }
-    var isBottomSheetVisible by remember { mutableStateOf(false) }
+    var bottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
 
     val titles = listOf(
         stringResource(Res.string.tutorial_one_title),
@@ -84,25 +73,27 @@ fun TutorialScreen(navController: NavController? = null) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        IconButton(
-            onClick = {
-                if (currentStep > 1) {
-                    currentStep--
-                } else {
-                    navController?.popBackStack()
-                }
-            },
-            modifier = Modifier
-                .padding(
-                    start = SightUPTheme.spacing.spacing_xs,
-                    top = SightUPTheme.spacing.spacing_xs
+        if (currentStep > 1) {
+            IconButton(
+                onClick = {
+                    if (currentStep > 1) {
+                        currentStep--
+                    } else {
+                        navController?.popBackStack()
+                    }
+                },
+                modifier = Modifier
+                    .padding(
+                        start = SightUPTheme.spacing.spacing_xs,
+                        top = SightUPTheme.spacing.spacing_xs
+                    )
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.arrow_back),
+                    contentDescription = "Back",
+                    tint = Color.Gray
                 )
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
-                tint = Color.Gray
-            )
+            }
         }
         Spacer(modifier = Modifier.weight(ONE_FLOAT))
         Image(
@@ -146,7 +137,7 @@ fun TutorialScreen(navController: NavController? = null) {
                         stringResource(Res.string.tutorial_secondary_button)
                     },
                     onClick = {
-                        navController?.navigate(SightUPApp) // Go HOME app
+                        navController?.navigate(SightUPApp)
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = if (currentStep >= 4) ButtonStyle.OUTLINED else ButtonStyle.TEXT
@@ -156,13 +147,13 @@ fun TutorialScreen(navController: NavController? = null) {
                     text = if (currentStep >= 4) {
                         stringResource(Res.string.tutorial_primary_button_last_step)
                     } else {
-                        stringResource(Res.string.tutorial_primary_button)
+                        stringResource(Res.string.tutorial_primary_button, currentStep.toString())
                     },
                     onClick = {
                         if (currentStep < 4) {
                             currentStep++
                         } else {
-                            isBottomSheetVisible = true
+                            bottomSheetVisibility = BottomSheetEnum.SHOW
                         }
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
@@ -172,76 +163,11 @@ fun TutorialScreen(navController: NavController? = null) {
         }
     }
 
-    var inputText by remember { mutableStateOf("") }
-
-    if (isBottomSheetVisible) {
-        SDSBottomSheet(
-            isVisible = isBottomSheetVisible,
-            onDismiss = { isBottomSheetVisible = false },
-            fullHeight = true,
-            sheetContent = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text("Login or Signup", style = SightUPTheme.textStyles.h4)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SDSInput(
-                        value = inputText,
-                        onValueChange = { newText -> inputText = newText },
-                        label = "Email",
-                        hint = "Email",
-                        isError = false,
-                        isEnabled = true,
-                        fullWidth = true
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(
-                        onClick = { /* Ação de continuar */ },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = false // Desabilitado inicialmente
-                    ) {
-                        Text("Continue")
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f), thickness = 1.dp)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    GoogleButtonUiContainer(
-                        modifier = Modifier.fillMaxWidth(),
-                        onGoogleSignInResult = { googleAuthResult ->
-                            val user = googleAuthResult?.idToken
-                            println(user)
-
-                            navController?.navigate(SightUPApp) // Go HOME app
-                        }
-                    ) {
-                        GoogleSignInButton(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            onClick = { this.onClick() },
-                            text = "Continue with Google"
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    AppleButtonUiContainer(
-                        onResult = { firebaseUserApple ->
-                            showToast(
-                                message = "Token Apple Success",
-                                bottomPadding = 40,
-                            )
-
-                        },
-                        linkAccount = false
-                    ) {
-                        AppleSignInButton(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            onClick = { this.onClick() },
-                            text = "Continue with Apple"
-                        )
-                    }
-                }
-            }
-        )
-    }
+    LoginSignUpScreen(
+        bottomSheetVisible = bottomSheetVisibility,
+        onBottomSheetVisibilityChange = {
+            bottomSheetVisibility = it
+        },
+        navController = navController
+    )
 }
