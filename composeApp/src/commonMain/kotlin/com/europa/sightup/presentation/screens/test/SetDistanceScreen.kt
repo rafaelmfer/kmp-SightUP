@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.europa.sightup.presentation.designsystem.components.DistanceMessageCard
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -40,12 +41,13 @@ fun SetDistanceScreen(
 ) {
     val distanceState = remember { mutableStateOf("0") }
 
-    val underRange = (distanceState.value.toFloatOrNull() ?: 0f) < 29f
-    val perfectRange = (distanceState.value.toFloatOrNull() ?: 0f) in 29f..35f
+    val underRange = (distanceState.value.toFloatOrNull() ?: 0f) < 30f
+    val perfectRange = (distanceState.value.toFloatOrNull() ?: 0f) in 30f..40f
+    val overRange = (distanceState.value.toFloatOrNull() ?: 0f) > 40f
 
     if (perfectRange) {
         LaunchedEffect(Unit) {
-            delay(3000L)
+            delay(2000L)
             onClick()
         }
     }
@@ -83,14 +85,16 @@ fun SetDistanceScreen(
                         // The Camera view from Android and iOS will be displayed here
                         val camera = DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f)
                         distanceState.value = camera.getDistanceToCamera.value
+                        val distance = distanceState.value.toFloatOrNull() ?: 0f
 
                         if (underRange) {
-                            val distance = distanceState.value.toFloatOrNull() ?: 0f
                             val distanceText = "${distance.toInt()} cm \n Step back further"
-
-                            DistanceCard(text = distanceText, backgroundColor = SightUPTheme.sightUPColors.error_300)
+                            DistanceMessageCard(text = distanceText, backgroundColor = SightUPTheme.sightUPColors.error_300)
                         } else if (perfectRange) {
-                            DistanceCard(text = "30 cm \n Perfect distance!")
+                            DistanceMessageCard(text = "${distance.toInt()} cm \n Perfect distance!")
+                        } else if (overRange) {
+                            val distanceText = "${distance.toInt()} cm \n Move closer"
+                            DistanceMessageCard(text = distanceText, backgroundColor = SightUPTheme.sightUPColors.error_300)
                         }
                     }
 
@@ -115,28 +119,6 @@ fun SetDistanceScreen(
     }
 }
 
-@Composable
-fun DistanceCard(
-    text: String,
-    backgroundColor: Color = SightUPTheme.colors.primary,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-            .padding(top = SightUPTheme.spacing.spacing_lg)
-            .clip(RoundedCornerShape(8.dp))
-            .background(backgroundColor)
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(SightUPTheme.spacing.spacing_base),
-            text = text,
-            style = SightUPTheme.textStyles.large,
-            color = SightUPTheme.sightUPColors.text_secondary,
-            textAlign = TextAlign.Center
-        )
-    }
-}
 
 @Composable
 fun MiddleCrux() {

@@ -11,6 +11,12 @@ inline fun <reified T> NavController.navigate(route: String?, objectToSerialize:
     navigate("$route/$jsonString")
 }
 
+inline fun <reified T> NavController.navigate(route: String?, objectToSerialize: T, objectToSerialize2: String) {
+    val jsonString = Json.encodeToString(objectToSerialize).encodeForUrl()
+    val jsonString2 = objectToSerialize2.encodeForUrl()
+    navigate("$route/$jsonString/$jsonString2")
+}
+
 inline fun <reified T> NavBackStackEntry.getObjectFromArgs(key: String?): T? {
     val jsonString = arguments?.getString(key) ?: return null
     return Json.decodeFromString<T>(jsonString)

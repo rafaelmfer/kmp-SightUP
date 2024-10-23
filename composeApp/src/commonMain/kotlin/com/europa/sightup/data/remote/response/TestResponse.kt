@@ -21,3 +21,9 @@ data class TestResponse(
         return TestResponse::class.simpleName.toString()
     }
 }
+
+enum class VisionTestTypes(val title: String) {
+    VisionAcuity("Visual Acuity"),
+    Astigmatism("Astigmatism");
+}
+

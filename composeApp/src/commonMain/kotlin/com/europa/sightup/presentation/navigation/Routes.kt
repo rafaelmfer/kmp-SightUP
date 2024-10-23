@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.navigation
 
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -56,6 +57,16 @@ sealed interface TestScreens {
     data class TestTutorial(val testResponse: String? = TestResponse.toString()) : TestScreens {
         override fun toString(): String {
             return TestTutorial::class.simpleName.toString()
+        }
+    }
+
+    @Serializable
+    data class TestActive(
+        val testResponse: String? = TestResponse.toString(),
+        val testMode: String? = TestModeEnum.Touch.displayName,
+    ) : TestScreens {
+        override fun toString(): String {
+            return TestActive::class.simpleName.toString()
         }
     }
 }

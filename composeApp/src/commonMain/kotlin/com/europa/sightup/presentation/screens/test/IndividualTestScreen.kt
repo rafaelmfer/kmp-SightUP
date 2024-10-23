@@ -1,8 +1,5 @@
 package com.europa.sightup.presentation.screens.test
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,22 +7,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,54 +19,40 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.lineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.navigate
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
-import kotlinx.coroutines.delay
 
 @Composable
 fun IndividualTestScreen(
     navController: NavController,
     test: TestResponse,
 ) {
-    BackgroundImageScreen(navController, test)
-}
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+    ) {
+        SDSTopBar(
+            title = "",
+            iconLeftVisible = true,
+            onLeftButtonClick = { navController.popBackStack() }
+        )
 
-@Composable
-fun BackgroundImageScreen(
-    navController: NavController,
-    test: TestResponse,
-) {
-    Scaffold {
-        Box(
-        ) {
-            CoilImage(
-                imageModel = { test.images },
-                imageOptions = ImageOptions(
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center
-                ),
-                modifier = Modifier.fillMaxSize()
-            )
+        CoilImage(
+            imageModel = { test.images },
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
+            ),
+            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(20.dp)).weight(.8f)
+        )
 
-            IconButton(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier.padding(16.dp)
-                    .align(Alignment.TopStart)
-                    .size(24.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                )
-            }
-
-            BottomCard(navController, test = test, modifier = Modifier.align(Alignment.BottomCenter))
-        }
+        BottomCard(navController, test = test, modifier = Modifier.weight(1f))
     }
 }
 
@@ -91,25 +62,10 @@ fun BottomCard(
     test: TestResponse,
     modifier: Modifier = Modifier,
 ) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        delay(200L)
-        visible = true
-    }
-
-    val offsetY by animateDpAsState(
-        targetValue = if (visible) 0.dp else 300.dp, // Se desplaza desde 300.dp hacia 0.dp
-        animationSpec = tween(
-            durationMillis = 600,
-            easing = FastOutSlowInEasing
-        )
-    )
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .offset(y = offsetY)
             .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             .background(SightUPTheme.colors.background),
     ) {
@@ -123,17 +79,17 @@ fun BottomCard(
                     bottom = SightUPTheme.spacing.spacing_base
                 )
         ) {
-            Text(text = test.title, style = SightUPTheme.textStyles.h1)
+            Text(text = test.title, style = SightUPTheme.textStyles.h2)
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
 
-            Text(text = test.description, style = SightUPTheme.textStyles.body)
+            Text(text = test.description, style = SightUPTheme.textStyles.body, lineHeight = SightUPTheme.lineHeight.lineHeight_2xs)
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
 
-            Text("How it works")
+            Text("Test Overview")
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
 
             test.howItWorks.forEach { item ->
-                Text(text = "• $item", style = SightUPTheme.textStyles.caption)
+                Text(text = "• $item", style = SightUPTheme.textStyles.caption, lineHeight = SightUPTheme.lineHeight.lineHeight_2xs)
             }
 
             SDSButton(

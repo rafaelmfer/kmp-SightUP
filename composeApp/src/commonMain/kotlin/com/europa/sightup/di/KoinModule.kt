@@ -11,7 +11,8 @@ import com.europa.sightup.getPlatform
 import com.europa.sightup.presentation.MainViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginViewModel
-import com.europa.sightup.presentation.screens.test.TestViewModel
+import com.europa.sightup.presentation.screens.test.viewModels.TestViewModel
+import com.europa.sightup.presentation.screens.test.viewModels.TutorialTestViewModel
 import com.europa.sightup.utils.ANDROID
 import io.ktor.client.HttpClient
 import org.koin.core.KoinApplication
@@ -47,6 +48,7 @@ val commonModule = module {
     viewModel { LoginViewModel(repository = get()) }
     viewModel { TestViewModel(repository = get()) }
     viewModel { ExerciseViewModel(repository = get()) }
+    viewModel { TutorialTestViewModel() }
 }
 
 fun initializeKoin(

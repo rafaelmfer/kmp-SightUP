@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,33 +25,38 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.components.StepProgressBar
-import com.europa.sightup.presentation.designsystem.components.Mode
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
+import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.test.viewModels.TutorialTestViewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.lineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.navigate
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
 
 @Composable
-fun ExecutionTestScreen(
+fun TutorialTestScreen(
     navController: NavController,
     test: TestResponse,
 ) {
-    val numberOfSteps = 4
-    var currentStep by remember { mutableStateOf(1) }
-    var selectedMode by remember { mutableStateOf(Mode.Touch) }
+    val tutorialViewModel = koinViewModel<TutorialTestViewModel>()
 
+    val currentStep = tutorialViewModel.currentStep
+    val eyeTested = tutorialViewModel.eyeTested
+    val selectedMode = tutorialViewModel.selectedMode
+
+    val numberOfSteps = 4
     val scrollState = rememberScrollState()
-    // Reset scroll position whenever 'currentStep' changes
+
     LaunchedEffect(currentStep) {
         scrollState.animateScrollTo(0)
     }
@@ -59,33 +66,34 @@ fun ExecutionTestScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
+        .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
     ) {
         Column {
             if (currentStep > 1) {
                 SDSTopBar(
                     title = test.title,
-                    iconRight = Res.drawable.close,
+                    iconRight = Icons.Default.Close,
                     iconRightVisible = true,
                     onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
                     iconLeftVisible = true,
-                    onLeftButtonClick = { currentStep-- },
-                    modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
+                    onLeftButtonClick = { tutorialViewModel.goBackStep() },
                 )
             } else {
                 SDSTopBar(
                     title = test.title,
-                    iconRight = Res.drawable.close,
+                    iconRight = Icons.Default.Close,
                     iconRightVisible = true,
-                    onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
-                    modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg)
+                    onRightButtonClick = {
+                        navController.navigate(TestScreens.TestRoot)
+                    },
                 )
             }
 
             StepProgressBar(
                 numberOfSteps = numberOfSteps,
                 currentStep = currentStep,
-                modifier = Modifier.padding(bottom = SightUPTheme.spacing.spacing_md)
+                modifier = Modifier
+                    .padding(bottom = SightUPTheme.spacing.spacing_base, top = SightUPTheme.spacing.spacing_base),
             )
         }
 
@@ -107,21 +115,28 @@ fun ExecutionTestScreen(
                 when (targetState) {
                     1 -> FirstStep(
                         selectedMode,
-                        onModeSelected = { selectedMode = it },
-                        onClick = { currentStep++ })
+                        onModeSelected = {
+                            //selectedMode = it
+                            tutorialViewModel.updateSelectedMode(it)
+                        },
+                        onClick = { tutorialViewModel.advanceStep() })
 
                     2 -> SecondStep(
-                        onClick = { currentStep++ }
+                        onClick = { tutorialViewModel.advanceStep() }
                     )
 
                     3 -> ThirdStep(
                         selectedMode = selectedMode,
                         test = test,
-                        onClick = { currentStep++ }
+                        onClick = { tutorialViewModel.advanceStep() }
                     )
 
                     4 -> FourthStep(
-                        onClick = { currentStep = 1 },
+                        navController = navController,
+                        test = test,
+                        selectedMode = selectedMode,
+                        eyeTested = eyeTested,
+                        onEyeTestedChange = { tutorialViewModel.updateEyeTested(it) }
                     )
                 }
             }
@@ -131,11 +146,11 @@ fun ExecutionTestScreen(
 
 @Composable
 fun FirstStep(
-    selectedMode: Mode,
-    onModeSelected: (Mode) -> Unit,
+    selectedMode: TestModeEnum,
+    onModeSelected: (TestModeEnum) -> Unit,
     onClick: () -> Unit,
 ) {
-    val modes = listOf(Mode.Touch, Mode.Voice, Mode.SmartWatch)
+    val modes = listOf(TestModeEnum.Touch, TestModeEnum.Voice, TestModeEnum.SmartWatch)
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -194,7 +209,7 @@ fun SecondStep(
 
             StepScreenWithAnimation(
                 animationPath = "files/animation_delete_me.json",
-                instructionText = "Place yourself and your phone parallel and set the distance to 30cm.",
+                instructionText = "Place yourself and your phone parallel and set the distance to 30 cm.",
                 speed = 0.8f,
                 backgroundColor = SightUPTheme.sightUPColors.neutral_100,
             )
@@ -218,13 +233,13 @@ fun SecondStep(
 @Composable
 fun ThirdStep(
     test: TestResponse,
-    selectedMode: Mode,
+    selectedMode: TestModeEnum,
     onClick: () -> Unit,
 ) {
     val modeText = when (selectedMode) {
-        Mode.Touch -> test.testMode.touch
-        Mode.Voice -> test.testMode.voice
-        Mode.SmartWatch -> test.testMode.smartwatch
+        TestModeEnum.Touch -> test.testMode.touch
+        TestModeEnum.Voice -> test.testMode.voice
+        TestModeEnum.SmartWatch -> test.testMode.smartwatch
     }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -253,16 +268,26 @@ fun ThirdStep(
 
 @Composable
 fun FourthStep(
-    onClick: () -> Unit,
+    navController: NavController,
+    test: TestResponse,
+    selectedMode: TestModeEnum,
+    eyeTested: String,
+    onEyeTestedChange: (String) -> Unit,
 ) {
+    val (animationPath, instructionText) = if (eyeTested == "right") {
+        "files/animation_delete_me.json" to "Start with your right eye. If you wear glasses, please take them off and cover your left eye."
+    } else {
+        "files/animation_delete_me.json" to "Now it's time to test your left eye. Please, cover your right eye."
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         StepScreenWithAnimation(
-            animationPath = "files/animation_delete_me.json",
-            instructionText = "Start with your right eye. Take off your glasses and cover your left eye.",
+            animationPath = animationPath,
+            instructionText = instructionText,
             speed = 0.8f,
             backgroundColor = SightUPTheme.sightUPColors.neutral_100,
         )
@@ -273,7 +298,14 @@ fun FourthStep(
 
         SDSButton(
             text = "Start",
-            onClick = onClick,
+            onClick = {
+                onEyeTestedChange("left")
+                navController.navigate(
+                    route = TestScreens.TestActive.toString(),
+                    objectToSerialize = test,
+                    objectToSerialize2 = selectedMode.displayName
+                )
+            },
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
             textStyle = SightUPTheme.textStyles.button,
         )

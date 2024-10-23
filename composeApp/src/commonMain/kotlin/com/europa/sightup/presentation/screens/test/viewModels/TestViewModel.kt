@@ -1,9 +1,9 @@
-package com.europa.sightup.presentation.screens.test
+package com.europa.sightup.presentation.screens.test.viewModels
 
-import com.europa.sightup.data.repository.SightUpRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.data.repository.SightUpRepository
 import com.europa.sightup.utils.UIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
