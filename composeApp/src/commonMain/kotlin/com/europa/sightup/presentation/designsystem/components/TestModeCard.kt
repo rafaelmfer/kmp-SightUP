@@ -20,17 +20,22 @@ import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
+import sightupkmpapp.composeapp.generated.resources.smartwatch_mode
+import sightupkmpapp.composeapp.generated.resources.touch_mode
+import sightupkmpapp.composeapp.generated.resources.voice_mode
 
 @Composable
-fun ModeSelectionCard(mode: Mode, isSelected: Boolean, onClick: () -> Unit) {
+fun ModeSelectionCard(mode: TestModeEnum, isSelected: Boolean, onClick: () -> Unit) {
     val borderColor = if (isSelected) SightUPTheme.colors.onBackground else SightUPTheme.colors.outline
     val icon = when (mode) {
-        Mode.Touch -> Res.drawable.compose_multiplatform
-        Mode.Voice -> Res.drawable.compose_multiplatform
-        Mode.SmartWatch -> Res.drawable.compose_multiplatform
+        TestModeEnum.Touch -> Res.drawable.compose_multiplatform
+        TestModeEnum.Voice -> Res.drawable.compose_multiplatform
+        TestModeEnum.SmartWatch -> Res.drawable.compose_multiplatform
     }
 
     Row(
@@ -68,9 +73,22 @@ fun ModeSelectionCard(mode: Mode, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
-// Enum for modes
-enum class Mode(val displayName: String, val description: String) {
-    Touch("Touch mode", "Use mobile screen"),
-    Voice("Voice mode", "Use voice commands"),
-    SmartWatch("Smartwatch mode", "Use smartwatch screen by connecting via Bluetooth. You need a pairing process.")
+@Serializable
+enum class TestModeEnum(val displayName: String, val description: String, val iconResource: DrawableResource) {
+    Touch(
+        "Touch mode",
+        "Use mobile screen",
+        Res.drawable.touch_mode
+    ),
+    Voice(
+        "Voice mode",
+        "Use voice commands",
+        Res.drawable.voice_mode
+    ),
+    SmartWatch(
+        "Smartwatch mode",
+        "Use smartwatch screen by connecting via Bluetooth. You need a pairing process.",
+        Res.drawable.smartwatch_mode
+    )
 }
+

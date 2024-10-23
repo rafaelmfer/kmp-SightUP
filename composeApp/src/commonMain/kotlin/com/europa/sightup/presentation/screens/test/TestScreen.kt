@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,11 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.test.viewModels.TestViewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -44,6 +45,8 @@ import com.europa.sightup.utils.navigate
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import org.koin.compose.viewmodel.koinViewModel
+import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.guide_book
 
 @Composable
 fun TestScreenWithState(
@@ -98,12 +101,12 @@ fun TestScreen(
 fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
     SDSTopBar(
         title = "Vision Tests",
-        iconRight = Icons.Default.Info,
+        iconRight = Res.drawable.guide_book,
         iconRightVisible = true,
-        modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_md)
+        //modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_md)
     )
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = Modifier.padding(vertical = SightUPTheme.spacing.spacing_xs)) {
         items(tests) { test ->
             TestItemCard(navController = navController, test = test)
         }
@@ -115,7 +118,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = SightUPTheme.spacing.spacing_base)
+            .padding(vertical = SightUPTheme.spacing.spacing_xs)
             .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .clickable {
@@ -160,26 +163,21 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = test.title,
-                style = SightUPTheme.textStyles.large,
+                style = SightUPTheme.textStyles.h4,
             )
+
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = test.shortDescription,
-                style = SightUPTheme.textStyles.button,
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(thickness = 1.dp)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Check List for test",
+                text = "Checklist for test",
                 style = SightUPTheme.textStyles.button,
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             test.checkList.forEach { item ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row{
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
@@ -190,6 +188,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
                     Text(
                         text = item,
                         style = SightUPTheme.textStyles.caption,
+                        lineHeight = 16.sp
                     )
                 }
             }

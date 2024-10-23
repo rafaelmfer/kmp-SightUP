@@ -55,9 +55,9 @@ fun SDSTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(SightUPTheme.sizes.size_48)
-            .padding(
-                horizontal = SightUPTheme.spacing.spacing_xs
-            )
+//            .padding(
+//                horizontal = SightUPTheme.spacing.spacing_xs
+//            )
             .then(modifier),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -154,7 +154,8 @@ fun SDSTopBarScreen() {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .background(color = SightUPTheme.sightUPColors.neutral_200),
+            .background(color = SightUPTheme.sightUPColors.neutral_200)
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_xs, Alignment.CenterVertically),
     ) {
         SDSTopBar(
