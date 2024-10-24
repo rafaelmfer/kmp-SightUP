@@ -13,6 +13,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBotto
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSConditions
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSExerciseCountdownScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSEyeClock
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
@@ -34,6 +35,7 @@ import com.europa.sightup.presentation.designsystem.screens.SDSBottomSheetScreen
 import com.europa.sightup.presentation.designsystem.screens.SDSControlEScreen
 import com.europa.sightup.presentation.designsystem.screens.SDSInputScreen
 import com.europa.sightup.presentation.designsystem.screens.TextStylesScreen
+import com.europa.sightup.presentation.screens.countdownscreen.SDSExerciseCountdownScreen
 import kotlinx.serialization.Serializable
 
 sealed interface DesignSystemSamples {
@@ -85,6 +87,9 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object SDSEyeClock : DesignSystemSamples
+
+    @Serializable
+    data object SDSExerciseCountdownScreen : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -135,6 +140,9 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         }
         composable<SDSEyeClock> {
             SDSEyeClockScreen()
+        }
+        composable<SDSExerciseCountdownScreen> {
+            SDSExerciseCountdownScreen()
         }
     }
 }
