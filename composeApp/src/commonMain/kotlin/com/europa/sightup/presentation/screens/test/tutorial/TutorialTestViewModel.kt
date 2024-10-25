@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.test.viewModels
+package com.europa.sightup.presentation.screens.test.tutorial
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.test
+package com.europa.sightup.presentation.screens.test.root
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,7 +36,6 @@ import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.TestScreens
-import com.europa.sightup.presentation.screens.test.viewModels.TestViewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -62,7 +61,7 @@ fun TestScreenWithState(
 }
 
 @Composable
-fun TestScreen(
+private fun TestScreen(
     navController: NavController,
     state: UIState<List<TestResponse>>,
 ) {
@@ -98,12 +97,11 @@ fun TestScreen(
 }
 
 @Composable
-fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
+private fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
     SDSTopBar(
         title = "Vision Tests",
         iconRight = Res.drawable.guide_book,
         iconRightVisible = true,
-        //modifier = Modifier.padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_md)
     )
 
     LazyColumn(modifier = Modifier.padding(vertical = SightUPTheme.spacing.spacing_xs)) {
@@ -114,7 +112,7 @@ fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navContro
 }
 
 @Composable
-fun TestItemCard(test: TestResponse, navController: NavController) {
+private fun TestItemCard(test: TestResponse, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,7 +175,7 @@ fun TestItemCard(test: TestResponse, navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             test.checkList.forEach { item ->
-                Row{
+                Row {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,

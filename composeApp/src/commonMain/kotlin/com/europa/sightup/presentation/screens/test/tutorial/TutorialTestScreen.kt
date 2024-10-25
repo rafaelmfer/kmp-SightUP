@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.test
+package com.europa.sightup.presentation.screens.test.tutorial
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,6 @@ import com.europa.sightup.presentation.designsystem.components.StepScreenWithAni
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
-import com.europa.sightup.presentation.screens.test.viewModels.TutorialTestViewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.lineHeight
@@ -145,7 +144,7 @@ fun TutorialTestScreen(
 }
 
 @Composable
-fun FirstStep(
+private fun FirstStep(
     selectedMode: TestModeEnum,
     onModeSelected: (TestModeEnum) -> Unit,
     onClick: () -> Unit,
@@ -193,7 +192,7 @@ fun FirstStep(
 }
 
 @Composable
-fun SecondStep(
+private fun SecondStep(
     onClick: () -> Unit,
 ) {
     var showCamera by remember { mutableStateOf(false) }
@@ -231,7 +230,7 @@ fun SecondStep(
 }
 
 @Composable
-fun ThirdStep(
+private fun ThirdStep(
     test: TestResponse,
     selectedMode: TestModeEnum,
     onClick: () -> Unit,
@@ -267,7 +266,7 @@ fun ThirdStep(
 }
 
 @Composable
-fun FourthStep(
+private fun FourthStep(
     navController: NavController,
     test: TestResponse,
     selectedMode: TestModeEnum,
@@ -299,11 +298,13 @@ fun FourthStep(
         SDSButton(
             text = "Start",
             onClick = {
-                onEyeTestedChange("left")
+                val nextEye = if (eyeTested == "right") "left" else "right"
+                onEyeTestedChange(nextEye)
                 navController.navigate(
                     route = TestScreens.TestActive.toString(),
                     objectToSerialize = test,
-                    objectToSerialize2 = selectedMode.displayName
+                    objectToSerialize2 = selectedMode.displayName,
+                    objectToSerialize3 = eyeTested
                 )
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),

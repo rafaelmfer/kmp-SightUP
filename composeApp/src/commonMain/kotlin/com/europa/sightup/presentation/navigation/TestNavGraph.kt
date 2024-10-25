@@ -11,10 +11,10 @@ import com.europa.sightup.presentation.navigation.TestScreens.TestIndividual
 import com.europa.sightup.presentation.navigation.TestScreens.TestInit
 import com.europa.sightup.presentation.navigation.TestScreens.TestRoot
 import com.europa.sightup.presentation.navigation.TestScreens.TestTutorial
-import com.europa.sightup.presentation.screens.test.ActiveTestScreen
 import com.europa.sightup.presentation.screens.test.IndividualTestScreen
-import com.europa.sightup.presentation.screens.test.TestScreenWithState
-import com.europa.sightup.presentation.screens.test.TutorialTestScreen
+import com.europa.sightup.presentation.screens.test.active.ActiveTestScreen
+import com.europa.sightup.presentation.screens.test.root.TestScreenWithState
+import com.europa.sightup.presentation.screens.test.tutorial.TutorialTestScreen
 import com.europa.sightup.utils.getObjectFromArgs
 
 fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
@@ -39,15 +39,17 @@ fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
         }
 
         composable(
-            route = "${TestActive}/{${TestActive().testResponse}}/{testMode}"
+            route = "${TestActive}/{${TestActive().testResponse}}/{testMode}/{eyeTested}"
         ) { it ->
             val testResponse = it.getObjectFromArgs<TestResponse>(TestActive().testResponse)
             val testMode = it.arguments?.getString("testMode") ?: TestModeEnum.Touch.displayName
+            val eyeTested = it.arguments?.getString("eyeTested") ?: ""
             testResponse?.let {
                 ActiveTestScreen(
                     navController = navController,
                     test = testResponse,
-                    testMode = testMode
+                    testMode = testMode,
+                    eyeTested = eyeTested
                 )
             }
         }

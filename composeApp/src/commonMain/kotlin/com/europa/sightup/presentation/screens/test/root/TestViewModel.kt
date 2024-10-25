@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.test.viewModels
+package com.europa.sightup.presentation.screens.test.root
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

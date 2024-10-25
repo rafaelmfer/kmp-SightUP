@@ -1,11 +1,13 @@
-package com.europa.sightup.presentation.screens.test
+package com.europa.sightup.presentation.screens.test.active
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,12 +20,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -40,25 +44,43 @@ import com.europa.sightup.presentation.designsystem.components.SDSEyeClock
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.test.DistanceToCamera
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import multiplatform.network.cmptoast.showToast
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ActiveTestScreen(
     navController: NavController,
     test: TestResponse,
     testMode: String,
+    eyeTested: String,
 ) {
+    val viewModel = koinViewModel<ActiveTestViewModel>()
+    LaunchedEffect(eyeTested) {
+        viewModel.updateCurrentEye(eyeTested)
+    }
+
     var testStarted by remember { mutableStateOf(false) }
     var currentMode by remember { mutableStateOf(testMode) }
+
+
+    // Distance to camera variables
+    val distanceState = remember { mutableStateOf("35") }
+    val perfectRange = (distanceState.value.toFloatOrNull() ?: 0f) in 30f..40f
+
+    val camera = DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f, showCameraView = false)
+    distanceState.value = camera.getDistanceToCamera.value
+    val distance = distanceState.value.toFloatOrNull() ?: 0f
 
     Scaffold(
         topBar = {
             SDSTopBar(
-                title = " ",
+                title = "",
                 iconRight = Icons.Default.Close,
                 iconRightVisible = true,
                 onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
@@ -66,11 +88,22 @@ fun ActiveTestScreen(
         },
         bottomBar = {
             if (testStarted) {
-                BottomBar(currentMode) { newMode -> currentMode = newMode }
+                if (perfectRange) {
+                    BottomBar(currentMode) { newMode -> currentMode = newMode }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(SightUPTheme.sightUPColors.black.copy(0.3f))
+                            .zIndex(10f)
+                            .pointerInput(Unit) {}
+                    ) {
+                        BottomBar(currentMode) {   /* No-op to disable mode switching */ }
+                    }
+                }
             }
         },
         content = { paddingValues ->
-
             if (!testStarted) {
                 CountdownScreen(onTestStart = { testStarted = true })
             } else {
@@ -78,6 +111,9 @@ fun ActiveTestScreen(
                     test = test,
                     currentMode = currentMode,
                     navController = navController,
+                    perfectRange = perfectRange,
+                    distance = distance,
+                    viewModel = viewModel,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -86,82 +122,106 @@ fun ActiveTestScreen(
 }
 
 @Composable
-fun TestContent(
+private fun TestContent(
     test: TestResponse,
     currentMode: String,
     navController: NavController,
+    perfectRange: Boolean,
+    distance: Float,
+    viewModel: ActiveTestViewModel,
     modifier: Modifier,
 ) {
-    val distanceState = remember { mutableStateOf("35") }
-    val perfectRange = (distanceState.value.toFloatOrNull() ?: 0f) in 30f..40f
-
-    val camera = DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f, showCameraView = false)
-    distanceState.value = camera.getDistanceToCamera.value
-    val distance = distanceState.value.toFloatOrNull() ?: 0f
 
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize().then(modifier),
+        contentAlignment = Alignment.Center
     ) {
-        // TODO: create like a dialog to cover the whole screen with the warning text
         if (!perfectRange) {
-            val distanceText = "${distance.toInt()} cm \n Please move your device until the distance is within range"
-            DistanceMessageCard(text = distanceText, backgroundColor = SightUPTheme.sightUPColors.error_300, modifier = Modifier.zIndex(10f))
+            val distanceText = "You're ${distance.toInt()} cm away. \n Please move your device to the optimal range."
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .background(SightUPTheme.sightUPColors.black.copy(0.3f))
+                    .zIndex(1f)
+                    .pointerInput(Unit) {} // Block all touch interactions
+            ) {
+                DistanceMessageCard(
+                    text = distanceText,
+                    backgroundColor = SightUPTheme.sightUPColors.error_300,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
         }
 
+        // Main content
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .background(SightUPTheme.colors.background)
-                .then(modifier),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .zIndex(0f)
+                .pointerInput(Unit) { // Prevent interaction if the overlay is active
+                    if (!perfectRange) {
+                        detectTapGestures {}
+                    }
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {TestHeader(test)}
+            if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {
+                viewModel.currentEFormat?.let { TestHeader(it) }
+            }
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(color = SightUPTheme.sightUPColors.neutral_100)
+                    .background(SightUPTheme.sightUPColors.neutral_100)
                     .padding(vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                TestTypeContent(test)
+                TestTypeContent(
+                    test = test,
+                    onClickChangeUI = { selectedDirection ->
+                        viewModel.checkAnswerAndChangeE(selectedDirection, navController)
+                    }
+                )
 
                 TestModeContent(
                     currentMode = currentMode,
-                    navController = navController
+                    onButtonClick = { viewModel.cannotSeeButton(navController) }
                 )
             }
         }
     }
-
 }
 
 @Composable
-fun TestHeader(test: TestResponse) {
+private fun TestHeader(currentEFormat: DrawableResource) {
     Box(
         modifier = Modifier.fillMaxWidth().height(100.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(top = 36.dp),
-            text = "Chart test for ${test.title}"
+        Icon(
+            painter = painterResource(currentEFormat),
+            contentDescription = "Visual acuity chart",
+            modifier = Modifier.size(50.dp),
         )
     }
 }
 
 @Composable
-fun TestTypeContent(test: TestResponse) {
-    when  {
+private fun TestTypeContent(
+    test: TestResponse,
+    onClickChangeUI: (EChart) -> Unit,
+) {
+    when {
         test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
             SDSControlE(
-                upButtonOnClickResult = { showToast("Up button clicked", bottomPadding = 40) },
-                leftButtonOnClickResult = { showToast("Left button clicked", bottomPadding = 40) },
-                rightButtonOnClickResult = { showToast("Right button clicked", bottomPadding = 40) },
-                downButtonOnClickResult = { showToast("Down button clicked", bottomPadding = 40) },
+                upButtonOnClickResult = { onClickChangeUI(EChart.UP) },
+                leftButtonOnClickResult = { onClickChangeUI(EChart.LEFT) },
+                rightButtonOnClickResult = { onClickChangeUI(EChart.RIGHT) },
+                downButtonOnClickResult = { onClickChangeUI(EChart.DOWN) },
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -245,14 +305,14 @@ fun TestTypeContent(test: TestResponse) {
 }
 
 @Composable
-fun TestModeContent(
+private fun TestModeContent(
     currentMode: String,
-    navController: NavController,
+    onButtonClick: () -> Unit = {},
 ) {
     when (currentMode) {
         TestModeEnum.Touch.displayName -> {
             SDSButton(
-                onClick = { navController.popBackStack() },
+                onClick = { onButtonClick() },
                 text = "Cannot See",
                 buttonStyle = ButtonStyle.OUTLINED,
                 modifier = Modifier
@@ -282,7 +342,7 @@ fun TestModeContent(
 
         TestModeEnum.SmartWatch.displayName -> {
             SDSButton(
-                onClick = { navController.popBackStack() },
+                onClick = { onButtonClick() },
                 text = "Cannot See",
                 buttonStyle = ButtonStyle.OUTLINED,
                 modifier = Modifier
@@ -294,7 +354,7 @@ fun TestModeContent(
 }
 
 @Composable
-fun BottomBar(
+private fun BottomBar(
     currentMode: String,
     onModeSelected: (String) -> Unit,
 ) {
@@ -327,7 +387,7 @@ fun BottomBar(
 }
 
 @Composable
-fun CountdownScreen(
+private fun CountdownScreen(
     onTestStart: () -> Unit,
 ) {
     Column(
@@ -344,6 +404,4 @@ fun CountdownScreen(
         )
     }
 }
-
-
 
