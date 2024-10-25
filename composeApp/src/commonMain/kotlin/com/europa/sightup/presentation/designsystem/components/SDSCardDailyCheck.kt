@@ -15,8 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -32,61 +32,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.europa.sightup.presentation.designsystem.components.data.SDSConditionsEnum
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
+import com.europa.sightup.presentation.ui.theme.layout.SightUPSpacing
+import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.clock
 
 @Composable
-fun SDSCardDailyCheck(
-    btnRound: Boolean = false,
-    clickCard: () -> Unit = { println("funcionando") },
-    hour: String = "10:00 am",
-    exerciseDuration: String = "3 min",
-    title: String = "title",
-    subtitle: String = "subtitle",
-    topBar: Boolean = true,
-    bottomBar: Boolean = true,
-    eyeCondition: Boolean = true
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        CardDailyCheck(
-            btnRound,
-            onClickCard = clickCard,
-            hour,
-            exerciseDuration,
-            title,
-            subtitle,
-            topBar,
-            bottomBar,
-            eyeCondition
-        )
-    }
-}
-
-
-@Composable
-fun CardDailyCheck(
+fun SDSCardAssessment(
     btnRound: Boolean = false,
     onClickCard: () -> Unit,
     hour: String,
-    exerciseDuration: String,
+    exerciseDuration: Int,
     title: String,
     subtitle: String,
     topBar: Boolean,
     bottomBar: Boolean,
-    eyeCondition: Boolean
+    eyeConditions: List<String>,
+    modifier: Modifier = Modifier,
 ) {
     var btnActive by remember { mutableStateOf(btnRound) }
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .then(modifier)
     ) {
         val (clIndicators, clCard) = createRefs()
 
@@ -99,21 +73,19 @@ fun CardDailyCheck(
                 height = Dimension.fillToConstraints
             }
         ) {
-            val linha1 = createRef()
-            val mbtCircle = createRef()
-            val linha2 = createRef()
+            val (lineOne, mbtCircle, lineTwo) = createRefs()
 
             Box(
                 modifier = Modifier
-                    .width(2.dp)
-                    .constrainAs(linha1) {
+                    .width(1.dp)
+                    .constrainAs(lineOne) {
                         top.linkTo(parent.top)
-                        bottom.linkTo(mbtCircle.top, margin = 16.dp)
+                        bottom.linkTo(mbtCircle.top, margin = SightUPSpacing.default.spacing_md)
                         start.linkTo(mbtCircle.start)
                         end.linkTo(mbtCircle.end)
                         height = Dimension.fillToConstraints
                     }
-                    .background(if (topBar) Color(0xFFAAB4BD) else Color.White)
+                    .background(if (topBar) SightUPTheme.sightUPColors.neutral_400 else Color.White)
             )
 
             Button(
@@ -123,15 +95,18 @@ fun CardDailyCheck(
                 modifier = Modifier
                     .size(24.dp)
                     .constrainAs(mbtCircle) {
-                        top.linkTo(linha1.bottom)
-                        bottom.linkTo(linha2.top)
+                        top.linkTo(lineOne.bottom)
+                        bottom.linkTo(lineTwo.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (btnActive) Color(0xFFDAF1FC) else Color.White
+                    containerColor = if (btnActive) SightUPTheme.sightUPColors.background_info else Color.Transparent
                 ),
-                border = BorderStroke(2.dp, if (btnActive) Color(0xFF2C76A8) else Color(0xFFAAB4BD))
+                border = BorderStroke(
+                    width = SightUPBorder.Width.sm,
+                    color = if (btnActive) SightUPTheme.sightUPColors.border_primary else SightUPTheme.sightUPColors.neutral_400
+                )
 
             ) {
 
@@ -139,21 +114,20 @@ fun CardDailyCheck(
 
             Box(
                 modifier = Modifier
-                    .width(2.dp)
-                    .constrainAs(linha2) {
-                        top.linkTo(mbtCircle.bottom, margin = 16.dp)
+                    .width(1.dp)
+                    .constrainAs(lineTwo) {
+                        top.linkTo(mbtCircle.bottom, margin = SightUPSpacing.default.spacing_md)
                         bottom.linkTo(parent.bottom)
                         start.linkTo(mbtCircle.start)
                         end.linkTo(mbtCircle.end)
                         height = Dimension.fillToConstraints
                     }
-                    .background(if (bottomBar) Color(0xFFAAB4BD) else Color.White)
+                    .background(if (bottomBar) SightUPTheme.sightUPColors.neutral_400 else Color.White)
             )
         }
 
         ConstraintLayout(
             modifier = Modifier
-                .padding(0.dp, 5.dp)
                 .constrainAs(clCard) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
@@ -161,18 +135,25 @@ fun CardDailyCheck(
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 }
-                .padding(start = 16.dp)
-                .background(if (btnActive) Color(0xFFDAF1FC) else Color.White, shape = RoundedCornerShape(16.dp))
-                .border(
-                    2.dp,
-                    if (btnActive) Color(0xFFDAF1FC) else Color(0xFFAAB4BD),
-                    shape = RoundedCornerShape(16.dp)
+                .padding(
+                    start = SightUPTheme.spacing.spacing_md,
+                    top = SightUPTheme.spacing.spacing_xs,
+                    bottom = SightUPTheme.spacing.spacing_xs,
                 )
+                .background(
+                    color = SightUPTheme.sightUPColors.background_default,
+                    shape = SightUPTheme.shapes.small
+                )
+                .border(
+                    width = SightUPBorder.Width.sm,
+                    color = SightUPTheme.sightUPColors.border_card,
+                    shape = SightUPTheme.shapes.small
+                )
+                .padding(SightUPTheme.spacing.spacing_base)
                 .clickable(onClick = onClickCard),
-            ) {
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(16.dp)
             ) {
                 if (hour.isNotEmpty()) {
                     Row(
@@ -202,118 +183,68 @@ fun CardDailyCheck(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        title,
-                        color = Color.Black,
-                        fontSize = 18.sp,
+                        text = title,
+                        color = SightUPTheme.sightUPColors.text_primary,
                         style = SightUPTheme.textStyles.subtitle
                     )
-
-                    if (exerciseDuration.isNotEmpty()) {
-                        Row(
-                            modifier = Modifier
-                                .border(1.dp, Color.Black, shape = RoundedCornerShape(23.dp))
-                                .background(Color.White, shape = RoundedCornerShape(23.dp))
-                                .padding(
-                                    horizontal = 12.dp,
-                                    vertical = 4.dp
-                                ),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Image(
-                                painter = painterResource(Res.drawable.clock),
-                                contentDescription = "Descrição da imagem",
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .height(24.dp)
-                                    .padding(end = 8.dp)
-                            )
-                            Text(
-                                "1 min",
-                                style = SightUPTheme.textStyles.caption,
-                                modifier = Modifier.padding(end = 3.dp)
-                            )
-                        }
+                    if (exerciseDuration > 0) {
+                        SDSBadgeTime(exerciseDuration)
                     }
                 }
 
                 if (subtitle.isNotEmpty()) {
                     Text(
-                        subtitle,
-                        color = Color(0xFF77818A),
+                        text = subtitle,
+                        color = SightUPTheme.sightUPColors.text_tertiary,
                         style = SightUPTheme.textStyles.caption,
                     )
                 }
 
-                if (eyeCondition) {
-                    Spacer(modifier = Modifier.size(32.dp))
-                    Row {
-                        Text(
-                            "Eye Strain",
-                            color = Color(0xFF7D4CF8),
-                            style = SightUPTheme.textStyles.caption,
-                            modifier = Modifier
-                                .border(
-                                    1.dp,
-                                    Color(0xFFEDE6FF),
-                                    shape = RoundedCornerShape(23.dp)
-                                )
-                                .background(
-                                    Color(0xFFEDE6FF),
-                                    shape = RoundedCornerShape(23.dp)
-                                )
-                                .padding(
-                                    horizontal = 12.dp,
-                                    vertical = 4.dp
-                                )
-                        )
-
-                        Spacer(modifier = Modifier.size(8.dp))
-
-                        Text(
-                            "Eye Strain",
-                            color = Color(0xFFDC6A1E),
-                            style = SightUPTheme.textStyles.caption,
-                            modifier = Modifier
-                                .border(
-                                    1.dp,
-                                    Color(0xFFF9E4D6),
-                                    shape = RoundedCornerShape(23.dp)
-                                )
-                                .background(
-                                    Color(0xFFF9E4D6),
-                                    shape = RoundedCornerShape(23.dp)
-                                )
-                                .padding(
-                                    horizontal = 12.dp,
-                                    vertical = 4.dp
-                                )
-                        )
-
-                        Spacer(modifier = Modifier.size(8.dp))
-
-                        Text(
-                            "Eye Strain",
-                            color = Color(0xFFDF263C),
-                            style = SightUPTheme.textStyles.caption,
-                            modifier = Modifier
-                                .border(
-                                    1.dp,
-                                    Color(0xFFFCDFE2),
-                                    shape = RoundedCornerShape(23.dp)
-                                )
-                                .background(
-                                    Color(0xFFFCDFE2),
-                                    shape = RoundedCornerShape(23.dp)
-                                )
-                                .padding(
-                                    horizontal = 12.dp,
-                                    vertical = 4.dp
-                                )
-                        )
+                if (eyeConditions.isNotEmpty()) {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(eyeConditions) { condition ->
+                            SDSConditions(
+                                type = SDSConditionsEnum.fromString(condition),
+                            )
+                            if (condition != eyeConditions.last()) {
+                                Spacer(Modifier.width(SightUPTheme.spacing.spacing_xs))
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SDSCardDailyCheckScreen(
+    btnRound: Boolean = false,
+    clickCard: () -> Unit = { println("funcionando") },
+    hour: String = "10:00 am",
+    exerciseDuration: Int = 0,
+    title: String = "title",
+    subtitle: String = "subtitle",
+    topBar: Boolean = true,
+    bottomBar: Boolean = true,
+    eyeConditions: List<String> = listOf("EYE_STRAIN", "DRY_EYES", "RED_EYES"),
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        SDSCardAssessment(
+            btnRound,
+            onClickCard = clickCard,
+            hour,
+            exerciseDuration,
+            title,
+            subtitle,
+            topBar,
+            bottomBar,
+            eyeConditions = eyeConditions
+        )
     }
 }

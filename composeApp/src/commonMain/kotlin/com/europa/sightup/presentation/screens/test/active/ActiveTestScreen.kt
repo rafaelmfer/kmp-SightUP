@@ -175,10 +175,15 @@ private fun TestContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(SightUPTheme.sightUPColors.neutral_100)
+                    .background(
+                        if (test.title.contains(VisionTestTypes.Astigmatism.title))
+                            SightUPTheme.sightUPColors.white
+                        else SightUPTheme.sightUPColors.neutral_100
+                    )
                     .padding(vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = if (test.title.contains(VisionTestTypes.Astigmatism.title))
+                    Arrangement.SpaceEvenly else Arrangement.SpaceBetween
             ) {
                 TestTypeContent(
                     test = test,
@@ -199,7 +204,7 @@ private fun TestContent(
 @Composable
 private fun TestHeader(currentEFormat: DrawableResource) {
     Box(
-        modifier = Modifier.fillMaxWidth().height(100.dp),
+        modifier = Modifier.fillMaxWidth().height(150.dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(

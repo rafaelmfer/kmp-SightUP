@@ -12,6 +12,7 @@ object SightUPColorPalette {
     val black = Color(0xFF000000)
     val white = Color(0xFFFFFFFF)
 
+    val primary_50 = Color(0xFFF5FCFF)
     val primary_100 = Color(0xFFE8F0F6)
     val primary_200 = Color(0xFFD3E3EE)
     val primary_300 = Color(0xFFA9C8DC)

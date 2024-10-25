@@ -50,22 +50,22 @@ class SightUPBorder {
          */
         val none = 0.dp
         /**
-         * @property xs is a Dp property that represents the extra small width value.
+         * @property sm is a Dp property that represents the extra small width value.
          * The value is set to 1dp.
          */
         val sm = 1.dp
         /**
-         * @property sm is a Dp property that represents the small width value.
+         * @property md is a Dp property that represents the small width value.
          * The value is set to 2dp.
          */
         val md = 2.dp
         /**
-         * @property md is a Dp property that represents the medium width value.
+         * @property lg is a Dp property that represents the medium width value.
          * The value is set to 4dp.
          */
         val lg = 4.dp
         /**
-         * @property lg is a Dp property that represents the large width value.
+         * @property xl is a Dp property that represents the large width value.
          * The value is set to 8dp.
          */
         val xl = 8.dp

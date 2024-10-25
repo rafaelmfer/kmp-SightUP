@@ -1,6 +1,5 @@
 package com.europa.sightup.presentation.ui.theme.layout
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.Dp
@@ -67,8 +66,26 @@ data class SightUPSpacing(
      * The value is set to 80dp.
      */
     val spacing_2xl: Dp = 80.dp
-)
+) {
+    companion object {
+        /**
+         * @property default is a SightUPSpacing property that represents the default spacing values.
+         * The values are set to the following:
+         * spacing_none = 0.dp
+         * spacing_2xs = 4.dp
+         * spacing_xs = 8.dp
+         * spacing_sm = 12.dp
+         * spacing_base = 16.dp
+         * spacing_side_margin = 20.dp
+         * spacing_md = 24.dp
+         * spacing_lg = 32.dp
+         * spacing_xl = 40.dp
+         * spacing_2xl = 80.dp
+         */
+        val default = SightUPSpacing()
+    }
+}
 
 val SightUPTheme.spacing: SightUPSpacing
     @Composable
-    get() = if (isSystemInDarkTheme()) SightUPSpacing() else SightUPSpacing()
+    get() = SightUPSpacing.default

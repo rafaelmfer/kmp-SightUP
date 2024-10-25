@@ -16,15 +16,14 @@ import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
 @Preview
 @Composable
 fun SDSConditions(
+    type: SDSConditionsEnum = SDSConditionsEnum.EYE_STRAIN,
     modifier: Modifier = Modifier,
-    type: SDSConditionsEnum = SDSConditionsEnum.STRAIN,
 ) {
     when (type) {
-        SDSConditionsEnum.STRAIN -> {
+        SDSConditionsEnum.EYE_STRAIN -> {
             Text(
                 modifier = Modifier
                     .clip(SightUPTheme.shapes.large)
@@ -40,7 +39,7 @@ fun SDSConditions(
             )
         }
 
-        SDSConditionsEnum.DRY -> {
+        SDSConditionsEnum.DRY_EYES -> {
             Text(
                 modifier = Modifier
                     .clip(SightUPTheme.shapes.large)
@@ -56,7 +55,7 @@ fun SDSConditions(
             )
         }
 
-        SDSConditionsEnum.RED -> {
+        SDSConditionsEnum.RED_EYES -> {
             Text(
                 modifier = Modifier
                     .clip(SightUPTheme.shapes.large)
@@ -72,7 +71,7 @@ fun SDSConditions(
             )
         }
 
-        SDSConditionsEnum.IRRITATED -> {
+        SDSConditionsEnum.IRRITATED_EYES -> {
             Text(
                 modifier = Modifier
                     .clip(SightUPTheme.shapes.large)
@@ -88,7 +87,7 @@ fun SDSConditions(
             )
         }
 
-        SDSConditionsEnum.WATERY -> {
+        SDSConditionsEnum.WATERY_EYES -> {
             Text(
                 modifier = Modifier
                     .clip(SightUPTheme.shapes.large)
@@ -104,7 +103,7 @@ fun SDSConditions(
             )
         }
 
-        SDSConditionsEnum.ITCHY -> {
+        SDSConditionsEnum.ITCHY_EYES -> {
             Text(
                 modifier = Modifier
                     .clip(SightUPTheme.shapes.large)
@@ -119,6 +118,8 @@ fun SDSConditions(
                 style = SightUPTheme.textStyles.caption
             )
         }
+
+        else -> {}
     }
 }
 
@@ -139,27 +140,27 @@ fun SDSConditionsScreen(
     ) {
         SDSConditions(
             modifier = Modifier,
-            type = SDSConditionsEnum.STRAIN
+            type = SDSConditionsEnum.EYE_STRAIN
         )
         SDSConditions(
             modifier = Modifier,
-            type = SDSConditionsEnum.DRY
+            type = SDSConditionsEnum.DRY_EYES
         )
         SDSConditions(
             modifier = Modifier,
-            type = SDSConditionsEnum.RED
+            type = SDSConditionsEnum.RED_EYES
         )
         SDSConditions(
             modifier = Modifier,
-            type = SDSConditionsEnum.IRRITATED
+            type = SDSConditionsEnum.IRRITATED_EYES
         )
         SDSConditions(
             modifier = Modifier,
-            type = SDSConditionsEnum.WATERY
+            type = SDSConditionsEnum.WATERY_EYES
         )
         SDSConditions(
             modifier = Modifier,
-            type = SDSConditionsEnum.ITCHY
+            type = SDSConditionsEnum.ITCHY_EYES
         )
     }
 }
