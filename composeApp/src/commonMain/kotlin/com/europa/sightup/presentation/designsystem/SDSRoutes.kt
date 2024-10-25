@@ -11,6 +11,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Home
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBadgeTime
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButtonArrow
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSCardDailyCheckScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSConditions
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
@@ -23,7 +24,8 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
 import com.europa.sightup.presentation.designsystem.components.SDSBadgeTimeScreen
-import com.europa.sightup.presentation.designsystem.components.SDSCardDailyCheck
+import com.europa.sightup.presentation.designsystem.components.SDSButtonArrowScreen
+import com.europa.sightup.presentation.designsystem.components.SDSCardDailyCheckScreen
 import com.europa.sightup.presentation.designsystem.components.SDSConditionsScreen
 import com.europa.sightup.presentation.designsystem.components.SDSEyeClockScreen
 import com.europa.sightup.presentation.designsystem.components.SDSFilterChipScreen
@@ -94,6 +96,9 @@ sealed interface DesignSystemSamples {
     data object SDSExerciseCountdownScreen : DesignSystemSamples
 
     @Serializable
+    data object SDSButtonArrow : DesignSystemSamples
+
+    @Serializable
     data object SDSCardDailyCheckScreen : DesignSystemSamples
 }
 
@@ -149,8 +154,11 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         composable<SDSExerciseCountdownScreen> {
             SDSExerciseCountdownScreen()
         }
+        composable<SDSButtonArrow> {
+            SDSButtonArrowScreen()
+        }
         composable<SDSCardDailyCheckScreen> {
-            SDSCardDailyCheck()
+            SDSCardDailyCheckScreen()
         }
 
 

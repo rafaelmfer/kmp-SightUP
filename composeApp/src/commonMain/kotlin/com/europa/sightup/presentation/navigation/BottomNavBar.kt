@@ -26,7 +26,11 @@ data class BottomNavItem(
     val screen: Any,
     val label: String,
     val icon: DrawableResource,
-)
+) {
+    fun getQualifiedScreenName(): String {
+        return screen::class.qualifiedName!!
+    }
+}
 
 @Composable
 fun BottomNavBar(
@@ -51,7 +55,7 @@ fun BottomNavBar(
     ) {
         listBottomScreens.forEach { item ->
             NavigationBarItem(
-                selected = currentSelectedScreen == item.screen,
+                selected = currentSelectedScreen == item.getQualifiedScreenName(),
                 onClick = {
                     navController.navigateToRootScreen(item.screen)
                 },
@@ -60,20 +64,21 @@ fun BottomNavBar(
                 },
                 icon = {
                     Column(
-                        modifier = Modifier,
+                        modifier = Modifier
+                            .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             painter = painterResource(item.icon),
                             modifier = Modifier.size(SightUPTheme.sizes.size_32),
                             contentDescription = item.label,
-                            tint = if (currentSelectedScreen == item.screen) selectedColor else unselectedColor
+                            tint = if (currentSelectedScreen == item.getQualifiedScreenName()) selectedColor else unselectedColor
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = item.label,
                             style = SightUPTheme.textStyles.footnote,
-                            color = if (currentSelectedScreen == item.screen) selectedColor else unselectedColor
+                            color = if (currentSelectedScreen == item.getQualifiedScreenName()) selectedColor else unselectedColor
                         )
                     }
                 },

@@ -26,7 +26,7 @@ fun SDSFilterChip(
     text: String = "Text Chip",
     isSelected: Boolean = false,
     isEnabled: Boolean = true,
-    onClick: () -> Unit = {},
+    onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -34,7 +34,9 @@ fun SDSFilterChip(
     FilterChip(
         selected = isSelected,
         modifier = modifier,
-        onClick = onClick,
+        onClick = {
+            onClick(text)
+        },
         enabled = isEnabled,
         label = {
             Text(
@@ -111,7 +113,7 @@ fun SDSFilterChipScreen() {
             onClick = {
                 isSelected.value = !isSelected.value
                 showToast(
-                    "Filter Chip clicked",
+                    if (isSelected.value) "Filter Chip selected" else "Filter Chip unselected",
                     bottomPadding = 40
                 )
             }

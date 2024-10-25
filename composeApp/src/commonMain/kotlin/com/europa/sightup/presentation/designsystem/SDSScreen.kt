@@ -18,6 +18,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.Countdow
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBadgeTime
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButton
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSButtonArrow
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSCardDailyCheckScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSConditions
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSControlE
@@ -51,6 +52,7 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSFilterChip to SDSFilterChip::class.simpleName!!,
         SDSEyeClock to SDSEyeClock::class.simpleName!!,
         SDSExerciseCountdownScreen to SDSExerciseCountdownScreen::class.simpleName!!,
+        SDSButtonArrow to SDSButtonArrow::class.simpleName!!,
         SDSCardDailyCheckScreen to SDSCardDailyCheckScreen::class.simpleName!!,
     )
 

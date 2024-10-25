@@ -75,10 +75,14 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation("tech.annexflow.compose:constraintlayout-compose-multiplatform:0.5.0-alpha03-shaded-core")
+            implementation(compose.animationGraphics)
+            implementation(compose.animation)
+            implementation(libs.constraintlayout.compose.multiplatform)
+
             // CMP Toast
             implementation(libs.cmptoast)
 
@@ -126,9 +130,9 @@ kotlin {
             implementation(libs.compottie.network)
             implementation(libs.compottie.resources)
 
-            implementation("io.github.mirzemehdi:kmpauth-google:2.1.0") //Google One Tap Sign-In
-            implementation("io.github.mirzemehdi:kmpauth-firebase:2.1.0") //Integrated Authentications with Firebase
-            implementation("io.github.mirzemehdi:kmpauth-uihelper:2.1.0") //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
+            implementation(libs.kmpauth.google) //Google One Tap Sign-In
+            implementation(libs.kmpauth.firebase) //Integrated Authentications with Firebase
+            implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
         }
 
         iosMain.dependencies {

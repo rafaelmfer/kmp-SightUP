@@ -245,7 +245,100 @@ data class SightUPColors(
      * Border disabled color is the color #AAB4BD
      * @see SightUPContextColor.border_disabled
      */
-    val border_disabled: Color = SightUPContextColor.border_disabled
+    val border_disabled: Color = SightUPContextColor.border_disabled,
+    /**
+     * Border card color is the color #E8F0F6
+     * @see SightUPContextColor.border_card
+     */
+    val border_card: Color = SightUPContextColor.border_card,
+    /**
+     * Border error color is the color #FFEFF2
+     * @see SightUPContextColor.border_error
+     */
+    val border_error: Color = SightUPContextColor.border_error,
+    /**
+     * Border warning color is the color #FFE8E2
+     * @see SightUPContextColor.border_warning
+     */
+    val border_warning: Color = SightUPContextColor.border_warning,
+    /**
+     * Border success color is the color #DEFFE0
+     * @see SightUPContextColor.border_success
+     */
+    val border_success: Color = SightUPContextColor.border_success,
+    /**
+     * Border info color is the color #DEF5FF
+     * @see SightUPContextColor.border_info
+     */
+    val border_info: Color = SightUPContextColor.border_info,
+    /**
+     * Border purple color is the color #EDE6FF
+     * @see SightUPContextColor.border_purple
+     */
+    val border_purple: Color = SightUPContextColor.border_purple,
+
+
+    // Background Colors
+    /**
+     * Background default color is the color #FEFEFE
+     * @see SightUPContextColor.background_default
+     */
+    val background_default: Color = SightUPContextColor.background_default,
+    /**
+     * Background light color is the color #F5FCFF
+     * @see SightUPContextColor.background_light
+     */
+    val background_light: Color = SightUPContextColor.background_light,
+    /**
+     * Background card color is the color #EAECEE
+     * @see SightUPContextColor.background_card
+     */
+    val background_card: Color = SightUPContextColor.background_card,
+    /**
+     * Background button color is the color #2C76A8
+     * @see SightUPContextColor.background_button
+     */
+    val background_button: Color = SightUPContextColor.background_button,
+    /**
+     * Background disabled color is the color #D5D9DE
+     * @see SightUPContextColor.background_disabled
+     */
+    val background_disabled: Color = SightUPContextColor.background_disabled,
+    /**
+     * Background activate color is the color #D3E3EE
+     * @see SightUPContextColor.background_activate
+     */
+    val background_activate: Color = SightUPContextColor.background_activate,
+    /**
+     * Background overlay color is the color #1E2022
+     * @see SightUPContextColor.background_overlay
+     */
+    val background_overlay: Color = SightUPContextColor.background_overlay,
+    /**
+     * Background error color is the color #FFEFF2
+     * @see SightUPContextColor.background_error
+     */
+    val background_error: Color = SightUPContextColor.background_error,
+    /**
+     * Background warning color is the color #FFE8E2
+     * @see SightUPContextColor.background_warning
+     */
+    val background_warning: Color = SightUPContextColor.background_warning,
+    /**
+     * Background success color is the color #DEFFE0
+     * @see SightUPContextColor.background_success
+     */
+    val background_success: Color = SightUPContextColor.background_success,
+    /**
+     * Background info color is the color #DEF5FF
+     * @see SightUPContextColor.background_info
+     */
+    val background_info: Color = SightUPContextColor.background_info,
+    /**
+     * Background purple color is the color #EDE6FF
+     * @see SightUPContextColor.background_purple
+     */
+    val background_purple: Color = SightUPContextColor.background_purple,
 )
 
 internal val LocalSightUPColors = staticCompositionLocalOf { SightUPColors() }
