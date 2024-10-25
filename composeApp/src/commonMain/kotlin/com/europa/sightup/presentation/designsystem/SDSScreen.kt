@@ -26,6 +26,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSExerc
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSEyeClock
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSListButtonsSelectableScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
@@ -54,6 +55,7 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSExerciseCountdownScreen to SDSExerciseCountdownScreen::class.simpleName!!,
         SDSButtonArrow to SDSButtonArrow::class.simpleName!!,
         SDSCardDailyCheckScreen to SDSCardDailyCheckScreen::class.simpleName!!,
+        SDSListButtonsSelectableScreen to SDSListButtonsSelectableScreen::class.simpleName!!,
     )
 
     Column(
