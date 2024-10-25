@@ -64,6 +64,7 @@ sealed interface TestScreens {
     data class TestActive(
         val testResponse: String? = TestResponse.toString(),
         val testMode: String? = TestModeEnum.Touch.displayName,
+        val eyeTested: String? = "Right",
     ) : TestScreens {
         override fun toString(): String {
             return TestActive::class.simpleName.toString()

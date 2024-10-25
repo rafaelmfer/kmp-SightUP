@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.test
+package com.europa.sightup.presentation.screens.test.tutorial
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -30,6 +30,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.europa.sightup.presentation.designsystem.components.DistanceMessageCard
 import com.europa.sightup.presentation.designsystem.components.SwitchAudio
+import com.europa.sightup.presentation.screens.test.DistanceToCamera
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -68,7 +69,7 @@ fun SetDistanceScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
-                topBlackBar()
+                TopBlackBar()
 
                 Box(
                     modifier = Modifier
@@ -121,7 +122,7 @@ fun SetDistanceScreen(
 
 
 @Composable
-fun MiddleCrux() {
+private fun MiddleCrux() {
     Canvas(
         modifier = Modifier.fillMaxSize(),
         onDraw = {
@@ -145,7 +146,7 @@ fun MiddleCrux() {
 }
 
 @Composable
-private fun topBlackBar() {
+private fun TopBlackBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
