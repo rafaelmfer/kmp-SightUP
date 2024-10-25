@@ -8,16 +8,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Event
@@ -62,8 +61,10 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .wrapContentHeight()
-            .background(SightUPTheme.sightUPColors.background_light),
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .background(SightUPTheme.sightUPColors.background_light)
+            .padding(bottom = SightUPTheme.spacing.spacing_md),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         GreetingWithIcons(name)
@@ -246,27 +247,26 @@ private fun NextTestCard(
 
 @Composable
 private fun AssessmentList(navController: NavController? = null) {
-    LazyColumn(
+    Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
     ) {
-        item {
-            SDSCardAssessment(
-                title = "Daily Check-In",
-                hour = "9:00 am",
-                btnRound = true,
-                exerciseDuration = 0,
-                subtitle = "Log your eye condition",
-                topBar = false,
-                bottomBar = true,
-                eyeConditions = listOf(),
-                onClickCard = {
-                    navController?.navigate(HomeExample)
-                },
-                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-            )
-        }
-        items(2) {
+        SDSCardAssessment(
+            title = "Daily Check-In",
+            hour = "9:00 am",
+            btnRound = true,
+            exerciseDuration = 0,
+            subtitle = "Log your eye condition",
+            topBar = false,
+            bottomBar = true,
+            eyeConditions = listOf(),
+            onClickCard = {
+                navController?.navigate(HomeExample)
+            },
+            modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+        )
+
+        repeat(2) { index ->
             SDSCardAssessment(
                 title = "Vision Acuity Test",
                 hour = "10:00 AM",
@@ -274,7 +274,7 @@ private fun AssessmentList(navController: NavController? = null) {
                 exerciseDuration = 2,
                 subtitle = "Take the test",
                 topBar = true,
-                bottomBar = it != 1,
+                bottomBar = index != 1,
                 eyeConditions = listOf("Eye Strain", "Red Eyes"),
                 onClickCard = {
                     showToast(
@@ -286,7 +286,6 @@ private fun AssessmentList(navController: NavController? = null) {
             )
         }
     }
-
 }
 
 @Composable
@@ -359,20 +358,20 @@ private fun EyeWellnessTips() {
         "Blepharitis" to listOf("Apply eye drops", "Medicines", "Treat health problems")
     )
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxWidth(),
+    Column(
+        verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_md),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = SightUPTheme.spacing.spacing_md) // Increase distance between the sections
     ) {
-        item {
-            EyeWellnessTipsTitle()
-        }
-        items(sections) { (title, buttons) ->
+        EyeWellnessTipsTitle()
+
+        sections.forEach { (title, buttons) ->
             EyeWellnessSection(
                 title = title,
                 buttons = buttons,
                 onClick = { action -> println("Clicked on: $action") }
             )
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
