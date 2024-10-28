@@ -1,156 +1,192 @@
 package com.europa.sightup.presentation.designsystem.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.sizes
+import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.clock
+import sightupkmpapp.composeapp.generated.resources.tip
 
 @Composable
-fun CardExerciseBottom(
-    audio: Boolean,
-    typeExercise: String,
-    duration: String,
-    title: String,
-    description: String,
-    subDescriptionTitle: String,
-    subDescription: ArrayList<String>,
-    onClick: ()->Unit
+fun SDSCardTestBottom(
+    title: String = "Visual Acuity",
+    description: String = "Visual acuity refers to the clarity or sharpness of vision, which is measured by your ability to discern letters or details at a specific distance.",
+    requirements: List<String> = listOf(
+        "• This test utilizes the camera",
+        "• Test can be done by holding your phone or from a distance."
+    ),
+    buttonText: String = "Start",
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, Color.Black)
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier),
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp, 24.dp)
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Box() {
-                    Column() {
-                        if (audio) {
-                            Text(
-                                text = typeExercise,
-                                color = Color(0xFF235E86),
-                                style = SightUPTheme.textStyles.body.copy(
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                            )
-                        }
-                        Text(
-                            text = title,
-                            style = SightUPTheme.textStyles.h2.copy(
-                                fontSize = 26.sp
-                            )
-                        )
-                    }
-                }
-
-
-                if (!audio) {
-                    var isChecked by remember { mutableStateOf(false) }
-                    SDSSwitch(
-                        isChecked = isChecked,
-                        onCheckedChange = { isChecked = it },
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(50.dp))
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.padding(12.dp)
-                        ) {
-
-                            Image(
-                                painter = painterResource(Res.drawable.clock),
-                                contentDescription = "Descrição da imagem",
-                                modifier = Modifier
-                                    .width(15.dp)
-                                    .height(15.dp)
-                                    .padding(start = 3.dp)
-                            )
-
-
-                            Text(
-                                text = " " + duration,
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Normal,
-                                fontSize = 12.sp,
-                                color = Color(0xFF1E1E1E)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
             Text(
-                text = description,
-                style = SightUPTheme.textStyles.subtitle.copy(
-                    fontWeight = FontWeight.Normal
-                )
+                text = title,
+                style = SightUPTheme.textStyles.h4,
+                color = SightUPTheme.sightUPColors.text_primary,
             )
-
-            if (subDescriptionTitle.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
-                    text = subDescriptionTitle,
-                    style = SightUPTheme.textStyles.subtitle.copy(
-                        fontWeight = FontWeight.Normal
-                    )
+                    text = "Audio Support",
+                    style = SightUPTheme.textStyles.caption,
+                    color = SightUPTheme.sightUPColors.text_primary,
+                )
+                Spacer(Modifier.width(SightUPTheme.spacing.spacing_xs))
+                SDSSwitch(
+                    isChecked = false,
+                    onCheckedChange = {},
+                    modifier = Modifier
                 )
             }
-
-            if(subDescription.isNotEmpty()) {
-                for(subDesc in subDescription){
-                    Text(text = "• $subDesc")
-                }
+        }
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Text(
+            text = description,
+            style = SightUPTheme.textStyles.body,
+            color = SightUPTheme.sightUPColors.text_primary,
+        )
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Text(
+            text = "Test Overview",
+            style = SightUPTheme.textStyles.body2,
+            color = SightUPTheme.sightUPColors.text_primary,
+        )
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_xs),
+            modifier = Modifier
+                .scrollable(
+                    enabled = false,
+                    state = rememberScrollState(),
+                    orientation = Orientation.Vertical,
+                ),
+        ) {
+            items(requirements) { requirement ->
+                Text(
+                    text = requirement,
+                    style = SightUPTheme.textStyles.caption,
+                    color = SightUPTheme.sightUPColors.text_primary,
+                )
             }
+        }
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        SDSButton(
+            text = buttonText,
+            onClick = onClick,
+            buttonStyle = ButtonStyle.PRIMARY,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
 
-            Spacer(modifier = Modifier.height(15.dp))
-
-            SDSButton(
-                "Start",
-                onClick = onClick,
-                buttonStyle = ButtonStyle.PRIMARY,
-                modifier = Modifier.fillMaxWidth()
+@Composable
+fun SDSCardExerciseBottom(
+    category: String = "",
+    title: String = "Circular Motion",
+    motivation: String = "Let’s take a quick break and give your eyes some gentle movement!",
+    duration: Int = 0,
+    tipText: String = "",
+    buttonText: String = "Start",
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier),
+    ) {
+        if (category.isNotEmpty() && duration > 0) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column(
+                    modifier = Modifier
+                ) {
+                    Text(
+                        text = category,
+                        style = SightUPTheme.textStyles.subtitle,
+                        color = SightUPTheme.sightUPColors.primary_700,
+                    )
+                    Spacer(Modifier.width(SightUPTheme.spacing.spacing_2xs))
+                    Text(
+                        text = title,
+                        style = SightUPTheme.textStyles.h4,
+                        color = SightUPTheme.sightUPColors.text_primary,
+                    )
+                }
+                SDSBadgeTime(timeMinutes = duration)
+            }
+        } else {
+            Text(
+                text = title,
+                style = SightUPTheme.textStyles.h5,
+                color = SightUPTheme.sightUPColors.text_primary,
             )
         }
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Text(
+            text = motivation,
+            style = SightUPTheme.textStyles.body,
+            color = SightUPTheme.sightUPColors.text_primary,
+        )
+        if (tipText.isNotEmpty()) {
+            Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.tip),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(SightUPTheme.sizes.size_16)
+                )
+                Spacer(Modifier.width(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = tipText,
+                    style = SightUPTheme.textStyles.body,
+                    color = SightUPTheme.sightUPColors.text_primary,
+                )
+            }
+        }
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        SDSButton(
+            text = buttonText,
+            onClick = onClick,
+            buttonStyle = ButtonStyle.PRIMARY,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.countdownscreen
+package com.europa.sightup.presentation.screens.exercise.countdownscreen
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -40,7 +40,6 @@ fun SDSExerciseCountdownScreen() {
         modifier = Modifier.fillMaxSize()
     ) {
         ExerciseCountdownScreen(
-            animationPath = "files/animation_delete_me.json",
             startColor = Color.LightGray,
             endColor = Color.Yellow,
             onFinish = {
@@ -55,13 +54,13 @@ fun SDSExerciseCountdownScreen() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ExerciseCountdownScreen(
-    animationPath: String,
     startColor: Color,
     endColor: Color,
     onFinish: () -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(true) }
 
+    val animationPath = "files/animation_delete_me.json"
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
             Res.readBytes(animationPath).decodeToString()

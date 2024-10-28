@@ -36,6 +36,38 @@ sealed interface ExerciseScreens {
 
     @Serializable
     data object ExerciseRoot : ExerciseScreens
+
+    @Serializable
+    data class ExerciseDetails(
+        val exerciseId: String,
+        val exerciseName: String,
+        val exerciseMotivation: String,
+        val exerciseDuration: Int,
+    ) : ExerciseScreens
+
+    @Serializable
+    data class ExerciseCountdown(
+        val exerciseId: String,
+        val exerciseName: String,
+        val exerciseMotivation: String,
+        val exerciseDuration: Int,
+    ) : ExerciseScreens
+
+    @Serializable
+    data class ExerciseRunning(
+        val exerciseId: String,
+        val exerciseName: String,
+        val exerciseMotivation: String,
+        val exerciseDuration: Int,
+    ) : ExerciseScreens
+
+    @Serializable
+    data class ExerciseFinish(
+        val exerciseId: String,
+        val exerciseName: String,
+        val exerciseMotivation: String,
+        val exerciseDuration: Int,
+    ) : ExerciseScreens
 }
 
 // Test Routes
