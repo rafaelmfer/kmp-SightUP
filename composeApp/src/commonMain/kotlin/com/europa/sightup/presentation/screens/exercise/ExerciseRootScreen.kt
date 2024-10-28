@@ -23,6 +23,7 @@ import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.presentation.designsystem.components.CardExercise
 import com.europa.sightup.presentation.designsystem.components.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -30,7 +31,7 @@ import com.europa.sightup.utils.UIState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ExerciseScreen(
+fun ExerciseRootScreen(
     navController: NavController,
 ) {
     val viewModel = koinViewModel<ExerciseViewModel>()
@@ -152,8 +153,7 @@ private fun ExerciseItemCard(exercise: ExerciseResponse, navController: NavContr
         CardExercise(
             exercise = exercise,
             modifier = Modifier.clickable {
-                //TODO: Handle click on exercise item
-                navController
+                navController.navigate(ExerciseDetails(exercise.id, exercise.title, exercise.motivation, exercise.duration))
             }
         )
     }

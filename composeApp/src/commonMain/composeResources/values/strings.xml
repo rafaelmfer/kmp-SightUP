@@ -9,8 +9,10 @@
     <string name="skip">Skip</string>
     <string name="done">Done</string>
     <string name="save">Save</string>
+    <string name="start">Start</string>
     <string name="close">Close</string>
     <string name="continue_string">Continue</string>
+    <string name="complete">Complete</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
 
@@ -41,6 +43,13 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="forgot_password">Forgot Password</string>
 
+
+    <!-- Exercise Details Screen -->
+    <string name="exercise_initial_tip">We will guide you using motion and sound.</string>
+    <string name="exercise_circular_tip">Remember to keep your head still and let your eyes do the work..</string>
+    <string name="exercise_blink_tip">Blink slowly and gently to avoid eye fatique.</string>
+    <string name="exercise_color_tip">It helps to boost your visual processing speed and sharpen color perception.</string>
+    <string name="exercise_stretching_tip">Try looking at a distant object for 20 seconds every 20 minutes to give your eyes a break.</string>
 
     <!-- Test Screens -->
     <string name="test_mode_title">Select Mode</string>
