@@ -25,13 +25,17 @@ import platform.AVFoundation.requestAccessForMediaType
 import platform.UIKit.UIColor
 import platform.UIKit.UIView
 
+//@OptIn(ExperimentalForeignApi::class)
+//@Composable
+//actual fun DistanceToCamera(
+//    distance: State<String>,
+//    aspectRatio: Float,
+//    showCameraView: Boolean,
+//): Camera {
+
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun DistanceToCamera(
-    distance: State<String>,
-    aspectRatio: Float,
-    showCameraView: Boolean,
-): Camera {
+fun failedCamera () {
 
     val device = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo).firstOrNull { device ->
         (device as AVCaptureDevice).position == AVCaptureDevicePositionFront
@@ -71,8 +75,6 @@ actual fun DistanceToCamera(
             cameraPreviewLayer.borderWidth = 2.0
 
             cameraPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-            cameraPreviewLayer.frame = container.bounds
-
             container.layer.addSublayer(cameraPreviewLayer)
             println("Added cameraPreviewLayer. Total sublayers: ${container.layer.sublayers?.size}")
             container.layer.sublayers?.forEach { layer ->
@@ -81,6 +83,7 @@ actual fun DistanceToCamera(
 
             // Ajusta el frame después de agregar el layer
             //  container.layoutIfNeeded()
+            //cameraPreviewLayer.frame = container.bounds
 
 
             AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { granted ->
@@ -104,9 +107,9 @@ actual fun DistanceToCamera(
         }
     )
 
-    return object : Camera {
-        override val getDistanceToCamera: State<String>
-            get() = distance
-    }
+//    return object : Camera {
+//        override val getDistanceToCamera: State<String>
+//            get() = distance
+//    }
 }
 

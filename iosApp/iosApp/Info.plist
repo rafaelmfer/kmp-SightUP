@@ -23,7 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-    	<string>We need access to your camera for vision tests</string>
+    <string>We need access to your camera for vision tests</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Photo Library permission is required for the app to work.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

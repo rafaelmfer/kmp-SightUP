@@ -138,6 +138,9 @@ kotlin {
         iosMain.dependencies {
             // Network
             implementation(libs.ktor.client.darwin)
+
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }
