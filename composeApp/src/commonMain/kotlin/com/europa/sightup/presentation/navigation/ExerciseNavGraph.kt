@@ -22,7 +22,6 @@ import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.complete
 import sightupkmpapp.composeapp.generated.resources.exercise_circular_tip
-import sightupkmpapp.composeapp.generated.resources.exercise_initial_tip
 import sightupkmpapp.composeapp.generated.resources.start
 
 fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
@@ -39,9 +38,9 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             ExerciseDetailsScreen(
                 idExercise = exerciseDetails.exerciseId,
                 title = exerciseDetails.exerciseName,
+                category = exerciseDetails.exerciseCategory,
                 motivation = exerciseDetails.exerciseMotivation,
                 duration = exerciseDetails.exerciseDuration,
-                tipText = stringResource(Res.string.exercise_initial_tip),
                 buttonText = stringResource(Res.string.start),
                 navController = navController,
             )

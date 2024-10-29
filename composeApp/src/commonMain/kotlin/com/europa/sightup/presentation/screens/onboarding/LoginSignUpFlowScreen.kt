@@ -35,7 +35,6 @@ fun LoginSignUpScreen(
     onBottomSheetVisibilityChange: (BottomSheetEnum) -> Unit,
     navController: NavController? = null,
 ) {
-    var isShowingLoginEmail by remember { mutableStateOf(true) }
     var email by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
 
@@ -47,29 +46,6 @@ fun LoginSignUpScreen(
         skipPartiallyExpanded = true,
         confirmValueChange = { true },
     )
-
-    when (state) {
-        is LoginUIState.InitialState -> {}
-        is LoginUIState.Loading -> {}
-        is LoginUIState.UserFound -> {
-            isShowingLoginEmail = false
-        }
-
-        is LoginUIState.LoginSuccess -> {
-            scope.hideBottomSheetWithAnimation(
-                sheetState = sheetState,
-                onBottomSheetVisibilityChange = onBottomSheetVisibilityChange,
-                onFinish = {
-                    navController?.navigate(SightUPApp)
-                }
-            )
-        }
-
-        is LoginUIState.Error -> {
-            error = (state as LoginUIState.Error).errorMessage
-            print(error)
-        }
-    }
 
     val title = stringResource(Res.string.login_title)
     var bottomSheetTitle by remember { mutableStateOf(title) }
@@ -97,6 +73,9 @@ fun LoginSignUpScreen(
                             onContinueClicked = {
                                 email = it
                                 viewModel.checkEmail(it)
+                            },
+                            onGoogleClicked = {
+                                viewModel.doLoginWithProvider(it)
                             }
                         )
                     }
@@ -116,13 +95,30 @@ fun LoginSignUpScreen(
                     }
 
                     is LoginUIState.LoginSuccess -> {
-                        showToast(
-                            "Login Success",
-                            bottomPadding = 40
+                        scope.hideBottomSheetWithAnimation(
+                            sheetState = sheetState,
+                            onBottomSheetVisibilityChange = onBottomSheetVisibilityChange,
+                            onFinish = {
+                                navController?.navigate(
+                                    SightUPApp
+                                ) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+                            }
                         )
                     }
 
-                    is LoginUIState.Error -> {}
+                    is LoginUIState.Error -> {
+                        showToast(
+                            "Login Error",
+                            bottomPadding = 40
+                        )
+                        error = (state as LoginUIState.Error).errorMessage
+                        print(error)
+                    }
                 }
             }
         }

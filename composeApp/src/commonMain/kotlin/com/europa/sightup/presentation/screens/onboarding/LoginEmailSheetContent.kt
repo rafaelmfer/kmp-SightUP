@@ -8,19 +8,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.europa.sightup.SightUPApp
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSDivider
 import com.europa.sightup.presentation.designsystem.components.SDSInput
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.mmk.kmpauth.firebase.apple.AppleButtonUiContainer
-import com.mmk.kmpauth.google.GoogleButtonUiContainer
+import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.apple.AppleSignInButton
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
+import kotlinx.coroutines.launch
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -31,7 +32,11 @@ import sightupkmpapp.composeapp.generated.resources.email
 fun LoginEmailSheetContent(
     navController: NavController? = null,
     onContinueClicked: (String) -> Unit = {},
+    onGoogleClicked: (String) -> Unit = {},
+    onAppleClicked: (String) -> Unit = {},
 ) {
+    val scope = rememberCoroutineScope()
+
     var inputText: String by remember { mutableStateOf("") }
     val isButtonEnabled = inputText.isNotEmpty()
 
@@ -60,13 +65,16 @@ fun LoginEmailSheetContent(
         SDSDivider()
         Spacer(Modifier.height(SightUPTheme.sizes.size_32))
 
-        GoogleButtonUiContainer(
+        GoogleButtonUiContainerFirebase(
             modifier = Modifier.fillMaxWidth(),
-            onGoogleSignInResult = { googleAuthResult ->
-                val user = googleAuthResult?.idToken
-                println(user)
-                navController?.navigate(SightUPApp)
-            }
+            onResult = { result ->
+                scope.launch {
+                    result.getOrNull()?.getIdToken(false)?.let {
+                        onGoogleClicked(it)
+                    }
+                }
+            },
+            linkAccount = false
         ) {
             GoogleSignInButton(
                 modifier = Modifier
@@ -77,12 +85,15 @@ fun LoginEmailSheetContent(
         }
         Spacer(Modifier.height(SightUPTheme.sizes.size_32))
         AppleButtonUiContainer(
-            onResult = { firebaseUserApple ->
+            onResult = { result ->
                 showToast(
-                    message = "Token Apple Success",
+                    message = "Not implemented yet",
                     bottomPadding = 40,
                 )
-
+                // TODO: Implement Apple Sign In if we have time
+//                scope.launch {
+//                    result.getOrNull()?.getIdToken(false)?.let { onAppleClicked(it) }
+//                }
             },
             linkAccount = false
         ) {

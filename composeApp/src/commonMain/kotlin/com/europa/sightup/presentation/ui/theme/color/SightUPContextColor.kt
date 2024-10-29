@@ -15,11 +15,11 @@ object SightUPContextColor {
     val border_disabled = SightUPColorPalette.neutral_400
     val border_primary = SightUPColorPalette.primary_600
     val border_card = SightUPColorPalette.primary_100
-    val border_error = SightUPColorPalette.error_100
-    val border_warning = SightUPColorPalette.warning_100
-    val border_success = SightUPColorPalette.success_100
-    val border_info = SightUPColorPalette.info_100
-    val border_purple = SightUPColorPalette.purple_100
+    val border_error = SightUPColorPalette.error_150
+    val border_warning = SightUPColorPalette.warning_150
+    val border_success = SightUPColorPalette.success_150
+    val border_info = SightUPColorPalette.info_150
+    val border_purple = SightUPColorPalette.purple_150
 
     val background_default = SightUPColorPalette.neutral_0
     val background_light = SightUPColorPalette.primary_50
@@ -33,4 +33,5 @@ object SightUPContextColor {
     val background_success = SightUPColorPalette.success_100
     val background_info = SightUPColorPalette.info_100
     val background_purple = SightUPColorPalette.purple_100
+    val background_orange = SightUPColorPalette.orange_100
 }

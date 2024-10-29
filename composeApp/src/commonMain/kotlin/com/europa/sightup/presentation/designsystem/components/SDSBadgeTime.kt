@@ -46,7 +46,7 @@ fun SDSBadgeTime(
             )
             .padding(
                 horizontal = SightUPTheme.spacing.spacing_sm,
-                vertical = SightUPTheme.spacing.spacing_xs
+                vertical = SightUPTheme.spacing.spacing_2xs
             )
             .then(modifier),
         horizontalArrangement = Arrangement.Center,

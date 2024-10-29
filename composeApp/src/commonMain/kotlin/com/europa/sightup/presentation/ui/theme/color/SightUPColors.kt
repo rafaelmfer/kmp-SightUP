@@ -110,6 +110,24 @@ data class SightUPColors(
     val neutral_900: Color = SightUPColorPalette.neutral_900,
 
 
+    // Orange Colors
+    /**
+     * Orange color is the color #F9E4D6
+     * @see SightUPColorPalette.orange_100
+     */
+    val orange_100: Color = SightUPColorPalette.orange_100,
+    /**
+     * Orange color is the color #DC6A1E
+     * @see SightUPColorPalette.orange_200
+     */
+    val orange_200: Color = SightUPColorPalette.orange_200,
+    /**
+     * Orange color is the color #CD6B29
+     * @see SightUPColorPalette.orange_300
+     */
+    val orange_300: Color = SightUPColorPalette.orange_300,
+
+
     // Success Colors
     /**
      * Success color is the color #DEFFE0
@@ -339,6 +357,11 @@ data class SightUPColors(
      * @see SightUPContextColor.background_purple
      */
     val background_purple: Color = SightUPContextColor.background_purple,
+    /**
+     * Background orange color is the color #F9E4D6
+     * @see SightUPContextColor.background_orange
+     */
+    val background_orange: Color = SightUPContextColor.background_orange,
 )
 
 internal val LocalSightUPColors = staticCompositionLocalOf { SightUPColors() }

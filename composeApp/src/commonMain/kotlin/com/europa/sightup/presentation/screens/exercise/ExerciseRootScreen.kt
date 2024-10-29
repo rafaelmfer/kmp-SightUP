@@ -153,7 +153,15 @@ private fun ExerciseItemCard(exercise: ExerciseResponse, navController: NavContr
         CardExercise(
             exercise = exercise,
             modifier = Modifier.clickable {
-                navController.navigate(ExerciseDetails(exercise.id, exercise.title, exercise.motivation, exercise.duration))
+                navController.navigate(
+                    ExerciseDetails(
+                        exercise.id,
+                        exercise.title,
+                        exercise.category,
+                        exercise.motivation,
+                        exercise.duration
+                    )
+                )
             }
         )
     }

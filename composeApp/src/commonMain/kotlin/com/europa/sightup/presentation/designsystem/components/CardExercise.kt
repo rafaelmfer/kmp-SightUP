@@ -89,7 +89,7 @@ fun CardExercise(
         Text(
             text = "Helps with:",
             style = SightUPTheme.textStyles.subtitle,
-            color = SightUPTheme.sightUPColors.text_primary,
+            color = SightUPTheme.sightUPColors.primary_700,
         )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
         LazyRow {

@@ -41,6 +41,7 @@ sealed interface ExerciseScreens {
     data class ExerciseDetails(
         val exerciseId: String,
         val exerciseName: String,
+        val exerciseCategory: String,
         val exerciseMotivation: String,
         val exerciseDuration: Int,
     ) : ExerciseScreens

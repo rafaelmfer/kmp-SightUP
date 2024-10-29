@@ -10,6 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
@@ -31,13 +34,12 @@ import sightupkmpapp.composeapp.generated.resources.Res
 fun ExerciseDetailsScreen(
     idExercise: String = "",
     title: String = "",
+    category: String = "",
     motivation: String = "",
     duration: Int = 0,
-    tipText: String = "",
     buttonText: String = "",
     navController: NavController? = null,
 ) {
-
     val animationPath = "files/animation_delete_me.json"
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
@@ -50,6 +52,8 @@ fun ExerciseDetailsScreen(
         speed = 1f,
         iterations = Compottie.IterateForever
     )
+
+    var isChecked by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -88,10 +92,10 @@ fun ExerciseDetailsScreen(
         )
 
         SDSCardExerciseBottom(
+            category = category,
             title = title,
             motivation = motivation,
             duration = duration,
-            tipText = tipText,
             buttonText = buttonText,
             onClick = {
                 navController?.navigate(
@@ -103,6 +107,8 @@ fun ExerciseDetailsScreen(
                     )
                 )
             },
+            isChecked = isChecked,
+            onCheckedChanged = { isChecked = it },
             modifier = Modifier
                 .padding(
                     start = SightUPTheme.spacing.spacing_side_margin,

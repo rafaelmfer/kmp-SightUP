@@ -12,7 +12,20 @@
           "package_name": "com.europa.sightup"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "456640147314-a25sa7n9oc189q5eg9039s68312vmuis.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.europa.sightup",
+            "certificate_hash": "ffb672d20b151c47158e6bfe4bc4c34fd2e68dd0"
+          }
+        },
+        {
+          "client_id": "456640147314-nuhont2kmvg9mqahlem851hkti0rjvs0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAf6MvfRqINwgJb5v7Gn2jwvkds_vgZY7Y"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456640147314-nuhont2kmvg9mqahlem851hkti0rjvs0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "456640147314-1seorhd2h4u251a77hkqllvqs861ufgb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.europa.sightup"
+              }
+            }
+          ]
         }
       }
     }
