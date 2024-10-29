@@ -10,6 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
@@ -49,6 +52,8 @@ fun ExerciseFinishScreen(
         speed = 1f,
         iterations = Compottie.IterateForever
     )
+
+    var isChecked by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -91,12 +96,13 @@ fun ExerciseFinishScreen(
             title = title,
             motivation = "For better results, repeat this exercise twice a day.",
             duration = 0,
-            tipText = tipText,
             buttonText = buttonText,
             onClick = {
                 idExercise
                 navController?.navigate(Home)
             },
+            isChecked = isChecked,
+            onCheckedChanged = { isChecked = it },
             modifier = Modifier
                 .padding(
                     start = SightUPTheme.spacing.spacing_side_margin,

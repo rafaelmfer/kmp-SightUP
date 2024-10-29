@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 
-
 sealed interface LoginUIState {
     data object InitialState : LoginUIState
     data object Loading : LoginUIState
@@ -54,6 +53,20 @@ class LoginViewModel(private val repository: SightUpRepository) : ViewModel() {
 
     fun doLogin(email: String, password: String) {
         repository.doLogin(email, password)
+            .onStart {
+                _state.update { LoginUIState.Loading }
+            }
+            .onEach { response: LoginResponse ->
+                _state.update { LoginUIState.LoginSuccess }
+            }
+            .catch { error ->
+                _state.update { LoginUIState.Error(error.message ?: UNKNOWN_ERROR) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun doLoginWithProvider(idToken: String) {
+        repository.doLoginWithProvider(idToken)
             .onStart {
                 _state.update { LoginUIState.Loading }
             }

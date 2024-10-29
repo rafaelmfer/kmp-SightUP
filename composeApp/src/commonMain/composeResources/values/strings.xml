@@ -13,8 +13,20 @@
     <string name="close">Close</string>
     <string name="continue_string">Continue</string>
     <string name="complete">Complete</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+
+
+    <!-- Conditions   -->
+    <string name="eye_strain">Eye Strain</string>
+    <string name="dry_eyes">Dry Eyes</string>
+    <string name="red_eyes">Red Eyes</string>
+    <string name="irritated_eyes">Irritated Eyes</string>
+    <string name="itchy_eyes">Itchy Eyes</string>
+    <string name="watery_eyes">Watery Eyes</string>
+
 
     <!-- Onboarding -->
     <!-- Disclaimer Screen -->

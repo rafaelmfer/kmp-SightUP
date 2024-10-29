@@ -8,23 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
-import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
-import org.jetbrains.compose.resources.painterResource
-import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.tip
 
 @Composable
 fun SDSCardTestBottom(
@@ -37,39 +30,19 @@ fun SDSCardTestBottom(
     buttonText: String = "Start",
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .then(modifier),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = title,
-                style = SightUPTheme.textStyles.h4,
-                color = SightUPTheme.sightUPColors.text_primary,
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Audio Support",
-                    style = SightUPTheme.textStyles.caption,
-                    color = SightUPTheme.sightUPColors.text_primary,
-                )
-                Spacer(Modifier.width(SightUPTheme.spacing.spacing_xs))
-                SDSSwitch(
-                    isChecked = false,
-                    onCheckedChange = {},
-                    modifier = Modifier
-                )
-            }
-        }
+        Text(
+            text = title,
+            style = SightUPTheme.textStyles.h4,
+            color = SightUPTheme.sightUPColors.text_primary,
+        )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         Text(
             text = description,
@@ -101,6 +74,12 @@ fun SDSCardTestBottom(
             }
         }
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        SDSSwitchBoxContainer(
+            text = "audio support",
+            isChecked = isChecked,
+            onCheckedChanged = onCheckedChanged,
+        )
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
         SDSButton(
             text = buttonText,
             onClick = onClick,
@@ -116,9 +95,10 @@ fun SDSCardExerciseBottom(
     title: String = "Circular Motion",
     motivation: String = "Let’s take a quick break and give your eyes some gentle movement!",
     duration: Int = 0,
-    tipText: String = "",
     buttonText: String = "Start",
     onClick: () -> Unit = {},
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -162,25 +142,12 @@ fun SDSCardExerciseBottom(
             style = SightUPTheme.textStyles.body,
             color = SightUPTheme.sightUPColors.text_primary,
         )
-        if (tipText.isNotEmpty()) {
-            Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.tip),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(SightUPTheme.sizes.size_16)
-                )
-                Spacer(Modifier.width(SightUPTheme.spacing.spacing_sm))
-                Text(
-                    text = tipText,
-                    style = SightUPTheme.textStyles.body,
-                    color = SightUPTheme.sightUPColors.text_primary,
-                )
-            }
-        }
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        SDSSwitchBoxContainer(
+            text = "music and voice guidance",
+            isChecked = isChecked,
+            onCheckedChanged = onCheckedChanged,
+        )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
         SDSButton(
             text = buttonText,
