@@ -60,6 +60,8 @@ kvault = "1.12.0"
 # KMP Auth
 kmpauth = "2.1.0"
 
+# Permissions KMP Moko
+permissionsCompose = "0.18.1"
 
 # Tests
 androidx-espresso-core = "3.6.1"
@@ -140,6 +142,9 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 
 # ML Kit
 face-detection = { module = "com.google.mlkit:face-detection", version.ref = "faceDetection" }
+
+# Permissions KMP
+permissions = { module = "dev.icerock.moko:permissions-compose", version.ref = "permissionsCompose" }
 
 ## Libraries for Tests
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

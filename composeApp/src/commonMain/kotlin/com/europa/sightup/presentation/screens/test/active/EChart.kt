@@ -65,6 +65,12 @@ enum class EChart(val resourceId: DrawableResource) {
             5 to "20/40"
         )
 
+        fun fromString(value: String): EChart? {
+            return EChart.entries.firstOrNull {
+                it.name.contains(value, ignoreCase = true)
+            }
+        }
+
         fun getRandomIcon(row: Int): DrawableResource? {
             val directions = chartRows[row]?.keys?.toList()
             val randomDirection = directions?.random()
@@ -76,4 +82,3 @@ enum class EChart(val resourceId: DrawableResource) {
         }
     }
 }
-
