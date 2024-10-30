@@ -133,6 +133,9 @@ kotlin {
             implementation(libs.kmpauth.google) //Google One Tap Sign-In
             implementation(libs.kmpauth.firebase) //Integrated Authentications with Firebase
             implementation(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
+
+            // Helper to Asks Permissions - Moko Permissions
+            api(libs.permissions)
         }
 
         iosMain.dependencies {

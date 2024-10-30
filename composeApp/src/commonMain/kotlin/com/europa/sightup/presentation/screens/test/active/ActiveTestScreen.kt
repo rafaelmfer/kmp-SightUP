@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +46,21 @@ import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.test.DistanceToCamera
+import com.europa.sightup.presentation.screens.test.VoiceRecognition
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -65,9 +75,10 @@ fun ActiveTestScreen(
         viewModel.updateCurrentEye(eyeTested)
     }
 
+    val voiceRecognition = koinInject<VoiceRecognition>()
+
     var testStarted by remember { mutableStateOf(false) }
     var currentMode by remember { mutableStateOf(testMode) }
-
 
     // Distance to camera variables
     val distanceState = remember { mutableStateOf("35") }
@@ -83,7 +94,10 @@ fun ActiveTestScreen(
                 title = "",
                 iconRight = Icons.Default.Close,
                 iconRightVisible = true,
-                onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
+                onRightButtonClick = {
+                    voiceRecognition.stopListening()
+                    navController.navigate(TestScreens.TestRoot)
+                },
             )
         },
         bottomBar = {
@@ -114,6 +128,7 @@ fun ActiveTestScreen(
                     perfectRange = perfectRange,
                     distance = distance,
                     viewModel = viewModel,
+                    voiceRecognition = voiceRecognition,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -129,15 +144,15 @@ private fun TestContent(
     perfectRange: Boolean,
     distance: Float,
     viewModel: ActiveTestViewModel,
+    voiceRecognition: VoiceRecognition,
     modifier: Modifier,
 ) {
-
     Box(
         modifier = Modifier.fillMaxSize().then(modifier),
         contentAlignment = Alignment.Center
     ) {
         if (!perfectRange) {
-            val distanceText = "You're ${distance.toInt()} cm away. \n Please move your device to the optimal range."
+            val distanceText = "You're ${distance.toInt()} cm away. Please move your device to the optimal range."
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -187,8 +202,13 @@ private fun TestContent(
             ) {
                 TestTypeContent(
                     test = test,
+                    currentMode = currentMode,
+                    voiceRecognition = voiceRecognition,
                     onClickChangeUI = { selectedDirection ->
                         viewModel.checkAnswerAndChangeE(selectedDirection, navController)
+                    },
+                    onCannotSeeClick = {
+                        viewModel.cannotSeeButton(navController)
                     }
                 )
 
@@ -218,8 +238,17 @@ private fun TestHeader(currentEFormat: DrawableResource) {
 @Composable
 private fun TestTypeContent(
     test: TestResponse,
+    currentMode: String,
+    voiceRecognition: VoiceRecognition,
     onClickChangeUI: (EChart) -> Unit,
+    onCannotSeeClick: () -> Unit,
 ) {
+    val factory: PermissionsControllerFactory = rememberPermissionsControllerFactory()
+    val controller: PermissionsController = remember(factory) { factory.createPermissionsController() }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+
+    BindEffect(controller)
+
     when {
         test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
             SDSControlE(
@@ -229,6 +258,20 @@ private fun TestTypeContent(
                 downButtonOnClickResult = { onClickChangeUI(EChart.DOWN) },
                 modifier = Modifier.fillMaxWidth()
             )
+            if (currentMode == TestModeEnum.Voice.displayName) {
+                coroutineScope.launch {
+                    controller.providePermission(Permission.RECORD_AUDIO)
+                }
+                voiceRecognition.startListening { spokenText ->
+                    when {
+                        spokenText.contains("down", ignoreCase = true) -> onClickChangeUI(EChart.DOWN)
+                        spokenText.contains("left", ignoreCase = true) -> onClickChangeUI(EChart.LEFT)
+                        spokenText.contains("right", ignoreCase = true) -> onClickChangeUI(EChart.RIGHT)
+                        spokenText.contains("up", ignoreCase = true) -> onClickChangeUI(EChart.UP)
+                        spokenText.contains("cannot see", ignoreCase = true) -> onCannotSeeClick()
+                    }
+                }
+            }
         }
 
         test.title.contains(VisionTestTypes.Astigmatism.title) -> {
@@ -305,6 +348,38 @@ private fun TestTypeContent(
                         bottomPadding = 40
                     )
                 })
+            if (currentMode == TestModeEnum.Voice.displayName) {
+                coroutineScope.launch {
+                    controller.providePermission(Permission.RECORD_AUDIO)
+                }
+                voiceRecognition.startListening { spokenText ->
+                    when {
+                        spokenText.contains("one", ignoreCase = true) -> {}
+                        spokenText.contains("two", ignoreCase = true) -> {}
+                        spokenText.contains("three", ignoreCase = true) -> {}
+                        spokenText.contains("four", ignoreCase = true) -> {}
+                        spokenText.contains("five", ignoreCase = true) -> {}
+                        spokenText.contains("six", ignoreCase = true) -> {}
+                        spokenText.contains("seven", ignoreCase = true) -> {}
+                        spokenText.contains("eight", ignoreCase = true) -> {}
+                        spokenText.contains("nine", ignoreCase = true) -> {}
+                        spokenText.contains("ten", ignoreCase = true) || spokenText.contains("10", ignoreCase = true) -> {}
+                        spokenText.contains("eleven", ignoreCase = true) || spokenText.contains(
+                            "11",
+                            ignoreCase = true
+                        ) -> {
+                        }
+
+                        spokenText.contains("twelve", ignoreCase = true) || spokenText.contains(
+                            "12",
+                            ignoreCase = true
+                        ) -> {
+                        }
+
+                        spokenText.contains("all lines", ignoreCase = true) -> onCannotSeeClick()
+                    }
+                }
+            }
         }
     }
 }
@@ -409,4 +484,3 @@ private fun CountdownScreen(
         )
     }
 }
-

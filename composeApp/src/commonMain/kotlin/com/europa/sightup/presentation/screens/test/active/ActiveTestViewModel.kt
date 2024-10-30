@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import com.europa.sightup.data.repository.SightUpRepository
 
 class ActiveTestViewModel(private val repository: SightUpRepository) : ViewModel() {
+
     private var currentEye = "right"
     private var currentEyeFinalLevel by mutableStateOf(1)
 
@@ -15,12 +16,9 @@ class ActiveTestViewModel(private val repository: SightUpRepository) : ViewModel
     private var correctAnswersCount by mutableStateOf(0)
     private var wrongAnswersCount by mutableStateOf(0)
     private var currentRow by mutableStateOf(1)
+
     var currentEFormat by mutableStateOf(EChart.getRandomIcon(currentRow))
         private set
-
-    fun updateCurrentEye(eye: String) {
-        currentEye = eye
-    }
 
     private fun updateFinalLevel(finalLevel: Int) {
         currentEyeFinalLevel = finalLevel
@@ -35,6 +33,10 @@ class ActiveTestViewModel(private val repository: SightUpRepository) : ViewModel
     private fun resetCounters() {
         correctAnswersCount = 0
         wrongAnswersCount = 0
+    }
+
+    fun updateCurrentEye(eye: String) {
+        currentEye = eye
     }
 
     fun cannotSeeButton(navController: NavController) {
