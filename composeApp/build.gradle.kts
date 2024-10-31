@@ -12,6 +12,14 @@ plugins {
     alias(libs.plugins.google.gms)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.buildConfig)
+    alias(libs.plugins.swiftKlib)
+}
+
+swiftklib {
+    create("native"){
+        path = file("../iosApp/iosApp/native")
+        packageName = "com.europa.sightup.native"
+    }
 }
 
 kotlin {
@@ -32,6 +40,13 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             export(libs.kmpnotifier)
+        }
+        iosTarget.compilations {
+            val main by getting {
+                cinterops {
+                    create("native")
+                }
+            }
         }
     }
 

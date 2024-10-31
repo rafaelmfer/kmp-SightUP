@@ -84,8 +84,7 @@ fun SetDistanceScreen(
                             .align(Alignment.Center)
                     ) {
                         // The Camera view from Android and iOS will be displayed here
-                        val camera = DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f)
-                        distanceState.value = camera.getDistanceToCamera.value
+                        DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f)
                         val distance = distanceState.value.toFloatOrNull() ?: 0f
 
                         if (underRange) {
