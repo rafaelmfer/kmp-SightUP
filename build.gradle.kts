@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.kotlinx.serialization) apply false
     alias(libs.plugins.google.gms) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.swiftKlib) apply false
 }

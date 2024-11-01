@@ -86,7 +86,7 @@ fun ActiveTestScreen(
     val distanceState = remember { mutableStateOf("35") }
     val perfectRange = (distanceState.value.toFloatOrNull() ?: 0f) in 30f..40f
 
-    val camera = DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f, showCameraView = false)
+    val camera = DistanceToCamera(distance = distanceState, showCameraView = false)
     distanceState.value = camera.getDistanceToCamera.value
     val distance = distanceState.value.toFloatOrNull() ?: 0f
 

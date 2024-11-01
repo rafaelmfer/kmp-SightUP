@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +35,14 @@ import com.europa.sightup.presentation.screens.test.DistanceToCamera
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SetDistanceScreen(
@@ -52,6 +60,11 @@ fun SetDistanceScreen(
             onClick()
         }
     }
+
+    val factory: PermissionsControllerFactory = rememberPermissionsControllerFactory()
+    val controller: PermissionsController = remember(factory) { factory.createPermissionsController() }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    BindEffect(controller)
 
     Dialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -84,8 +97,10 @@ fun SetDistanceScreen(
                             .align(Alignment.Center)
                     ) {
                         // The Camera view from Android and iOS will be displayed here
-                        val camera = DistanceToCamera(distance = distanceState, aspectRatio = 3f / 4f)
-                        distanceState.value = camera.getDistanceToCamera.value
+                        coroutineScope.launch {
+                            controller.providePermission(Permission.CAMERA)
+                        }
+                        DistanceToCamera(distance = distanceState)
                         val distance = distanceState.value.toFloatOrNull() ?: 0f
 
                         if (underRange) {
@@ -113,13 +128,11 @@ fun SetDistanceScreen(
                         SwitchAudio()
                     }
                 }
-
                 BottomBlackBar()
             }
         }
     }
 }
-
 
 @Composable
 private fun MiddleCrux() {
