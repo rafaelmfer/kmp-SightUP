@@ -68,6 +68,9 @@ kotlin {
 
             // ML Kit - Face detector
             implementation (libs.face.detection)
+
+            // Wearable
+            implementation(libs.play.services.wearable)
         }
 
         commonMain.dependencies {

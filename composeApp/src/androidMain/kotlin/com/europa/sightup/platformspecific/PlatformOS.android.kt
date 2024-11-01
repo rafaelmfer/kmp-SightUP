@@ -1,4 +1,6 @@
-package com.europa.sightup
+package com.europa.sightup.platformspecific
+
+import com.europa.sightup.BuildConfig
 
 class AndroidPlatform : PlatformOS {
     override val name: String = "ANDROID"

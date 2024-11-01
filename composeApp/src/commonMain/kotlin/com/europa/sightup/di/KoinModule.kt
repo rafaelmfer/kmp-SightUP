@@ -7,7 +7,7 @@ import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.api.createSightUpApiService
 import com.europa.sightup.data.repository.JsonPlaceholderRepository
 import com.europa.sightup.data.repository.SightUpRepository
-import com.europa.sightup.getPlatform
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.MainViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginViewModel

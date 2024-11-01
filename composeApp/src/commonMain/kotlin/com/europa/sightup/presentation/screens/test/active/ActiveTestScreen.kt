@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.data.remote.response.VisionTestTypes
+import com.europa.sightup.platformspecific.createWearMessageReceiver
 import com.europa.sightup.presentation.designsystem.components.AudioVisualizer
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.Countdown
@@ -248,6 +250,50 @@ private fun TestTypeContent(
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     BindEffect(controller)
+
+    val messageReceiver = remember { createWearMessageReceiver("/actions") }
+
+    DisposableEffect(currentMode) {
+        if (currentMode == TestModeEnum.SmartWatch.displayName) {
+            when {
+                test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
+                    messageReceiver.startListening { message ->
+                        when (message) {
+                            "up" -> onClickChangeUI(EChart.UP)
+                            "down" -> onClickChangeUI(EChart.DOWN)
+                            "left" -> onClickChangeUI(EChart.LEFT)
+                            "right" -> onClickChangeUI(EChart.RIGHT)
+                            "cannot see" -> onCannotSeeClick()
+                        }
+                    }
+                }
+
+                test.title.contains(VisionTestTypes.Astigmatism.title) -> {
+                    messageReceiver.startListening { message ->
+                        when (message) {
+                            "1" -> {}
+                            "2" -> {}
+                            "3" -> {}
+                            "4" -> {}
+                            "5" -> {}
+                            "6" -> {}
+                            "7" -> {}
+                            "8" -> {}
+                            "9" -> {}
+                            "10" -> {}
+                            "11" -> {}
+                            "12" -> {}
+                            "all lines" -> onCannotSeeClick()
+                        }
+                    }
+                }
+            }
+        }
+
+        onDispose {
+            messageReceiver.stopListening()
+        }
+    }
 
     when {
         test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
