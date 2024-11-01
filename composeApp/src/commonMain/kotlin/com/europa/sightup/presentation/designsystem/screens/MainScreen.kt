@@ -25,44 +25,45 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import sightupkmpapp.composeapp.generated.resources.Res
 
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun AnimationJson(animation: String) {
+    val composition by rememberLottieComposition {
+        LottieCompositionSpec.JsonString(
+            Res.readBytes(animation).decodeToString()
+
+        )
+    }
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        speed = 1f,
+        iterations = Compottie.IterateForever
+    )
+    Image(
+        painter = rememberLottiePainter(
+            composition = composition,
+            progress = { progress },
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            //.align(Alignment.Center)
+            .background(Color.Transparent),
+        contentDescription = null
+    )
+}
+
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MainScreen() {
-    @Composable
-    fun teste() {
-        val composition by rememberLottieComposition {
-            LottieCompositionSpec.JsonString(
-                Res.readBytes("files/animation_delete_me.json").decodeToString()
-            )
-        }
-
-        val progress by animateLottieCompositionAsState(
-            composition = composition,
-            speed = 1f,
-            iterations = Compottie.IterateForever
-        )
-        Image(
-            painter = rememberLottiePainter(
-                composition = composition,
-                progress = { progress },
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                //.align(Alignment.Center)
-                .background(Color.Transparent),
-            contentDescription = null
-        )
-    }
 
     var firstScreen by remember { mutableStateOf(true) }
     var secondScreen: Boolean by remember { mutableStateOf(false) }
     var causeScreen: Boolean by remember { mutableStateOf(false) }
-
     var iconLeftVisible: Boolean by remember { mutableStateOf(false) }
     var iconRightVisible: Boolean by remember { mutableStateOf(true) }
     var topBarTitle: String by remember { mutableStateOf("Daily Check-in") }
-
     var currentStep: Int by remember { mutableStateOf(1) }
 
     Column(
@@ -106,15 +107,14 @@ fun MainScreen() {
                         }
                     },
                     btn = { it ->
-                        println(it)
                         iconLeftVisible = true
                         currentStep = 2
                     },
-                    jsonEye1 = { teste() },
-                    jsonEye2 = { teste() },
-                    jsonEye3 = { teste() },
-                    jsonEye4 = { teste() },
-                    jsonEye5 = { teste() }
+                    jsonEye1 = "files/animation_delete_me.json",
+                    jsonEye2 = "files/animation_delete_me.json",
+                    jsonEye3 = "files/animation_delete_me.json",
+                    jsonEye4 = "files/animation_delete_me.json",
+                    jsonEye5 = "files/animation_delete_me.json"
                 )
             }
 

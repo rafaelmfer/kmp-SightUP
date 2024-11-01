@@ -1,5 +1,6 @@
 package com.europa.sightup.presentation.designsystem.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,21 +32,31 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import io.github.alexzhirkevich.compottie.Compottie
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import sightupkmpapp.composeapp.generated.resources.Res
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SliderWithPoints(
     showScreen: (Boolean) -> Unit,
     btn: (String) -> Unit,
-    jsonEye1: @Composable () -> Unit,
-    jsonEye2: @Composable () -> Unit,
-    jsonEye3: @Composable () -> Unit,
-    jsonEye4: @Composable () -> Unit,
-    jsonEye5: @Composable () -> Unit,
+    jsonEye1: String,
+    jsonEye2: String,
+    jsonEye3: String,
+    jsonEye4: String,
+    jsonEye5: String,
+
     sliderViewModel: SliderViewModel = viewModel(),
 ) {
     val buttonLabels = listOf("btn1", "btn2", "btn3", "btn4", "btn5")
     val activeBtn by sliderViewModel.activeButton.collectAsState()
+    var activeAnimation: String by remember { mutableStateOf("") }
 
     ConstraintLayout(
         modifier = Modifier
@@ -89,13 +103,38 @@ fun SliderWithPoints(
                 }
         ) {
 
-            when (activeBtn) {
-                "btn1" -> jsonEye1()
-                "btn2" -> jsonEye2()
-                "btn3" -> jsonEye3()
-                "btn4" -> jsonEye4()
-                "btn5" -> jsonEye5()
+            activeAnimation = when (activeBtn) {
+                    "btn1" -> jsonEye1
+                    "btn2" -> jsonEye2
+                    "btn3" -> jsonEye3
+                    "btn4" -> jsonEye4
+                    "btn5" -> jsonEye5
+                    else -> ""
+                }
+
+            val composition by rememberLottieComposition(activeAnimation) {
+                LottieCompositionSpec.JsonString(
+                    //Res.readBytes("files/animation_delete_me.json").decodeToString()
+                    Res.readBytes(activeAnimation).decodeToString()
+                )
             }
+
+            val progress by animateLottieCompositionAsState(
+                composition = composition,
+                speed = 1f,
+                iterations = Compottie.IterateForever
+            )
+            Image(
+                painter = rememberLottiePainter(
+                    composition = composition,
+                    progress = { progress },
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    //.align(Alignment.Center)
+                    .background(Color.Transparent),
+                contentDescription = null
+            )
         }
 
         Column(
@@ -178,7 +217,6 @@ fun SliderWithPoints(
             SDSButton(
                 "Next(1/4)",
                 onClick = {
-                    println(sliderViewModel.activeButton.value)
                     showScreen(true)
                     btn("primeiro")
                 },

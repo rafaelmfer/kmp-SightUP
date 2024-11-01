@@ -64,7 +64,7 @@ kmpauth = "2.1.0"
 permissionsCompose = "0.18.1"
 
 # iOS - Cinterop
-swiftKlib = "0.6.3"
+swiftKlib = "0.6.4"
 
 # Tests
 androidx-espresso-core = "3.6.1"
