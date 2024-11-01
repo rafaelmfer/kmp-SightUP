@@ -44,8 +44,8 @@ fun Step(
     // Current step gets primary color, completed and future steps get secondary
     val color = when {
         isCurrent -> SightUPTheme.colors.primary
-        isComplete -> SightUPTheme.colors.secondary.copy(alpha = 0.8f)
-        else -> SightUPTheme.colors.secondary.copy(alpha = 0.3f)
+        isComplete -> SightUPTheme.colors.inversePrimary
+        else -> SightUPTheme.colors.inversePrimary
     }
 
     Box(
