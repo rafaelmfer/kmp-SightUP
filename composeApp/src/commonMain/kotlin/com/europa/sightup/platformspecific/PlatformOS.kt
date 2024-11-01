@@ -1,4 +1,4 @@
-package com.europa.sightup
+package com.europa.sightup.platformspecific
 
 interface PlatformOS {
     val name: String

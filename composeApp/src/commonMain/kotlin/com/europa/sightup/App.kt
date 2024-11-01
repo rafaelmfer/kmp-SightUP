@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.AppNavHost
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples
 import com.europa.sightup.presentation.designsystem.designSystemNavGraph

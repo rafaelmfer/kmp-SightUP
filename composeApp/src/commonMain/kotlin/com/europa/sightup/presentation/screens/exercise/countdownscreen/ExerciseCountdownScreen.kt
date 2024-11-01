@@ -82,7 +82,6 @@ fun ExerciseCountdownScreen(
         if (progress >= 0.99f) {
             onFinish()
         }
-        println(progress);
     }
 
     val backgroundColor = animateBackgroundColor(

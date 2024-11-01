@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.europa.sightup.SightUPApp
-import com.europa.sightup.getPlatform
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.navigation.OnboardingScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
