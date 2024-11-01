@@ -10,6 +10,5 @@ interface Camera {
 @Composable
 expect fun DistanceToCamera(
     distance: State<String>,
-    aspectRatio: Float,
     showCameraView: Boolean = true,
 ): Camera

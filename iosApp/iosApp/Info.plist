@@ -61,6 +61,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera for vision tests</string>
 	<key>NSMicrophoneUsageDescription</key>
     <string>We need access to your microphone to recognize your voice.</string>
     <key>NSSpeechRecognitionUsageDescription</key>

@@ -3,6 +3,8 @@ package com.europa.sightup.presentation.screens.test
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.OptIn
 import androidx.camera.core.*
@@ -24,8 +26,11 @@ class AndroidCameraImpl(
     private val lifecycleOwner: LifecycleOwner,
     val distanceState: MutableState<String>,
 ) {
-
     private val cameraExecutor: ExecutorService = Executors.newCachedThreadPool()
+    private val handler = Handler(Looper.getMainLooper())  // Handler for delayed execution
+    private val debounceDelay = 500L  // Adjustable delay in milliseconds
+    private var pendingDistance: Float? = null  // Store the latest distance to be set
+    private var updateScheduled = false  // Flag to track if an update is scheduled
 
     init {
         startCamera()
@@ -37,7 +42,6 @@ class AndroidCameraImpl(
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
-            // Setup the preview view
             val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(previewView.surfaceProvider)
             }
@@ -56,7 +60,18 @@ class AndroidCameraImpl(
                                 cameraInfo.focalLengthMm,
                                 cameraInfo.pixelSizeMmX
                             )
-                            distanceState.value = distance.toString()
+
+                            // Store the latest calculated distance
+                            pendingDistance = distance
+
+                            // Schedule update if not already scheduled
+                            if (!updateScheduled) {
+                                updateScheduled = true
+                                handler.postDelayed({
+                                    distanceState.value = pendingDistance?.toString() ?: "No face detected"
+                                    updateScheduled = false  // Reset flag
+                                }, debounceDelay)
+                            }
                         } else {
                             distanceState.value = "No face detected"
                         }
@@ -67,9 +82,6 @@ class AndroidCameraImpl(
 
             try {
                 cameraProvider.unbindAll()
-                //cameraProvider.unbind(preview, imageAnalyzer)
-
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner, cameraSelector, preview, imageAnalyzer
                 )
@@ -123,6 +135,7 @@ class AndroidCameraImpl(
 
     fun shutdown() {
         cameraExecutor.shutdown()
+        handler.removeCallbacksAndMessages(null)  // Clear handler callbacks on shutdown
     }
 
     inner class FaceAnalyzer(private val onFacesDetected: (List<Face>) -> Unit) : ImageAnalysis.Analyzer {
@@ -141,13 +154,6 @@ class AndroidCameraImpl(
                 detector.process(image)
                     .addOnSuccessListener { faces ->
                         onFacesDetected(faces)
-                        if (faces.isNotEmpty()) {
-                            val cameraInfo = getFocalLengthAndPixelSize()
-                            val distance = calculateDistance(faces[0], cameraInfo.focalLengthMm, cameraInfo.pixelSizeMmX)
-                            distanceState.value = distance.toString()
-                        } else {
-                            distanceState.value = "No face detected"
-                        }
                     }
                     .addOnFailureListener { e ->
                         Log.e("FaceAnalyzer", "Face detection failed", e)
