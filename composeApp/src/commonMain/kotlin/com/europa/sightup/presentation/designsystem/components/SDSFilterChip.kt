@@ -56,7 +56,7 @@ fun SDSFilterChip(
             selectedLabelColor = SightUPTheme.sightUPColors.text_secondary,
             disabledLabelColor = SightUPTheme.sightUPColors.text_disabled,
         ),
-        shape = SightUPTheme.shapes.large,
+        shape = SightUPTheme.shapes.extraLarge,
         border = FilterChipDefaults.filterChipBorder(
             enabled = isEnabled,
             selected = isSelected,

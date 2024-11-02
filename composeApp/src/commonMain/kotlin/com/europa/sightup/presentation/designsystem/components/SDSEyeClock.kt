@@ -73,7 +73,7 @@ fun SDSEyeClock(
 
                         IntOffset(offsetX.roundToPx(), 0)
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonTwelveOnClick() }
             )
             Box(
@@ -88,7 +88,7 @@ fun SDSEyeClock(
                             offsetY.roundToPx() / 18
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonElevenOnClick() }
             )
             Box(
@@ -103,7 +103,7 @@ fun SDSEyeClock(
                             (offsetY.roundToPx() / 4.5).toInt()
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonTenOnClick() }
             )
             Box(
@@ -115,7 +115,7 @@ fun SDSEyeClock(
 
                         IntOffset(0, (offsetY.roundToPx() / 2.3).toInt())
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonNineOnClick() }
             )
             Box(
@@ -130,7 +130,7 @@ fun SDSEyeClock(
                             (offsetY.roundToPx() / 2) + (offsetY.roundToPx() / 6)
                         ) //
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonEightOnClick() }
             )
             Box(
@@ -145,7 +145,7 @@ fun SDSEyeClock(
                             offsetY.roundToPx() / 2 + (offsetY.roundToPx() / 3.2).toInt()
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonSevenOnClick() }
             )
             Box(
@@ -157,7 +157,7 @@ fun SDSEyeClock(
 
                         IntOffset((offsetX.roundToPx()), offsetY.roundToPx())
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonSixOnClick() }
             )
             Box(
@@ -172,7 +172,7 @@ fun SDSEyeClock(
                             offsetY.roundToPx() / 2 + (offsetY.roundToPx() / 3.2).toInt()
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonFiveOnClick() }
             )
             Box(
@@ -187,7 +187,7 @@ fun SDSEyeClock(
                             (offsetY.roundToPx() / 2) + (offsetY.roundToPx() / 6)
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonFourOnClick() }
             )
             Box(
@@ -199,7 +199,7 @@ fun SDSEyeClock(
 
                         IntOffset(offsetX.roundToPx(), (offsetY.roundToPx() / 2.3).toInt())
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonThreeOnClick() }
             )
             Box(
@@ -214,7 +214,7 @@ fun SDSEyeClock(
                             (offsetY.roundToPx() / 4.5).toInt()
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonTwoOnClick() }
             )
             Box(
@@ -229,7 +229,7 @@ fun SDSEyeClock(
                             offsetY.roundToPx() / 18
                         )
                     }
-                    .clip(SightUPTheme.shapes.large)
+                    .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonOneOnClick() }
             )
         }
