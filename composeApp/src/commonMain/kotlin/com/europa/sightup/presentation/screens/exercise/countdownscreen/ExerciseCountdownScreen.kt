@@ -1,7 +1,5 @@
 package com.europa.sightup.presentation.screens.exercise.countdownscreen
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,16 +16,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
-import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
-
 import kotlinx.coroutines.delay
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -40,8 +37,6 @@ fun SDSExerciseCountdownScreen() {
         modifier = Modifier.fillMaxSize()
     ) {
         ExerciseCountdownScreen(
-            startColor = Color.LightGray,
-            endColor = Color.Yellow,
             onFinish = {
                 showToast(
                     "new screen"
@@ -54,28 +49,27 @@ fun SDSExerciseCountdownScreen() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ExerciseCountdownScreen(
-    startColor: Color,
-    endColor: Color,
+    animationPath: String = "",
     onFinish: () -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(true) }
+    var isPlaying by remember { mutableStateOf(false) }
 
-    val animationPath = "files/animation_delete_me.json"
-    val composition by rememberLottieComposition {
+    val compositionResult by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
             Res.readBytes(animationPath).decodeToString()
         )
     }
 
     val progress by animateLottieCompositionAsState(
-        composition = composition,
-        speed = 1f,
-        iterations = Compottie.IterateForever
+        composition = compositionResult,
+        isPlaying = isPlaying
     )
 
     LaunchedEffect(Unit) {
-        delay(2000L)
+        delay(1000L)
         isVisible = false
+        isPlaying = true
     }
 
     LaunchedEffect(progress) {
@@ -84,16 +78,9 @@ fun ExerciseCountdownScreen(
         }
     }
 
-    val backgroundColor = animateBackgroundColor(
-        startColor = startColor,
-        endColor = endColor,
-        durationMillis = 5000
-    )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
     ) {
         SDSTopBar(
             modifier = Modifier
@@ -105,28 +92,24 @@ fun ExerciseCountdownScreen(
             iconRight = Res.drawable.close
         )
 
-        if (isVisible) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            if (isVisible) {
                 Text(
                     text = "Now let's get started!",
                     style = SightUPTheme.textStyles.h3,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-            }
-        } else {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
+            } else {
                 Image(
                     painter = rememberLottiePainter(
-                        composition = composition,
-                        progress = { progress },
+                        composition = compositionResult,
+                        progress = { progress }
                     ),
+                    contentScale = ContentScale.FillWidth,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Transparent),
@@ -135,24 +118,4 @@ fun ExerciseCountdownScreen(
             }
         }
     }
-}
-
-@Composable
-fun animateBackgroundColor(
-    startColor: Color,
-    endColor: Color,
-    durationMillis: Int,
-): Color {
-    var isStartColor by remember { mutableStateOf(true) }
-
-    val backgroundColor by animateColorAsState(
-        targetValue = if (isStartColor) startColor else endColor,
-        animationSpec = tween(durationMillis)
-    )
-
-    LaunchedEffect(Unit) {
-        isStartColor = !isStartColor
-    }
-
-    return backgroundColor
 }

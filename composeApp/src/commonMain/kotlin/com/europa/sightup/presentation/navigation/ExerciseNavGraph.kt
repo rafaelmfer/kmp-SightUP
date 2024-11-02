@@ -1,6 +1,5 @@
 package com.europa.sightup.presentation.navigation
 
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -17,7 +16,6 @@ import com.europa.sightup.presentation.screens.exercise.countdownscreen.Exercise
 import com.europa.sightup.presentation.screens.exercise.details.ExerciseDetailsScreen
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreen
 import com.europa.sightup.presentation.screens.exercise.running.ExerciseRunningScreen
-import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.complete
@@ -38,9 +36,10 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             ExerciseDetailsScreen(
                 idExercise = exerciseDetails.exerciseId,
                 title = exerciseDetails.exerciseName,
-                category = exerciseDetails.exerciseCategory,
-                motivation = exerciseDetails.exerciseMotivation,
-                duration = exerciseDetails.exerciseDuration,
+                category = exerciseDetails.category,
+                motivation = exerciseDetails.motivation,
+                duration = exerciseDetails.duration,
+                image = exerciseDetails.imageInstruction,
                 buttonText = stringResource(Res.string.start),
                 navController = navController,
             )
@@ -50,15 +49,14 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             val exerciseCountdown = it.toRoute<ExerciseCountdown>()
 
             ExerciseCountdownScreen(
-                startColor = Color.LightGray,
-                endColor = SightUPTheme.sightUPColors.primary_200,
+                animationPath = "files/countdown_animation.json",
                 onFinish = {
                     navController.navigate(
                         ExerciseRunning(
                             exerciseId = exerciseCountdown.exerciseId,
                             exerciseName = exerciseCountdown.exerciseName,
-                            exerciseMotivation = exerciseCountdown.exerciseMotivation,
-                            exerciseDuration = exerciseCountdown.exerciseDuration
+                            motivation = exerciseCountdown.motivation,
+                            duration = exerciseCountdown.duration
                         )
                     )
                 }
@@ -71,8 +69,9 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             ExerciseRunningScreen(
                 exerciseId = exerciseRunning.exerciseId,
                 exerciseName = exerciseRunning.exerciseName,
-                exerciseMotivation = exerciseRunning.exerciseMotivation,
-                exerciseDuration = exerciseRunning.exerciseDuration,
+                exerciseMotivation = exerciseRunning.motivation,
+                exerciseDuration = exerciseRunning.duration,
+                navController = navController,
             )
         }
 
@@ -82,7 +81,7 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             ExerciseFinishScreen(
                 idExercise = exerciseFinish.exerciseId,
                 title = exerciseFinish.exerciseName,
-                motivation = exerciseFinish.exerciseMotivation,
+                motivation = exerciseFinish.motivation,
                 tipText = stringResource(Res.string.exercise_circular_tip),
                 buttonText = stringResource(Res.string.complete),
                 navController = navController,

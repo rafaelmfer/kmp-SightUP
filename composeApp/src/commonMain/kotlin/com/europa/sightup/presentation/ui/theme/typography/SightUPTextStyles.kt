@@ -124,37 +124,38 @@ val SightUPTheme.textStyles: SightUPTextStyles
             fontWeight = SightUPFontWeight.default.fontWeight_medium,
         ),
 
-        large = MaterialTheme.typography.bodyLarge.copy(
+        large = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_lg,
             fontWeight = SightUPFontWeight.default.fontWeight_bold,
         ),
-        subtitle = MaterialTheme.typography.bodyLarge.copy(
+        subtitle = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_md,
             fontWeight = SightUPFontWeight.default.fontWeight_bold,
         ),
-        body = MaterialTheme.typography.bodyLarge.copy(
+        body = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_base,
             fontWeight = SightUPFontWeight.default.fontWeight_regular,
+            lineHeight = SightUPLineHeight.default.lineHeight_xs
         ),
-        body2 = MaterialTheme.typography.bodyLarge.copy(
+        body2 = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_sm,
             fontWeight = SightUPFontWeight.default.fontWeight_regular,
         ),
-        button = MaterialTheme.typography.bodyLarge.copy(
+        button = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_sm,
             fontWeight = SightUPFontWeight.default.fontWeight_bold,
         ),
-        caption = MaterialTheme.typography.bodyLarge.copy(
+        caption = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_xs,
             fontWeight = SightUPFontWeight.default.fontWeight_regular,
         ),
-        footnote = MaterialTheme.typography.bodyLarge.copy(
+        footnote = MaterialTheme.typography.bodyMedium.copy(
             fontFamily = SightUPTheme.latoFontFamily,
             fontSize = SightUPFontSize.default.fontSize_2xs,
             fontWeight = SightUPFontWeight.default.fontWeight_regular,

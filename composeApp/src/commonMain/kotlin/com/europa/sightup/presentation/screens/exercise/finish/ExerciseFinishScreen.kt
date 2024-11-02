@@ -6,13 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
@@ -53,24 +48,15 @@ fun ExerciseFinishScreen(
         iterations = Compottie.IterateForever
     )
 
-    var isChecked by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SightUPTheme.sightUPColors.background_default)
+            .background(SightUPTheme.sightUPColors.background_light)
     ) {
         SDSTopBar(
             title = "",
-            iconLeftVisible = true,
-            onLeftButtonClick = {
-                navController?.popBackStack()
-            },
-            iconRightVisible = true,
-            iconRight = Icons.Default.Share,
-            onRightButtonClick = {
-                // TODO: Implement share
-            },
+            iconLeftVisible = false,
+            iconRightVisible = false,
             modifier = Modifier
                 .padding(
                     horizontal = SightUPTheme.spacing.spacing_sm,
@@ -98,11 +84,9 @@ fun ExerciseFinishScreen(
             duration = 0,
             buttonText = buttonText,
             onClick = {
-                idExercise
                 navController?.navigate(Home)
             },
-            isChecked = isChecked,
-            onCheckedChanged = { isChecked = it },
+            showGuidance = false,
             modifier = Modifier
                 .padding(
                     start = SightUPTheme.spacing.spacing_side_margin,

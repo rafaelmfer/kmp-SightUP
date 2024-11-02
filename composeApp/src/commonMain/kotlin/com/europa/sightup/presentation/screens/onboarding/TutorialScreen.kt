@@ -23,10 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
-import com.europa.sightup.SightUPApp
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
+import com.europa.sightup.presentation.navigation.WelcomeScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -36,17 +36,20 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.arrow_back
-import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
+import sightupkmpapp.composeapp.generated.resources.tutorial_four
 import sightupkmpapp.composeapp.generated.resources.tutorial_four_content
 import sightupkmpapp.composeapp.generated.resources.tutorial_four_title
+import sightupkmpapp.composeapp.generated.resources.tutorial_one
 import sightupkmpapp.composeapp.generated.resources.tutorial_one_content
 import sightupkmpapp.composeapp.generated.resources.tutorial_one_title
 import sightupkmpapp.composeapp.generated.resources.tutorial_primary_button
 import sightupkmpapp.composeapp.generated.resources.tutorial_primary_button_last_step
 import sightupkmpapp.composeapp.generated.resources.tutorial_secondary_button
 import sightupkmpapp.composeapp.generated.resources.tutorial_secondary_button_last_step
+import sightupkmpapp.composeapp.generated.resources.tutorial_three
 import sightupkmpapp.composeapp.generated.resources.tutorial_three_content
 import sightupkmpapp.composeapp.generated.resources.tutorial_three_title
+import sightupkmpapp.composeapp.generated.resources.tutorial_two
 import sightupkmpapp.composeapp.generated.resources.tutorial_two_content
 import sightupkmpapp.composeapp.generated.resources.tutorial_two_title
 
@@ -54,6 +57,13 @@ import sightupkmpapp.composeapp.generated.resources.tutorial_two_title
 fun TutorialScreen(navController: NavController? = null) {
     var currentStep by remember { mutableStateOf(1) }
     var bottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+
+    val images = listOf(
+        painterResource(Res.drawable.tutorial_one),
+        painterResource(Res.drawable.tutorial_two),
+        painterResource(Res.drawable.tutorial_three),
+        painterResource(Res.drawable.tutorial_four),
+    )
 
     val titles = listOf(
         stringResource(Res.string.tutorial_one_title),
@@ -73,37 +83,34 @@ fun TutorialScreen(navController: NavController? = null) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        if (currentStep > 1) {
-            IconButton(
-                onClick = {
-                    if (currentStep > 1) {
-                        currentStep--
-                    } else {
-                        navController?.popBackStack()
-                    }
-                },
-                modifier = Modifier
-                    .padding(
-                        start = SightUPTheme.spacing.spacing_xs,
-                        top = SightUPTheme.spacing.spacing_xs
-                    )
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.arrow_back),
-                    contentDescription = "Back",
-                    tint = Color.Gray
+        IconButton(
+            onClick = {
+                if (currentStep > 1) {
+                    currentStep--
+                } else {
+                    navController?.popBackStack()
+                }
+            },
+            modifier = Modifier
+                .padding(
+                    start = SightUPTheme.spacing.spacing_xs,
+                    top = SightUPTheme.spacing.spacing_xs
                 )
-            }
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.arrow_back),
+                contentDescription = "Back",
+                tint = Color.Gray
+            )
         }
         Spacer(modifier = Modifier.weight(ONE_FLOAT))
         Image(
-            painter = painterResource(Res.drawable.compose_multiplatform),
-            contentDescription = "",
+            painter = images[currentStep - 1],
+            contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         )
-        Spacer(modifier = Modifier.weight(ONE_FLOAT))
-
+        Spacer(Modifier.weight(ONE_FLOAT))
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom,
@@ -121,11 +128,11 @@ fun TutorialScreen(navController: NavController? = null) {
                 textAlign = TextAlign.Center,
                 style = SightUPTheme.textStyles.h3
             )
-            Spacer(modifier = Modifier.height(SightUPTheme.sizes.size_24))
+            Spacer(Modifier.height(SightUPTheme.sizes.size_24))
             Text(
                 text = descriptions[currentStep - 1],
             )
-            Spacer(modifier = Modifier.height(SightUPTheme.sizes.size_32))
+            Spacer(Modifier.height(SightUPTheme.sizes.size_32))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -137,12 +144,12 @@ fun TutorialScreen(navController: NavController? = null) {
                         stringResource(Res.string.tutorial_secondary_button)
                     },
                     onClick = {
-                        navController?.navigate(SightUPApp)
+                        navController?.navigate(WelcomeScreen)
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = if (currentStep >= 4) ButtonStyle.OUTLINED else ButtonStyle.TEXT
                 )
-                Spacer(modifier = Modifier.width(SightUPTheme.sizes.size_16))
+                Spacer(Modifier.width(SightUPTheme.sizes.size_16))
                 SDSButton(
                     text = if (currentStep >= 4) {
                         stringResource(Res.string.tutorial_primary_button_last_step)

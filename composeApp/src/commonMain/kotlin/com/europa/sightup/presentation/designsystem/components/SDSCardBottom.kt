@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 
 @Composable
@@ -48,6 +49,7 @@ fun SDSCardTestBottom(
             text = description,
             style = SightUPTheme.textStyles.body,
             color = SightUPTheme.sightUPColors.text_primary,
+            lineHeight = SightUPLineHeight.default.lineHeight_xs
         )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         Text(
@@ -97,6 +99,7 @@ fun SDSCardExerciseBottom(
     duration: Int = 0,
     buttonText: String = "Start",
     onClick: () -> Unit = {},
+    showGuidance: Boolean = true,
     isChecked: Boolean = false,
     onCheckedChanged: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
@@ -143,12 +146,14 @@ fun SDSCardExerciseBottom(
             color = SightUPTheme.sightUPColors.text_primary,
         )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
-        SDSSwitchBoxContainer(
-            text = "music and voice guidance",
-            isChecked = isChecked,
-            onCheckedChanged = onCheckedChanged,
-        )
-        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        if (showGuidance) {
+            SDSSwitchBoxContainer(
+                text = "music and voice guidance",
+                isChecked = isChecked,
+                onCheckedChanged = onCheckedChanged,
+            )
+            Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        }
         SDSButton(
             text = buttonText,
             onClick = onClick,

@@ -16,7 +16,7 @@ core-splash-screen = "1.1.0-rc01"
 
 # Google
 googleGms = "4.4.2"
-googleKsp = "2.0.20-1.0.24"
+googleKsp = "2.0.21-1.0.25"
 
 # Design
 androidx-appcompat = "1.7.0"

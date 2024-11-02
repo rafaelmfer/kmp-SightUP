@@ -1,5 +1,6 @@
 package com.europa.sightup.presentation.screens.test.root
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -69,6 +70,7 @@ private fun TestScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(SightUPTheme.sightUPColors.background_light)
                 .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

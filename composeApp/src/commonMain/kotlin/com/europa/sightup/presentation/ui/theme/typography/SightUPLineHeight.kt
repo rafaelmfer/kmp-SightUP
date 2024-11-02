@@ -8,13 +8,45 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 
 @Immutable
 data class SightUPLineHeight(
+    /**
+     * @property lineHeight_2xs is a TextUnit property that represents the 2xs line height value.
+     * The value is set to 16.sp.
+     */
     val lineHeight_2xs: TextUnit = 16.sp,
+    /**
+     * @property lineHeight_xs is a TextUnit property that represents the xs line height value.
+     * The value is set to 20.sp.
+     */
     val lineHeight_xs: TextUnit = 20.sp,
+    /**
+     * @property lineHeight_sm is a TextUnit property that represents the sm line height value.
+     * The value is set to 24.sp.
+     */
     val lineHeight_sm: TextUnit = 24.sp,
+    /**
+     * @property lineHeight_md is a TextUnit property that represents the md line height value.
+     * The value is set to 28.sp.
+     */
     val lineHeight_md: TextUnit = 28.sp,
+    /**
+     * @property lineHeight_lg is a TextUnit property that represents the lg line height value.
+     * The value is set to 32.sp.
+     */
     val lineHeight_lg: TextUnit = 32.sp,
+    /**
+     * @property lineHeight_xl is a TextUnit property that represents the xl line height value.
+     * The value is set to 36.sp.
+     */
     val lineHeight_xl: TextUnit = 36.sp,
+    /**
+     * @property lineHeight_2xl is a TextUnit property that represents the 2xl line height value.
+     * The value is set to 40.sp.
+     */
     val lineHeight_2xl: TextUnit = 40.sp,
+    /**
+     * @property lineHeight_3xl is a TextUnit property that represents the 3xl line height value.
+     * The value is set to 44.sp.
+     */
     val lineHeight_3xl: TextUnit = 44.sp
 ) {
     internal companion object {

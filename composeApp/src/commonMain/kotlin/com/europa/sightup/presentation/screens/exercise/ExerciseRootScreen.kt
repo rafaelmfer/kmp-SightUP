@@ -1,5 +1,6 @@
 package com.europa.sightup.presentation.screens.exercise
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +43,9 @@ fun ExerciseRootScreen(
     val state by viewModel.exercise.collectAsStateWithLifecycle()
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SightUPTheme.sightUPColors.background_light)
     ) {
         SDSTopBar(
             title = "Eye Exercises",
@@ -134,14 +138,14 @@ private fun FilterChips(onChipClick: (String) -> Unit) {
 @Composable
 private fun ExerciseList(exercises: List<ExerciseResponse>, navController: NavController, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
-        items(exercises) { exercise ->
-            ExerciseItemCard(exercise = exercise, navController = navController)
+        itemsIndexed(exercises) { index, exercise ->
+            ExerciseItemCard(exercise = exercise, index = index, navController = navController)
         }
     }
 }
 
 @Composable
-private fun ExerciseItemCard(exercise: ExerciseResponse, navController: NavController) {
+private fun ExerciseItemCard(exercise: ExerciseResponse, index: Int, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,6 +156,7 @@ private fun ExerciseItemCard(exercise: ExerciseResponse, navController: NavContr
     ) {
         CardExercise(
             exercise = exercise,
+            iconWhite = index == 1 || index == 2,
             modifier = Modifier.clickable {
                 navController.navigate(
                     ExerciseDetails(
@@ -159,7 +164,8 @@ private fun ExerciseItemCard(exercise: ExerciseResponse, navController: NavContr
                         exercise.title,
                         exercise.category,
                         exercise.motivation,
-                        exercise.duration
+                        exercise.duration,
+                        exercise.imageInstruction,
                     )
                 )
             }
