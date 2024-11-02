@@ -53,6 +53,7 @@ fun SDSTimer(
     seconds: Int = 10,
     minutes: Int = 2,
     onTimerFinish: () -> Unit = { },
+    modifier: Modifier = Modifier,
 ) {
     var secondsLeft by remember { mutableStateOf(seconds) }
     var minutesLeft by remember { mutableStateOf(minutes) }
@@ -67,6 +68,7 @@ fun SDSTimer(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .then(modifier),
     ) {
         Text(
             text = "$title ",

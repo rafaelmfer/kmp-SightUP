@@ -62,7 +62,7 @@ fun SDSButtonArrow(
     text: String = "",
     onClick: () -> Unit = {},
     textStyle: TextStyle = SightUPTheme.textStyles.body2,
-    shape: Shape = SightUPTheme.shapes.large,
+    shape: Shape = SightUPTheme.shapes.extraLarge,
     contentPadding: PaddingValues = PaddingValues(
         horizontal = SightUPTheme.spacing.spacing_base,
         vertical = SightUPTheme.spacing.spacing_xs

@@ -130,17 +130,17 @@ data class SightUPColors(
 
     // Success Colors
     /**
-     * Success color is the color #DEFFE0
+     * Success color is the color #ECFBED
      * @see SightUPColorPalette.success_100
      */
     val success_100: Color = SightUPColorPalette.success_100,
     /**
-     * Success color is the color #2CA834
+     * Success color is the color #79B97D
      * @see SightUPColorPalette.success_200
      */
     val success_200: Color = SightUPColorPalette.success_200,
     /**
-     * Success color is the color #0D7014
+     * Success color is the color #57925B
      * @see SightUPColorPalette.success_300
      */
     val success_300: Color = SightUPColorPalette.success_300,
@@ -148,17 +148,17 @@ data class SightUPColors(
 
     // Error Colors
     /**
-     * Error color is the color #FFEFF2
+     * Error color is the color #FFEAE4
      * @see SightUPColorPalette.error_100
      */
     val error_100: Color = SightUPColorPalette.error_100,
     /**
-     * Error color is the color #FFD9E0
+     * Error color is the color #F95C30
      * @see SightUPColorPalette.error_200
      */
     val error_200: Color = SightUPColorPalette.error_200,
     /**
-     * Error color is the color #FAA2B3
+     * Error color is the color #BE4A2A
      * @see SightUPColorPalette.error_300
      */
     val error_300: Color = SightUPColorPalette.error_300,
@@ -166,17 +166,17 @@ data class SightUPColors(
 
     // Warning Colors
     /**
-     * Warning color is the color #FFE8E2
+     * Warning color is the color #FFF6DB
      * @see SightUPColorPalette.warning_100
      */
     val warning_100: Color = SightUPColorPalette.warning_100,
     /**
-     * Warning color is the color #F95C30
+     * Warning color is the color #D1A626
      * @see SightUPColorPalette.warning_200
      */
     val warning_200: Color = SightUPColorPalette.warning_200,
     /**
-     * Warning color is the color #9D2C0C
+     * Warning color is the color #B8901A
      * @see SightUPColorPalette.warning_300
      */
     val warning_300: Color = SightUPColorPalette.warning_300,
@@ -184,12 +184,12 @@ data class SightUPColors(
 
     // Info Colors
     /**
-     * Info color is the color #DEF5FF
+     * Info color is the color #E5F7FF
      * @see SightUPColorPalette.info_100
      */
     val info_100: Color = SightUPColorPalette.info_100,
     /**
-     * Info color is the color #23B4F6
+     * Info color is the color #1BA7E7
      * @see SightUPColorPalette.info_200
      */
     val info_200: Color = SightUPColorPalette.info_200,
@@ -201,17 +201,17 @@ data class SightUPColors(
 
     // Purple Colors
     /**
-     * Purple color is the color #EDE6FF
+     * Purple color is the color #F5F1FF
      * @see SightUPColorPalette.purple_100
      */
     val purple_100: Color = SightUPColorPalette.purple_100,
     /**
-     * Purple color is the color #7D4CF8
+     * Purple color is the color #A890E3
      * @see SightUPColorPalette.purple_200
      */
     val purple_200: Color = SightUPColorPalette.purple_200,
     /**
-     * Purple color is the color #360D9C
+     * Purple color is the color #6645BA
      * @see SightUPColorPalette.purple_300
      */
     val purple_300: Color = SightUPColorPalette.purple_300,
@@ -333,27 +333,27 @@ data class SightUPColors(
      */
     val background_overlay: Color = SightUPContextColor.background_overlay,
     /**
-     * Background error color is the color #FFEFF2
+     * Background error color is the color #FFEAE4
      * @see SightUPContextColor.background_error
      */
     val background_error: Color = SightUPContextColor.background_error,
     /**
-     * Background warning color is the color #FFE8E2
+     * Background warning color is the color #FFF6DB
      * @see SightUPContextColor.background_warning
      */
     val background_warning: Color = SightUPContextColor.background_warning,
     /**
-     * Background success color is the color #DEFFE0
+     * Background success color is the color #ECFBED
      * @see SightUPContextColor.background_success
      */
     val background_success: Color = SightUPContextColor.background_success,
     /**
-     * Background info color is the color #DEF5FF
+     * Background info color is the color #E5F7FF
      * @see SightUPContextColor.background_info
      */
     val background_info: Color = SightUPContextColor.background_info,
     /**
-     * Background purple color is the color #EDE6FF
+     * Background purple color is the color #F5F1FF
      * @see SightUPContextColor.background_purple
      */
     val background_purple: Color = SightUPContextColor.background_purple,

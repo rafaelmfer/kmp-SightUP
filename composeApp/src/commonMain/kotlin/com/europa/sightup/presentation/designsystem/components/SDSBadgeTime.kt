@@ -38,11 +38,11 @@ fun SDSBadgeTime(
             .semantics {
                 contentDescription = if (timeMinutes > 1) "$timeMinutes minutes" else "$timeMinutes minute"
             }
-            .clip(SightUPTheme.shapes.large)
+            .clip(SightUPTheme.shapes.extraLarge)
             .border(
                 width = SightUPBorder.Width.sm,
                 color = SightUPTheme.sightUPColors.text_primary,
-                shape = SightUPTheme.shapes.large
+                shape = SightUPTheme.shapes.extraLarge
             )
             .padding(
                 horizontal = SightUPTheme.spacing.spacing_sm,

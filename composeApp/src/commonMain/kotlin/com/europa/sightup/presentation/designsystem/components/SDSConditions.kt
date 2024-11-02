@@ -77,7 +77,7 @@ fun SDSConditions(
 
     Text(
         modifier = Modifier
-            .clip(SightUPTheme.shapes.large)
+            .clip(SightUPTheme.shapes.extraLarge)
             .background(backgroundColor)
             .padding(
                 horizontal = SightUPTheme.spacing.spacing_sm,

@@ -26,7 +26,7 @@ internal val LocalShapes = staticCompositionLocalOf {
          * @property large is a RoundedCornerShape property that represents the large shape.
          * The value is set to RoundedCornerShape(SightUPBorder.Radius.lg) = 24.dp.
          */
-        large = RoundedCornerShape(SightUPBorder.Radius.full),
+        large = RoundedCornerShape(SightUPBorder.Radius.lg),
         /**
          * @property extraLarge is a CircleShape property that represents the extra large shape.
          * The value is set to CircleShape.
