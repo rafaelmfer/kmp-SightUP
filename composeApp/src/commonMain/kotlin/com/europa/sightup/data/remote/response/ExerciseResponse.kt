@@ -12,6 +12,7 @@ data class ExerciseResponse(
     @SerialName("type") val type: String,
     @SerialName("video") val video: String,
     @SerialName("images") val images: String,
+    @SerialName("imageInstruction") val imageInstruction: String,
     @SerialName("duration") val duration: Int,
     @SerialName("helps") val helps: List<String>,
     @SerialName("category") val category: String,

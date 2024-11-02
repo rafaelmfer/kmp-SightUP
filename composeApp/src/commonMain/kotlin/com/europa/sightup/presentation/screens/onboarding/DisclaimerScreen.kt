@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
+import sightupkmpapp.composeapp.generated.resources.disclaimer
 import sightupkmpapp.composeapp.generated.resources.disclaimer_button
 import sightupkmpapp.composeapp.generated.resources.disclaimer_content
 import sightupkmpapp.composeapp.generated.resources.disclaimer_title
@@ -43,7 +43,7 @@ fun DisclaimerScreen(navController: NavController? = null) {
     ) {
         Spacer(modifier = Modifier.weight(ONE_FLOAT))
         Image(
-            painter = painterResource(Res.drawable.compose_multiplatform),
+            painter = painterResource(Res.drawable.disclaimer),
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

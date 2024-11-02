@@ -25,6 +25,9 @@ sealed interface OnboardingScreens {
 
 }
 
+@Serializable
+object WelcomeScreen
+
 // Home Routes
 @Serializable
 object Home
@@ -41,33 +44,34 @@ sealed interface ExerciseScreens {
     data class ExerciseDetails(
         val exerciseId: String,
         val exerciseName: String,
-        val exerciseCategory: String,
-        val exerciseMotivation: String,
-        val exerciseDuration: Int,
+        val category: String,
+        val motivation: String,
+        val duration: Int,
+        val imageInstruction: String,
     ) : ExerciseScreens
 
     @Serializable
     data class ExerciseCountdown(
         val exerciseId: String,
         val exerciseName: String,
-        val exerciseMotivation: String,
-        val exerciseDuration: Int,
+        val motivation: String,
+        val duration: Int,
     ) : ExerciseScreens
 
     @Serializable
     data class ExerciseRunning(
         val exerciseId: String,
         val exerciseName: String,
-        val exerciseMotivation: String,
-        val exerciseDuration: Int,
+        val motivation: String,
+        val duration: Int,
     ) : ExerciseScreens
 
     @Serializable
     data class ExerciseFinish(
         val exerciseId: String,
         val exerciseName: String,
-        val exerciseMotivation: String,
-        val exerciseDuration: Int,
+        val motivation: String,
+        val duration: Int,
     ) : ExerciseScreens
 }
 

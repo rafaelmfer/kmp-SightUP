@@ -19,9 +19,11 @@ import com.europa.sightup.presentation.AppNavHost
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples
 import com.europa.sightup.presentation.designsystem.designSystemNavGraph
 import com.europa.sightup.presentation.navigation.OnboardingScreens
+import com.europa.sightup.presentation.navigation.WelcomeScreen
 import com.europa.sightup.presentation.navigation.onboardingNavGraph
 import com.europa.sightup.presentation.screens.FlowSeparator
 import com.europa.sightup.presentation.screens.FlowSeparatorScreen
+import com.europa.sightup.presentation.screens.onboarding.WelcomeScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
@@ -61,7 +63,9 @@ fun InitNavGraph(
                 FlowSeparatorScreen(navController = navController)
             }
             onboardingNavGraph(navController)
-
+            composable<WelcomeScreen> {
+                WelcomeScreen(navController = navController)
+            }
             composable<SightUPApp> {
                 AppNavHost()
             }

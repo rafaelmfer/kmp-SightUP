@@ -14,6 +14,7 @@ data class TestResponse(
     @SerialName("testMode") val testMode: TestModeResponse,
     @SerialName("video") val video: String,
     @SerialName("images") val images: String,
+    @SerialName("imageInstruction") val imageInstruction: String,
     @SerialName("checkList") val checkList: List<String>,
     @SerialName("howItWorks") val howItWorks: List<String>,
 ) {
