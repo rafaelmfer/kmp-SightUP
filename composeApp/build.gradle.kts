@@ -84,6 +84,11 @@ kotlin {
             // ML Kit - Face detector
             implementation (libs.face.detection)
 
+            // ExoPlayer
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.exoplayer.dash)
+            implementation(libs.androidx.media3.ui)
+
             // Wearable
             implementation(libs.play.services.wearable)
         }

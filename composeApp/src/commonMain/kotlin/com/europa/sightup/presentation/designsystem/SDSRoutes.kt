@@ -23,6 +23,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSListB
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSVideoPlayerScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
 import com.europa.sightup.presentation.designsystem.components.SDSBadgeTimeScreen
 import com.europa.sightup.presentation.designsystem.components.SDSButtonArrowScreen
@@ -34,6 +35,7 @@ import com.europa.sightup.presentation.designsystem.components.SDSListButtonsSel
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTimerScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTopBarScreen
+import com.europa.sightup.presentation.designsystem.components.SDSVideoPlayerPreview
 import com.europa.sightup.presentation.designsystem.components.SdsButtonScreen
 import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScreen
 import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
@@ -105,6 +107,9 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object SDSListButtonsSelectableScreen : DesignSystemSamples
+
+    @Serializable
+    data object SDSVideoPlayerScreen : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -167,6 +172,9 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         }
         composable<SDSListButtonsSelectableScreen> {
             SDSListButtonsSelectablePreview()
+        }
+        composable<SDSVideoPlayerScreen> {
+            SDSVideoPlayerPreview()
         }
     }
 }

@@ -30,6 +30,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSListB
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSVideoPlayerScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -56,6 +57,7 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSButtonArrow to SDSButtonArrow::class.simpleName!!,
         SDSCardDailyCheckScreen to SDSCardDailyCheckScreen::class.simpleName!!,
         SDSListButtonsSelectableScreen to SDSListButtonsSelectableScreen::class.simpleName!!,
+        SDSVideoPlayerScreen to SDSVideoPlayerScreen::class.simpleName!!,
     )
 
     Column(
