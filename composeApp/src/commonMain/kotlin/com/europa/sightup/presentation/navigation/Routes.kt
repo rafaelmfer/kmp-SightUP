@@ -107,6 +107,15 @@ sealed interface TestScreens {
             return TestActive::class.simpleName.toString()
         }
     }
+
+    @Serializable
+    data class TestResult(
+        val appTest: Boolean,
+        val testId: String,
+        val testTitle: String,
+        val left: String,
+        val right: String,
+    ) : TestScreens
 }
 
 // Prescriptions Routes

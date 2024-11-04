@@ -5,65 +5,124 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.europa.sightup.data.repository.SightUpRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-class ActiveTestViewModel(private val repository: SightUpRepository) : ViewModel() {
+object EyeTestRepository {
+    var rightEyeResult: String? = null
+    var leftEyeResult: String? = null
+
+    fun saveTestResult(eye: String, finalLevel: String?) {
+        if (eye == "right") {
+            rightEyeResult = finalLevel
+        } else if (eye == "left") {
+            leftEyeResult = finalLevel
+        }
+    }
+}
+
+class ActiveTestViewModel : ViewModel() {
+    enum class ActiveTest {
+        VisualAcuity,
+        Astigmatism
+    }
+
+    private var activeTest: ActiveTest = ActiveTest.VisualAcuity
+        private set
+
+    private val _testState = MutableStateFlow<TestState>(TestState.InProgress)
+    val testState: StateFlow<TestState> = _testState
 
     private var currentEye = "right"
-    private var currentEyeFinalLevel by mutableStateOf(1)
 
-    // Control variables for the test
+    // EChart Test variables
     private var correctAnswersCount by mutableStateOf(0)
     private var wrongAnswersCount by mutableStateOf(0)
     private var currentRow by mutableStateOf(1)
 
-    var currentEFormat by mutableStateOf(EChart.getRandomIcon(currentRow))
+    var currentEFormat by mutableStateOf(EChart.getRandomIcon(1))
         private set
+    private var lastDirection: EChart? = null // To ensure the same direction is not repeated
 
-    private fun updateFinalLevel(finalLevel: Int) {
-        currentEyeFinalLevel = finalLevel
-//        TODO: save the test results in the database
-//        repository.saveTestResults(currentEye, finalLevel)
-    }
 
-    private fun printTestStatus() {
-        println("test -> $currentEye eye: ${EChart.getScoreForRow(currentEyeFinalLevel)}")
-    }
-
-    private fun resetCounters() {
-        correctAnswersCount = 0
-        wrongAnswersCount = 0
+    // Eye Test Functions
+    fun setActiveTest(test: ActiveTest) {
+        activeTest = test
     }
 
     fun updateCurrentEye(eye: String) {
         currentEye = eye
     }
 
-    fun cannotSeeButton(navController: NavController) {
-        wrongAnswersCount++
-        checkAnswerAndChangeE(null, navController)
+    private fun displayFinalResults() {
+        _testState.value = TestState.Completed
+        println("Test -> Completed! Right Eye: ${EyeTestRepository.rightEyeResult}, Left Eye: ${EyeTestRepository.leftEyeResult}")
     }
 
-    fun checkAnswerAndChangeE(
+    fun testButton(navController: NavController) {
+        if (activeTest == ActiveTest.VisualAcuity) {
+            wrongAnswersCount++
+            handleEChartSelection(null, navController)
+        } else if (activeTest == ActiveTest.Astigmatism) {
+            println("test -> All lines appear the same.")
+            endTestForCurrentEye(navController, "You don't have astigmatism.")
+        }
+    }
+
+    fun onClickChangeUI(input: Any, navController: NavController) {
+        when (activeTest) {
+            ActiveTest.VisualAcuity -> {
+                if (input is EChart) {
+                    handleEChartSelection(input, navController)
+                } else {
+                    println("Error: Input type mismatch for VisualAcuity test")
+                }
+            }
+            ActiveTest.Astigmatism -> {
+                if (input is Int) {
+                    handleAstigmatismSelection(input, navController)
+                } else {
+                    println("Error: Input type mismatch for Astigmatism test")
+                }
+            }
+        }
+    }
+
+    private fun endTestForCurrentEye(
+        navController: NavController, result: String?,
+    ) {
+        EyeTestRepository.saveTestResult(eye = currentEye, finalLevel = result)
+
+        if (currentEye == "right") {
+            currentEye = "left"
+            if (activeTest == ActiveTest.VisualAcuity) {
+                resetTestForNextEye()}
+            navController.popBackStack()
+        } else {
+            displayFinalResults()
+        }
+    }
+
+    // Visual Acuity Test functions
+    private fun handleEChartSelection(
         selectedDirection: EChart?,
         navController: NavController,
     ) {
         selectedDirection?.let {
-            val currentE = EChart.entries.find { it.resourceId == currentEFormat }
-            if (selectedDirection == currentE) {
+            if (selectedDirection == currentEFormat?.direction) {
                 correctAnswersCount++
-                println("test -> Correct answer! Current count: $correctAnswersCount")
+                println("Test -> Correct answer! Current count: $correctAnswersCount")
             } else {
                 wrongAnswersCount++
-                println("test -> Wrong answer! Current count: $wrongAnswersCount")
+                println("Test -> Wrong answer! Current count: $wrongAnswersCount")
             }
         }
 
-        // Change rows or end the test based on the current count
+        // To check if the test is completed or move to the next row
         when {
             correctAnswersCount == 3 -> {
-                if (currentRow >= 5) {
-                    endTestForCurrentEye(navController, currentRow)
+                if (currentRow >= 8) {
+                    endTestForCurrentEye(navController, EChart.getScoreForRow(currentRow))
                     return
                 }
                 currentRow++
@@ -71,19 +130,39 @@ class ActiveTestViewModel(private val repository: SightUpRepository) : ViewModel
             }
 
             wrongAnswersCount >= 3 -> {
-                endTestForCurrentEye(navController, currentRow - 1)
+                val finalRow = currentRow -1
+                endTestForCurrentEye(navController, EChart.getScoreForRow(finalRow))
                 return
             }
         }
+        currentEFormat = EChart.getRandomIcon(currentRow, lastDirection)
+        lastDirection = currentEFormat?.direction
 
+    }
+
+    private fun resetTestForNextEye() {
+        correctAnswersCount = 0
+        wrongAnswersCount = 0
+        currentRow = 1
         currentEFormat = EChart.getRandomIcon(currentRow)
     }
 
-    private fun endTestForCurrentEye(navController: NavController, row: Int) {
-        updateFinalLevel(row)
-        printTestStatus()
-        resetCounters()
-        navController.popBackStack()
+    private fun resetCounters() {
+        correctAnswersCount = 0
+        wrongAnswersCount = 0
+    }
+
+    // Function for the Astigmatism test
+    private fun handleAstigmatismSelection(direction: Int, navController: NavController) {
+        val angle = AstigmatismChart.getAngleForDirection(direction)
+        println("test -> Selected direction for Astigmatism: $direction with angle $angle")
+        endTestForCurrentEye(navController, "$angle")
+    }
+
+    sealed class TestState {
+        data object InProgress : TestState()
+        data object Completed : TestState()
     }
 }
+
 

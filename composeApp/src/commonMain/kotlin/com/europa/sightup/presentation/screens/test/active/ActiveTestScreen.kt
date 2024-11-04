@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,8 +60,6 @@ import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import multiplatform.network.cmptoast.showToast
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,6 +72,7 @@ fun ActiveTestScreen(
     eyeTested: String,
 ) {
     val viewModel = koinViewModel<ActiveTestViewModel>()
+
     LaunchedEffect(eyeTested) {
         viewModel.updateCurrentEye(eyeTested)
     }
@@ -82,13 +82,35 @@ fun ActiveTestScreen(
     var testStarted by remember { mutableStateOf(false) }
     var currentMode by remember { mutableStateOf(testMode) }
 
-    // Distance to camera variables
+    // Variables to store the distance user-camera
     val distanceState = remember { mutableStateOf("35") }
     val perfectRange = (distanceState.value.toFloatOrNull() ?: 0f) in 30f..40f
 
     val camera = DistanceToCamera(distance = distanceState, showCameraView = false)
     distanceState.value = camera.getDistanceToCamera.value
     val distance = distanceState.value.toFloatOrNull() ?: 0f
+
+    // Move when the test has been completed move to the result screen
+    val testState by viewModel.testState.collectAsState()
+
+    LaunchedEffect(testState) {
+        if (testState is ActiveTestViewModel.TestState.Completed) {
+            val leftEyeResult = EyeTestRepository.leftEyeResult ?: ""
+            val rightEyeResult = EyeTestRepository.rightEyeResult ?: ""
+
+            navController.navigate(
+                TestScreens.TestResult
+                    (
+                    appTest = true,
+                    testId = test.taskId,
+                    testTitle = test.title,
+                    left = leftEyeResult,
+                    right = rightEyeResult,
+                )
+            )
+        }
+    }
+
 
     Scaffold(
         topBar = {
@@ -105,7 +127,7 @@ fun ActiveTestScreen(
         bottomBar = {
             if (testStarted) {
                 if (perfectRange) {
-                    BottomBar(currentMode) { newMode -> currentMode = newMode }
+                    BottomModeBar(currentMode) { newMode -> currentMode = newMode }
                 } else {
                     Box(
                         modifier = Modifier
@@ -114,7 +136,7 @@ fun ActiveTestScreen(
                             .zIndex(10f)
                             .pointerInput(Unit) {}
                     ) {
-                        BottomBar(currentMode) {   /* No-op to disable mode switching */ }
+                        BottomModeBar(currentMode) {   /* No-op to disable mode switching */ }
                     }
                 }
             }
@@ -153,6 +175,7 @@ private fun TestContent(
         modifier = Modifier.fillMaxSize().then(modifier),
         contentAlignment = Alignment.Center
     ) {
+        // Warning sign if the device is not in the optimal range
         if (!perfectRange) {
             val distanceText = "You're ${distance.toInt()} cm away. Please move your device to the optimal range."
             Box(
@@ -171,7 +194,7 @@ private fun TestContent(
             }
         }
 
-        // Main content
+        // Main content of each test
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -184,10 +207,12 @@ private fun TestContent(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Only to display the E-chart
             if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {
-                viewModel.currentEFormat?.let { TestHeader(it) }
+                viewModel.currentEFormat?.let { VisualAcuityChart(it) }
             }
 
+            // Controllers of the tests
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -202,21 +227,32 @@ private fun TestContent(
                 verticalArrangement = if (test.title.contains(VisionTestTypes.Astigmatism.title))
                     Arrangement.SpaceEvenly else Arrangement.SpaceBetween
             ) {
+
+                LaunchedEffect(test) {
+                    if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {
+                        viewModel.setActiveTest(ActiveTestViewModel.ActiveTest.VisualAcuity)
+                    } else if (test.title.contains(VisionTestTypes.Astigmatism.title)) {
+                        viewModel.setActiveTest(ActiveTestViewModel.ActiveTest.Astigmatism)
+                    }
+                }
+
                 TestTypeContent(
                     test = test,
                     currentMode = currentMode,
                     voiceRecognition = voiceRecognition,
-                    onClickChangeUI = { selectedDirection ->
-                        viewModel.checkAnswerAndChangeE(selectedDirection, navController)
+                    onClickChangeUI = { input ->
+                        viewModel.onClickChangeUI(input, navController)
                     },
-                    onCannotSeeClick = {
-                        viewModel.cannotSeeButton(navController)
+                    onTestButtonClick = {
+                        viewModel.testButton(navController)
                     }
                 )
 
                 TestModeContent(
                     currentMode = currentMode,
-                    onButtonClick = { viewModel.cannotSeeButton(navController) }
+                    onButtonClick = { viewModel.testButton(navController) },
+                    textButton =
+                    if (test.title.contains(VisionTestTypes.Astigmatism.title)) "All lines same" else "Cannot See"
                 )
             }
         }
@@ -224,26 +260,28 @@ private fun TestContent(
 }
 
 @Composable
-private fun TestHeader(currentEFormat: DrawableResource) {
+private fun VisualAcuityChart(currentEFormat: EChartIcon) {
     Box(
         modifier = Modifier.fillMaxWidth().height(150.dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(currentEFormat),
+            painter = painterResource(resource = currentEFormat.resourceId),
             contentDescription = "Visual acuity chart",
-            modifier = Modifier.size(50.dp),
         )
     }
 }
 
+
+// This composable contains the controller with four buttons for the Visual Acuity Test
+// and the circle with lines for the Astigmatism Test
 @Composable
 private fun TestTypeContent(
     test: TestResponse,
     currentMode: String,
     voiceRecognition: VoiceRecognition,
-    onClickChangeUI: (EChart) -> Unit,
-    onCannotSeeClick: () -> Unit,
+    onClickChangeUI: (Any) -> Unit,
+    onTestButtonClick: () -> Unit,
 ) {
     val factory: PermissionsControllerFactory = rememberPermissionsControllerFactory()
     val controller: PermissionsController = remember(factory) { factory.createPermissionsController() }
@@ -263,27 +301,64 @@ private fun TestTypeContent(
                             "down" -> onClickChangeUI(EChart.DOWN)
                             "left" -> onClickChangeUI(EChart.LEFT)
                             "right" -> onClickChangeUI(EChart.RIGHT)
-                            "cannot see" -> onCannotSeeClick()
+                            "cannot see" -> onTestButtonClick()
                         }
                     }
                 }
 
                 test.title.contains(VisionTestTypes.Astigmatism.title) -> {
                     messageReceiver.startListening { message ->
+                        val direction = message.toInt()
                         when (message) {
-                            "1" -> {}
-                            "2" -> {}
-                            "3" -> {}
-                            "4" -> {}
-                            "5" -> {}
-                            "6" -> {}
-                            "7" -> {}
-                            "8" -> {}
-                            "9" -> {}
-                            "10" -> {}
-                            "11" -> {}
-                            "12" -> {}
-                            "all lines" -> onCannotSeeClick()
+                            "1" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "2" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "3" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "4" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "5" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "6" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "7" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "8" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "9" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "10" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "11" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "12" -> {
+                                onClickChangeUI(direction)
+                            }
+
+                            "all lines" -> onTestButtonClick()
                         }
                     }
                 }
@@ -314,7 +389,7 @@ private fun TestTypeContent(
                         spokenText.contains("left", ignoreCase = true) -> onClickChangeUI(EChart.LEFT)
                         spokenText.contains("right", ignoreCase = true) -> onClickChangeUI(EChart.RIGHT)
                         spokenText.contains("up", ignoreCase = true) -> onClickChangeUI(EChart.UP)
-                        spokenText.contains("cannot see", ignoreCase = true) -> onCannotSeeClick()
+                        spokenText.contains("cannot see", ignoreCase = true) -> onTestButtonClick()
                     }
                 }
             }
@@ -322,78 +397,20 @@ private fun TestTypeContent(
 
         test.title.contains(VisionTestTypes.Astigmatism.title) -> {
             SDSEyeClock(
-                buttonOneOnClick = {
-                    showToast(
-                        "Button One Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonTwoOnClick = {
-                    showToast(
-                        "Button Two Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonThreeOnClick = {
-                    showToast(
-                        "Button Three Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonFourOnClick = {
-                    showToast(
-                        "Button Four Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonFiveOnClick = {
-                    showToast(
-                        "Button Five Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonSixOnClick = {
-                    showToast(
-                        "Button Six Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonSevenOnClick = {
-                    showToast(
-                        "Button Seven Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonEightOnClick = {
-                    showToast(
-                        "Button Eight Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonNineOnClick = {
-                    showToast(
-                        "Button Nine Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonTenOnClick = {
-                    showToast(
-                        "Button Ten Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonElevenOnClick = {
-                    showToast(
-                        "Button Eleven Clicked",
-                        bottomPadding = 40
-                    )
-                },
-                buttonTwelveOnClick = {
-                    showToast(
-                        "Button Twelve Clicked",
-                        bottomPadding = 40
-                    )
-                })
+                buttonOneOnClick = { onClickChangeUI(1) },
+                buttonTwoOnClick = { onClickChangeUI(2) },
+                buttonThreeOnClick = { onClickChangeUI(3) },
+                buttonFourOnClick = { onClickChangeUI(4) },
+                buttonFiveOnClick = { onClickChangeUI(5) },
+                buttonSixOnClick = { onClickChangeUI(6) },
+                buttonSevenOnClick = { onClickChangeUI(7) },
+                buttonEightOnClick = { onClickChangeUI(8) },
+                buttonNineOnClick = { onClickChangeUI(9) },
+                buttonTenOnClick = { onClickChangeUI(10) },
+                buttonElevenOnClick = { onClickChangeUI(11) },
+                buttonTwelveOnClick = { onClickChangeUI(12) }
+            )
+
             if (currentMode == TestModeEnum.Voice.displayName) {
                 coroutineScope.launch {
                     controller.providePermission(Permission.RECORD_AUDIO)
@@ -422,7 +439,7 @@ private fun TestTypeContent(
                         ) -> {
                         }
 
-                        spokenText.contains("all lines", ignoreCase = true) -> onCannotSeeClick()
+                        spokenText.contains("all lines", ignoreCase = true) -> onTestButtonClick()
                     }
                 }
             }
@@ -430,16 +447,20 @@ private fun TestTypeContent(
     }
 }
 
+// This composable show the right UI according to the test mode selected
 @Composable
 private fun TestModeContent(
     currentMode: String,
     onButtonClick: () -> Unit = {},
+    textButton: String,
 ) {
     when (currentMode) {
-        TestModeEnum.Touch.displayName -> {
+        TestModeEnum.Touch.displayName,
+        TestModeEnum.SmartWatch.displayName,
+            -> {
             SDSButton(
                 onClick = { onButtonClick() },
-                text = "Cannot See",
+                text = textButton,
                 buttonStyle = ButtonStyle.OUTLINED,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -453,7 +474,7 @@ private fun TestModeContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "\"Cannot see\"",
+                    text = textButton,
                     style = SightUPTheme.textStyles.large,
                 )
                 AudioVisualizer(
@@ -465,22 +486,11 @@ private fun TestModeContent(
                 )
             }
         }
-
-        TestModeEnum.SmartWatch.displayName -> {
-            SDSButton(
-                onClick = { onButtonClick() },
-                text = "Cannot See",
-                buttonStyle = ButtonStyle.OUTLINED,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
-            )
-        }
     }
 }
 
 @Composable
-private fun BottomBar(
+private fun BottomModeBar(
     currentMode: String,
     onModeSelected: (String) -> Unit,
 ) {
