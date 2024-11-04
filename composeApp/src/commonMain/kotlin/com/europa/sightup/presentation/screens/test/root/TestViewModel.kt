@@ -26,12 +26,7 @@ class TestViewModel(private val repository: SightUpRepository) : ViewModel() {
 
 
     fun getTests() {
-        flow {
-            val test = withContext(Dispatchers.IO) {
-                repository.getTests()
-            }
-            emit(test)
-        }
+        repository.getTests()
             .onStart {
                 println("onStart")
                 _tests.update { UIState.Loading() }

@@ -6,6 +6,8 @@ import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.request.ProfileRequest
 import com.europa.sightup.data.remote.request.auth.LoginRequest
 import com.europa.sightup.data.remote.request.auth.LoginWithProviderRequest
+import com.europa.sightup.data.remote.request.visionHistory.ResultRequest
+import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
@@ -13,12 +15,17 @@ import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.data.remote.response.auth.LoginEmailResponse
 import com.europa.sightup.data.remote.response.auth.LoginResponse
+import com.europa.sightup.data.remote.response.visionHistory.UserHistoryResponse
+import com.europa.sightup.data.remote.response.visionHistory.VisionHistoryResponse
 import com.europa.sightup.utils.USER_INFO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -96,13 +103,47 @@ class SightUpRepository(
         }.flowOn(Dispatchers.IO)
     }
 
+    fun postUserTestsResult(
+        appTest: Boolean,
+        testId: String,
+        testTitle: String,
+        result: ResultRequest
+        ): Flow<VisionHistoryResponse> {
+
+        val userInfo = getUserInfo()
+        val request = VisionHistoryRequest(
+            userId = userInfo.id,
+            userEmail = userInfo.email!!,
+            appTest = appTest,
+            testId = testId,
+            testTitle = testTitle,
+            result = result
+        )
+
+        return flow {
+            val response = api.saveTestResult(request)
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getUserVisionHistory(): Flow<UserHistoryResponse>{
+       val userInfo = getUserInfo()
+       return flow {
+           val user = userInfo.email ?: userInfo.id
+           val response = api.getUserTests(user)
+           emit(response)
+       }.flowOn(Dispatchers.IO)
+    }
 
     suspend fun getTasks(): List<TaskResponse> {
         return api.getTasks()
     }
 
-    suspend fun getTests(): List<TestResponse> {
-        return api.getTests()
+    fun getTests(): Flow<List<TestResponse>> {
+       return  flow {
+           val response = api.getTests()
+            emit(response)
+        }.flowOn(Dispatchers.IO)
     }
 
     suspend fun getExercises(): List<ExerciseResponse> {

@@ -12,6 +12,7 @@ import com.europa.sightup.presentation.MainViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginViewModel
 import com.europa.sightup.presentation.screens.test.active.ActiveTestViewModel
+import com.europa.sightup.presentation.screens.test.result.TestResultViewModel
 import com.europa.sightup.presentation.screens.test.root.TestViewModel
 import com.europa.sightup.presentation.screens.test.tutorial.TutorialTestViewModel
 import com.europa.sightup.utils.ANDROID
@@ -50,7 +51,8 @@ val commonModule = module {
     viewModel { TestViewModel(repository = get()) }
     viewModel { ExerciseViewModel(repository = get()) }
     viewModel { TutorialTestViewModel() }
-    viewModel { ActiveTestViewModel(repository = get()) }
+    viewModel { ActiveTestViewModel() }
+    viewModel { TestResultViewModel( repository = get()) }
 }
 
 fun initializeKoin(
