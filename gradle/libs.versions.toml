@@ -6,10 +6,6 @@ android-targetSdk = "34"
 agp = "8.5.2"
 kotlin = "2.0.21"
 
-# Camera Android
-cameraCore = "1.4.0"
-faceDetection = "16.1.7"
-
 # AndroidX Core
 core-ktx = "1.13.1"
 core-splash-screen = "1.1.0-rc01"
@@ -63,21 +59,31 @@ kmpauth = "2.1.0"
 # Permissions KMP Moko
 permissionsCompose = "0.18.1"
 
-# iOS - Cinterop
-swiftKlib = "0.6.4"
 
-# Tests
-androidx-espresso-core = "3.6.1"
-androidx-test-junit = "1.2.1"
-junit = "4.13.2"
+## Android
+# Camera Android
+cameraCore = "1.4.0"
+faceDetection = "16.1.7"
 
+# Media3 Exoplayer
+media3Exoplayer = "1.4.1"
 
-# Android Wearable
+## Android Wearable
 playServicesWearable = "18.2.0"
 composeBom = "2024.10.01"
 composeMaterial = "1.0.0-alpha28"
 composeFoundation = "1.4.0"
 wearToolingPreview = "1.0.0"
+
+
+## iOS - Cinterop
+swiftKlib = "0.6.4"
+
+
+## Tests
+androidx-espresso-core = "3.6.1"
+androidx-test-junit = "1.2.1"
+junit = "4.13.2"
 
 
 [libraries]
@@ -95,6 +101,7 @@ androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecyc
 constraintlayout-compose-multiplatform = { module = "tech.annexflow.compose:constraintlayout-compose-multiplatform", version.ref = "constraintlayoutComposeMultiplatform" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 cmptoast = { module = "network.chaintech:cmptoast", version.ref = "cmptoast" }
+
 # Coil - image-loading library
 landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapistCoil3" }
 
@@ -157,6 +164,11 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 # ML Kit
 face-detection = { module = "com.google.mlkit:face-detection", version.ref = "faceDetection" }
 
+# Media3 Exoplayer
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
+androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3Exoplayer" }
+androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Exoplayer" }
+
 ## Android Wearable Libs
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -164,7 +176,6 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-
 wear-compose-material = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "composeMaterial" }
 wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
 wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
