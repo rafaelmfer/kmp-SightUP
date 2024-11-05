@@ -1,7 +1,6 @@
 package com.europa.sightup.presentation.screens.exercise
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -52,7 +51,6 @@ fun ExerciseRootScreen(
             iconLeftVisible = false,
             iconRightVisible = false,
         )
-
         when (state) {
             is UIState.InitialState -> {}
             is UIState.Loading -> {
@@ -157,18 +155,22 @@ private fun ExerciseItemCard(exercise: ExerciseResponse, index: Int, navControll
         CardExercise(
             exercise = exercise,
             iconWhite = index == 1 || index == 2,
-            modifier = Modifier.clickable {
+            onClick = {
                 navController.navigate(
                     ExerciseDetails(
-                        exercise.id,
-                        exercise.title,
-                        exercise.category,
-                        exercise.motivation,
-                        exercise.duration,
-                        exercise.imageInstruction,
+                        exerciseId = exercise.id,
+                        exerciseName = exercise.title,
+                        category = exercise.category,
+                        motivation = exercise.motivation,
+                        duration = exercise.duration,
+                        imageInstruction = exercise.imageInstruction,
+                        video = exercise.video,
+                        finishTitle = exercise.finishTitle,
+                        advice = exercise.advice
                     )
                 )
-            }
+            },
+            modifier = Modifier
         )
     }
 }

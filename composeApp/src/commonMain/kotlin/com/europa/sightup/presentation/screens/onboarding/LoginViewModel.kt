@@ -78,4 +78,8 @@ class LoginViewModel(private val repository: SightUpRepository) : ViewModel() {
             }
             .launchIn(viewModelScope)
     }
+
+    fun resetLoginState() {
+        _state.update { LoginUIState.InitialState }
+    }
 }

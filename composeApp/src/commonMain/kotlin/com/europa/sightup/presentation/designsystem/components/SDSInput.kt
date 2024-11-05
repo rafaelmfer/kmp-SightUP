@@ -44,6 +44,8 @@ fun SDSInput(
     hint: String = "Placeholder",
     fullWidth: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -139,8 +141,8 @@ fun SDSInput(
                     }
                 )
             },
-            visualTransformation = VisualTransformation.None,
-            keyboardOptions = KeyboardOptions.Default
+            visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions
         )
     }
 }

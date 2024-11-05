@@ -50,6 +50,9 @@ fun SDSExerciseCountdownScreen() {
 @Composable
 fun ExerciseCountdownScreen(
     animationPath: String = "",
+    titleHeader: String = "",
+    onLeftButtonHeaderClick: () -> Unit = {},
+    onRightButtonHeaderClick: () -> Unit = {},
     onFinish: () -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(true) }
@@ -86,10 +89,16 @@ fun ExerciseCountdownScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),
-            title = "Circular Motion",
+            title = titleHeader,
             iconLeftVisible = true,
+            onLeftButtonClick = {
+                onLeftButtonHeaderClick()
+            },
             iconRightVisible = true,
-            iconRight = Res.drawable.close
+            iconRight = Res.drawable.close,
+            onRightButtonClick = {
+                onRightButtonHeaderClick()
+            }
         )
 
         Column(

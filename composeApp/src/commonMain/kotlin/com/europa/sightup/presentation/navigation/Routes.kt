@@ -48,30 +48,49 @@ sealed interface ExerciseScreens {
         val motivation: String,
         val duration: Int,
         val imageInstruction: String,
+        val video: String,
+        val finishTitle: String,
+        val advice: String,
     ) : ExerciseScreens
 
     @Serializable
     data class ExerciseCountdown(
         val exerciseId: String,
+        val category: String,
         val exerciseName: String,
-        val motivation: String,
         val duration: Int,
+        val video: String,
+        val finishTitle: String,
+        val advice: String,
+
     ) : ExerciseScreens
 
     @Serializable
     data class ExerciseRunning(
         val exerciseId: String,
+        val category: String,
         val exerciseName: String,
-        val motivation: String,
         val duration: Int,
+        val video: String,
+        val finishTitle: String,
+        val advice: String,
     ) : ExerciseScreens
 
     @Serializable
     data class ExerciseFinish(
         val exerciseId: String,
+        val category: String,
         val exerciseName: String,
-        val motivation: String,
-        val duration: Int,
+        val finishTitle: String,
+        val advice: String,
+    ) : ExerciseScreens
+
+    @Serializable
+    data class ExerciseEvaluationResult(
+        val exerciseId: String,
+        val category: String,
+        val exerciseName: String,
+        val answerEvaluation: String,
     ) : ExerciseScreens
 }
 

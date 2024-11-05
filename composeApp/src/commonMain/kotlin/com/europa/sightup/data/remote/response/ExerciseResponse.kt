@@ -17,4 +17,6 @@ data class ExerciseResponse(
     @SerialName("helps") val helps: List<String>,
     @SerialName("category") val category: String,
     @SerialName("motivation") val motivation: String,
+    @SerialName("finishTitle") val finishTitle: String,
+    @SerialName("advice") val advice: String,
 )

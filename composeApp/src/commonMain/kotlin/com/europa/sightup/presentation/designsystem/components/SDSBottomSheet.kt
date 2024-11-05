@@ -2,6 +2,7 @@
 
 package com.europa.sightup.presentation.designsystem.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.displayCutoutPadding
@@ -22,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
@@ -63,7 +65,7 @@ fun SDSBottomSheet(
     /**
      * @param sheetContent: Content of the bottom sheet.
      */
-    sheetContent: @Composable ColumnScope.() -> Unit,
+    sheetContent: @Composable ColumnScope.(dismiss: () -> Unit) -> Unit,
     /**
      * @param title: Title of the bottom sheet. If not provided, the top bar will not be shown.
      */
@@ -118,18 +120,23 @@ fun SDSBottomSheet(
                 bottomStart = SightUPBorder.Radius.none,
                 bottomEnd = SightUPBorder.Radius.none
             ),
-            containerColor = SightUPTheme.sightUPColors.white,
+            containerColor = SightUPTheme.sightUPColors.background_light,
             dragHandle = null,
             content = {
                 if (title != null) {
                     Column(
                         modifier = Modifier
                             .padding(
-                                top = SightUPTheme.spacing.spacing_md,
+                                top = SightUPTheme.spacing.spacing_sm,
                             )
                     ) {
                         SDSTopBar(
-                            modifier = Modifier,
+                            modifier = Modifier
+                                .background(Color.Transparent)
+                                .padding(
+                                    start = SightUPTheme.spacing.spacing_sm,
+                                    end = SightUPTheme.spacing.spacing_sm,
+                                ),
                             title = title,
                             iconLeftVisible = iconLeft != null,
                             iconLeft = iconLeft,
@@ -150,7 +157,7 @@ fun SDSBottomSheet(
                         .applyIf(fullHeight) { fillMaxHeight() },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    sheetContent()
+                    sheetContent(onDismiss)
                 }
             }
         )

@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.europa.sightup.SightUPApp
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
@@ -33,6 +32,7 @@ import sightupkmpapp.composeapp.generated.resources.sign_up_title
 fun LoginSignUpScreen(
     bottomSheetVisible: BottomSheetEnum,
     onBottomSheetVisibilityChange: (BottomSheetEnum) -> Unit,
+    onSuccessfulLogin: () -> Unit,
     navController: NavController? = null,
 ) {
     var email by remember { mutableStateOf("") }
@@ -55,6 +55,9 @@ fun LoginSignUpScreen(
         expanded = bottomSheetVisible,
         onExpandedChange = {
             onBottomSheetVisibilityChange(it)
+        },
+        onDismiss = {
+            viewModel.resetLoginState()
         },
         sheetState = sheetState,
         fullHeight = true,
@@ -99,14 +102,7 @@ fun LoginSignUpScreen(
                             sheetState = sheetState,
                             onBottomSheetVisibilityChange = onBottomSheetVisibilityChange,
                             onFinish = {
-                                navController?.navigate(
-                                    SightUPApp
-                                ) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        inclusive = true
-                                    }
-                                    launchSingleTop = true
-                                }
+                                onSuccessfulLogin()
                             }
                         )
                     }

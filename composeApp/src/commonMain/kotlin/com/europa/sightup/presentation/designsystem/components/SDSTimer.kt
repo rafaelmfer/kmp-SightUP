@@ -50,7 +50,7 @@ fun startTimer(
 @Composable
 fun SDSTimer(
     title: String = "Duration",
-    seconds: Int = 10,
+    seconds: Int = 0,
     minutes: Int = 2,
     onTimerFinish: () -> Unit = { },
     modifier: Modifier = Modifier,

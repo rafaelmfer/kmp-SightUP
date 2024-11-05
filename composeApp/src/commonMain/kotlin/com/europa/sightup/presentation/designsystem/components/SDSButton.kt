@@ -37,7 +37,7 @@ fun SDSButton(
     buttonStyle: ButtonStyle = ButtonStyle.PRIMARY,
     textStyle: TextStyle = SightUPTheme.textStyles.button,
     shape: Shape = SightUPTheme.shapes.small,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = PaddingValues(SightUPTheme.spacing.spacing_base),
     enabled: Boolean = true,
 ) {
     when (buttonStyle) {

@@ -2,6 +2,7 @@ package com.europa.sightup.presentation.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -42,12 +43,14 @@ import sightupkmpapp.composeapp.generated.resources.share
 fun CardExercise(
     exercise: ExerciseResponse,
     iconWhite: Boolean = false,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(SightUPTheme.shapes.large)
+            .clickable { onClick() }
             .background(SightUPTheme.sightUPColors.background_default)
             .border(
                 width = SightUPBorder.Width.sm,
