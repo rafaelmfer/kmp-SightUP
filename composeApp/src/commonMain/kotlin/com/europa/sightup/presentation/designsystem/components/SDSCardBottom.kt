@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -123,7 +123,7 @@ fun SDSCardExerciseBottom(
                         style = SightUPTheme.textStyles.subtitle,
                         color = SightUPTheme.sightUPColors.primary_700,
                     )
-                    Spacer(Modifier.width(SightUPTheme.spacing.spacing_2xs))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_4))
                     Text(
                         text = title,
                         style = SightUPTheme.textStyles.h4,
@@ -139,20 +139,20 @@ fun SDSCardExerciseBottom(
                 color = SightUPTheme.sightUPColors.text_primary,
             )
         }
-        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Spacer(Modifier.height(SightUPTheme.sizes.size_12))
         Text(
             text = motivation,
             style = SightUPTheme.textStyles.body,
             color = SightUPTheme.sightUPColors.text_primary,
         )
-        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(Modifier.height(SightUPTheme.sizes.size_24))
         if (showGuidance) {
             SDSSwitchBoxContainer(
                 text = "music and voice guidance",
                 isChecked = isChecked,
                 onCheckedChanged = onCheckedChanged,
             )
-            Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            Spacer(Modifier.height(SightUPTheme.sizes.size_24))
         }
         SDSButton(
             text = buttonText,

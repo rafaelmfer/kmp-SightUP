@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseCountdown
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
+import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseEvaluationResult
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseFinish
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseInit
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
@@ -14,12 +15,12 @@ import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRunnin
 import com.europa.sightup.presentation.screens.exercise.ExerciseRootScreen
 import com.europa.sightup.presentation.screens.exercise.countdownscreen.ExerciseCountdownScreen
 import com.europa.sightup.presentation.screens.exercise.details.ExerciseDetailsScreen
+import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResult
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreen
 import com.europa.sightup.presentation.screens.exercise.running.ExerciseRunningScreen
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.complete
-import sightupkmpapp.composeapp.generated.resources.exercise_circular_tip
 import sightupkmpapp.composeapp.generated.resources.start
 
 fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
@@ -31,32 +32,43 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
         }
 
         composable<ExerciseDetails> { backStackEntry ->
-            val exerciseDetails = backStackEntry.toRoute<ExerciseDetails>()
+            val arguments = backStackEntry.toRoute<ExerciseDetails>()
 
             ExerciseDetailsScreen(
-                idExercise = exerciseDetails.exerciseId,
-                title = exerciseDetails.exerciseName,
-                category = exerciseDetails.category,
-                motivation = exerciseDetails.motivation,
-                duration = exerciseDetails.duration,
-                image = exerciseDetails.imageInstruction,
+                idExercise = arguments.exerciseId,
+                title = arguments.exerciseName,
+                category = arguments.category,
+                motivation = arguments.motivation,
+                duration = arguments.duration,
+                image = arguments.imageInstruction,
                 buttonText = stringResource(Res.string.start),
                 navController = navController,
             )
         }
 
         composable<ExerciseCountdown> {
-            val exerciseCountdown = it.toRoute<ExerciseCountdown>()
+            val arguments = it.toRoute<ExerciseCountdown>()
 
             ExerciseCountdownScreen(
                 animationPath = "files/countdown_animation.json",
+                titleHeader = arguments.exerciseName,
+                onLeftButtonHeaderClick = {
+                    navController.popBackStack()
+                },
+                onRightButtonHeaderClick = {
+                    // TODO: open Dialog to confirm exit and if confirmed, navigate to ExerciseRoot
+                    navController.popBackStack<ExerciseRoot>(inclusive = false)
+                },
                 onFinish = {
                     navController.navigate(
                         ExerciseRunning(
-                            exerciseId = exerciseCountdown.exerciseId,
-                            exerciseName = exerciseCountdown.exerciseName,
-                            motivation = exerciseCountdown.motivation,
-                            duration = exerciseCountdown.duration
+                            exerciseId = arguments.exerciseId,
+                            category = arguments.category,
+                            exerciseName = arguments.exerciseName,
+                            duration = arguments.duration,
+                            video = arguments.video,
+                            finishTitle = arguments.finishTitle,
+                            advice = arguments.advice,
                         )
                     )
                 }
@@ -64,26 +76,37 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
         }
 
         composable<ExerciseRunning> {
-            val exerciseRunning = it.toRoute<ExerciseRunning>()
+            val arguments = it.toRoute<ExerciseRunning>()
 
             ExerciseRunningScreen(
-                exerciseId = exerciseRunning.exerciseId,
-                exerciseName = exerciseRunning.exerciseName,
-                exerciseMotivation = exerciseRunning.motivation,
-                exerciseDuration = exerciseRunning.duration,
+                exerciseId = arguments.exerciseId,
+                exerciseName = arguments.exerciseName,
+                exerciseDuration = arguments.duration,
+                exerciseVideo = arguments.video,
                 navController = navController,
             )
         }
 
         composable<ExerciseFinish> { backStackEntry ->
-            val exerciseFinish = backStackEntry.toRoute<ExerciseFinish>()
+            val arguments = backStackEntry.toRoute<ExerciseFinish>()
 
             ExerciseFinishScreen(
-                idExercise = exerciseFinish.exerciseId,
-                title = exerciseFinish.exerciseName,
-                motivation = exerciseFinish.motivation,
-                tipText = stringResource(Res.string.exercise_circular_tip),
+                idExercise = arguments.exerciseId,
+                category = arguments.category,
+                exerciseName = arguments.exerciseName,
+                title = arguments.finishTitle,
+                advice = arguments.advice,
                 buttonText = stringResource(Res.string.complete),
+                navController = navController,
+            )
+        }
+        composable<ExerciseEvaluationResult> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<ExerciseEvaluationResult>()
+
+            ExerciseEvaluationResult(
+                category = arguments.category,
+                exerciseName = arguments.exerciseName,
+                answerEvaluation = arguments.answerEvaluation,
                 navController = navController,
             )
         }

@@ -27,3 +27,14 @@ fun String.encodeForUrl(): String {
         .replace("[", "%5B")
         .replace("]", "%5D")
 }
+
+fun String.capitalizeWords(): String = split(" ")
+    .joinToString(" ") { words ->
+        words.replaceFirstChar {
+            if (it.isLowerCase()) {
+                it.titlecase()
+            } else {
+                it.toString()
+            }
+        }
+    }

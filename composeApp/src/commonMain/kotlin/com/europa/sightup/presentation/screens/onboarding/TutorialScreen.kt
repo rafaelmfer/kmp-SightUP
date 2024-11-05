@@ -135,7 +135,7 @@ fun TutorialScreen(navController: NavController? = null) {
             Spacer(Modifier.height(SightUPTheme.sizes.size_32))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm, Alignment.CenterHorizontally),
             ) {
                 SDSButton(
                     text = if (currentStep >= 4) {
@@ -174,6 +174,17 @@ fun TutorialScreen(navController: NavController? = null) {
         bottomSheetVisible = bottomSheetVisibility,
         onBottomSheetVisibilityChange = {
             bottomSheetVisibility = it
+        },
+        onSuccessfulLogin = {
+            //TODO: verify if the user has profile to send that info to WelcomeScreen to open BottomSheets
+            navController?.navigate(
+                WelcomeScreen
+            ) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
         },
         navController = navController
     )

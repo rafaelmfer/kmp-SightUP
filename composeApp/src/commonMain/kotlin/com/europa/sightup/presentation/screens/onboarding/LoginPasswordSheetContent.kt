@@ -2,18 +2,24 @@ package com.europa.sightup.presentation.screens.onboarding
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
-import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSDivider
 import com.europa.sightup.presentation.designsystem.components.SDSInput
@@ -59,7 +65,11 @@ fun LoginPasswordSheetContent(
             onValueChange = { newText -> password = newText },
             label = stringResource(Res.string.password),
             hint = stringResource(Res.string.password),
-            fullWidth = true
+            fullWidth = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+            ),
         )
         Spacer(Modifier.height(SightUPTheme.sizes.size_32))
         SDSButton(
@@ -73,13 +83,26 @@ fun LoginPasswordSheetContent(
         Spacer(Modifier.height(SightUPTheme.sizes.size_32))
         SDSDivider()
         Spacer(Modifier.height(SightUPTheme.sizes.size_32))
-        SDSButton(
-            text = stringResource(Res.string.forgot_password),
+
+        TextButton(
             onClick = {
                 // TODO: Implement forgot password
             },
-            modifier = Modifier.fillMaxWidth(),
-            buttonStyle = ButtonStyle.TEXT
-        )
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(
+                    minHeight = SightUPTheme.sizes.size_48
+                ),
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = SightUPTheme.sightUPColors.text_primary,
+                disabledContainerColor = SightUPTheme.sightUPColors.neutral_200,
+                disabledContentColor = SightUPTheme.sightUPColors.neutral_500,
+            ),
+            shape = SightUPTheme.shapes.small,
+            contentPadding = ButtonDefaults.ContentPadding,
+        ) {
+            Text(text = stringResource(Res.string.forgot_password), style = SightUPTheme.textStyles.button)
+        }
     }
 }
