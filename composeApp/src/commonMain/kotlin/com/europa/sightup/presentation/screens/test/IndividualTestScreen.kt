@@ -51,7 +51,9 @@ fun IndividualTestScreen(
         SDSTopBar(
             title = "",
             iconLeftVisible = true,
-            onLeftButtonClick = { navController.navigate(TestScreens.TestRoot) },
+            onLeftButtonClick = {
+                navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+            },
             modifier = Modifier
                 .padding(
                     horizontal = SightUPTheme.spacing.spacing_sm,
