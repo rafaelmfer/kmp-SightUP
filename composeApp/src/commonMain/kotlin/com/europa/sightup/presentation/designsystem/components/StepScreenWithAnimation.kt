@@ -1,7 +1,6 @@
 package com.europa.sightup.presentation.designsystem.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,6 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import sightupkmpapp.composeapp.generated.resources.Res
 
-
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun StepScreenWithAnimation(
@@ -30,7 +28,6 @@ fun StepScreenWithAnimation(
     instructionText: String,
     speed: Float = 1f,
     modifier: Modifier = Modifier,
-    backgroundColor: androidx.compose.ui.graphics.Color = SightUPTheme.sightUPColors.neutral_0
 ) {
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
@@ -53,12 +50,11 @@ fun StepScreenWithAnimation(
             painter = rememberLottiePainter(
                 composition = composition,
                 progress = { progress },
-                ),
+            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(316.dp)
-                .background(backgroundColor),
-            contentDescription = "Lottie animation"
+                .height(316.dp),
+            contentDescription = "Animation"
         )
 
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_lg))

@@ -18,7 +18,7 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
+import sightupkmpapp.composeapp.generated.resources.one_e_right
 
 @Composable
 fun SDSControlE(
@@ -55,9 +55,9 @@ fun SDSControlE(
             )
             Spacer(modifier = Modifier.width(SightUPTheme.spacing.spacing_base))
             Image(
-                painter = painterResource(Res.drawable.compose_multiplatform),
+                painter = painterResource(Res.drawable.one_e_right),
                 contentDescription = "Center Image",
-                modifier = Modifier.size(100.dp),
+                modifier = Modifier.size(60.dp),
                 contentScale = ContentScale.Fit
             )
             Spacer(modifier = Modifier.width(SightUPTheme.spacing.spacing_base))
@@ -77,6 +77,5 @@ fun SDSControlE(
             text = "Down",
             contentPadding = PaddingValues(0.dp, 0.dp, 0.dp, 0.dp),
         )
-
     }
 }

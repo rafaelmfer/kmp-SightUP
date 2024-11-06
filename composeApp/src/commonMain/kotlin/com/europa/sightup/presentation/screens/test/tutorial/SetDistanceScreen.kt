@@ -105,12 +105,16 @@ fun SetDistanceScreen(
 
                         if (underRange) {
                             val distanceText = "${distance.toInt()} cm \n Step back further"
-                            DistanceMessageCard(text = distanceText, backgroundColor = SightUPTheme.sightUPColors.error_300)
+                            DistanceMessageCard(text = distanceText,
+                                backgroundColor = SightUPTheme.sightUPColors.background_error,
+                                textColor = SightUPTheme.sightUPColors.error_300)
                         } else if (perfectRange) {
                             DistanceMessageCard(text = "${distance.toInt()} cm \n Perfect distance!")
                         } else if (overRange) {
                             val distanceText = "${distance.toInt()} cm \n Move closer"
-                            DistanceMessageCard(text = distanceText, backgroundColor = SightUPTheme.sightUPColors.error_300)
+                            DistanceMessageCard(text = distanceText,
+                                backgroundColor = SightUPTheme.sightUPColors.background_error,
+                                textColor = SightUPTheme.sightUPColors.error_300)
                         }
                     }
 
@@ -182,12 +186,12 @@ private fun BottomBlackBar() {
                 .fillMaxWidth()
                 .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
                 .clip(RoundedCornerShape(8.dp))
-                .background(SightUPTheme.colors.primary)
+                .background(SightUPTheme.sightUPColors.background_info)
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth().padding(12.dp),
                 text = "Keep 30 cm distance away from your phone.",
-                color = SightUPTheme.sightUPColors.text_secondary,
+                color = SightUPTheme.sightUPColors.info_300,
                 style = SightUPTheme.textStyles.button,
                 textAlign = TextAlign.Center,
             )

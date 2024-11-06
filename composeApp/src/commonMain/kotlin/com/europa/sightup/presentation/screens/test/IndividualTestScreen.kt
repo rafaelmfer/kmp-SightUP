@@ -40,14 +40,20 @@ fun IndividualTestScreen(
 
     val imageString = test.imageInstruction.replace("illustrations/vision_test/", "illustrations%2Fvision_test%2F")
 
+    // TODO this screen doesn't work on small devices
+    // vertical scroll makes the app crash
+    //val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         SDSTopBar(
             title = "",
             iconLeftVisible = true,
-            onLeftButtonClick = { navController.popBackStack() },
+            onLeftButtonClick = {
+                navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+            },
             modifier = Modifier
                 .padding(
                     horizontal = SightUPTheme.spacing.spacing_sm,
@@ -61,7 +67,7 @@ fun IndividualTestScreen(
                 alignment = Alignment.Center,
                 requestSize = IntSize(
                     width = -1,
-                    height = 130.dp.value.toInt(),
+                    height = 90.dp.value.toInt(),
                 ),
             ),
             modifier = Modifier
