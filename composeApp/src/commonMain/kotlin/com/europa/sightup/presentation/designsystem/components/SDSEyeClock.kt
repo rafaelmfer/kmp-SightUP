@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +27,7 @@ import com.europa.sightup.presentation.ui.theme.layout.sizes
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.astigmatic_clock_eye_chart
+import sightupkmpapp.composeapp.generated.resources.astigmatism_test
 
 @Composable
 fun SDSEyeClock(
@@ -53,10 +54,11 @@ fun SDSEyeClock(
                     .fillMaxWidth()
             ) {
                 Image(
-                    painter = painterResource(Res.drawable.astigmatic_clock_eye_chart),
+                    painter = painterResource(Res.drawable.astigmatism_test),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(12.dp)
                         .aspectRatio(1f)
                         .clipToBounds()
                         .onGloballyPositioned { coordinates ->
@@ -69,7 +71,7 @@ fun SDSEyeClock(
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
                         val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth / 2).toDp() - 25.dp }
+                        val offsetX = with(density) { (parentWidth / 2).toDp() - 12.dp }
 
                         IntOffset(offsetX.roundToPx(), 0)
                     }
@@ -81,10 +83,10 @@ fun SDSEyeClock(
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
                         val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth / 4).toDp() - 0.dp }
+                        val offsetX = with(density) { (parentWidth / 4).toDp() + 4.dp }
 
                         IntOffset(
-                            (offsetX.roundToPx() / 1.2).toInt(),
+                            (offsetX.roundToPx() / 1.1).toInt(),
                             offsetY.roundToPx() / 18
                         )
                     }
@@ -99,7 +101,7 @@ fun SDSEyeClock(
                         val offsetX = with(density) { (parentWidth / 15).toDp() - 0.dp }
 
                         IntOffset(
-                            (offsetX.roundToPx() / 1.3).toInt(),
+                            (offsetX.roundToPx() / 1.1).toInt(),
                             (offsetY.roundToPx() / 4.5).toInt()
                         )
                     }
@@ -110,10 +112,10 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth / 15).toDp() - 0.dp }
+                        val offsetY = with(density) { (parentWidth).toDp() + 10.dp }
+                        val offsetX = with(density) { (parentWidth / 15).toDp() - 5.dp }
 
-                        IntOffset(0, (offsetY.roundToPx() / 2.3).toInt())
+                        IntOffset(0, (offsetY.roundToPx() / 2.2).toInt())
                     }
                     .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonNineOnClick() }
@@ -122,12 +124,12 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
+                        val offsetY = with(density) { (parentWidth).toDp() + 3.dp }
                         val offsetX = with(density) { (parentWidth / 15).toDp() - 0.dp }
 
                         IntOffset(
-                            (offsetX.roundToPx() / 1.3).toInt(),
-                            (offsetY.roundToPx() / 2) + (offsetY.roundToPx() / 6)
+                            (offsetX.roundToPx() / 1.1).toInt(),
+                            (offsetY.roundToPx() / 1.9).toInt() + (offsetY.roundToPx() / 6) + 10
                         ) //
                     }
                     .clip(SightUPTheme.shapes.extraLarge)
@@ -141,8 +143,8 @@ fun SDSEyeClock(
                         val offsetX = with(density) { (parentWidth / 4).toDp() - 0.dp }
 
                         IntOffset(
-                            (offsetX.roundToPx() / 1.2).toInt(),
-                            offsetY.roundToPx() / 2 + (offsetY.roundToPx() / 3.2).toInt()
+                            (offsetX.roundToPx() / 1.1).toInt(),
+                            (offsetY.roundToPx() / 1.8).toInt() + (offsetY.roundToPx() / 3.2).toInt()
                         )
                     }
                     .clip(SightUPTheme.shapes.extraLarge)
@@ -152,8 +154,8 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() - SightUPTheme.sizes.size_48 }
-                        val offsetX = with(density) { (parentWidth / 2).toDp() - 25.dp }
+                        val offsetY = with(density) { (parentWidth + 77).toDp() - SightUPTheme.sizes.size_48 }
+                        val offsetX = with(density) { (parentWidth / 1.9).toInt().toDp() - 23.dp }
 
                         IntOffset((offsetX.roundToPx()), offsetY.roundToPx())
                     }
@@ -164,8 +166,8 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth / 3).toDp() - 0.dp }
+                        val offsetY = with(density) { (parentWidth).toDp() + 25.dp }
+                        val offsetX = with(density) { (parentWidth / 3).toDp() + 7.dp }
 
                         IntOffset(
                             (offsetX.roundToPx()) + (offsetX.roundToPx()),
@@ -179,8 +181,8 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth).toDp() - 0.dp }
+                        val offsetY = with(density) { (parentWidth).toDp() + 18.dp }
+                        val offsetX = with(density) { (parentWidth).toDp() + 25.dp }
 
                         IntOffset(
                             (offsetX.roundToPx() / 1.22).toInt(),
@@ -194,8 +196,8 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth).toDp() - SightUPTheme.sizes.size_48 }
+                        val offsetY = with(density) { (parentWidth).toDp() + 14.dp }
+                        val offsetX = with(density) { (parentWidth + 70).toDp() - SightUPTheme.sizes.size_48 }
 
                         IntOffset(offsetX.roundToPx(), (offsetY.roundToPx() / 2.3).toInt())
                     }
@@ -206,8 +208,8 @@ fun SDSEyeClock(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth).toDp() - 0.dp }
+                        val offsetY = with(density) { (parentWidth).toDp() + -10.dp }
+                        val offsetX = with(density) { (parentWidth).toDp() + 30.dp }
 
                         IntOffset(
                             (offsetX.roundToPx() / 1.22).toInt(),
@@ -216,13 +218,14 @@ fun SDSEyeClock(
                     }
                     .clip(SightUPTheme.shapes.extraLarge)
                     .clickable { buttonTwoOnClick() }
+
             )
             Box(
                 modifier = Modifier
                     .size(SightUPTheme.sizes.size_48)
                     .offset {
-                        val offsetY = with(density) { (parentWidth).toDp() + 0.dp }
-                        val offsetX = with(density) { (parentWidth).toDp() - 0.dp }
+                        val offsetY = with(density) { (parentWidth).toDp() - 55.dp }
+                        val offsetX = with(density) { (parentWidth).toDp() + 32.dp }
 
                         IntOffset(
                             (offsetX.roundToPx() / 1.52).toInt(),
