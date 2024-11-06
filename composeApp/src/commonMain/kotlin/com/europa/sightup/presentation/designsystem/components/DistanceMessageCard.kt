@@ -19,7 +19,8 @@ import com.europa.sightup.presentation.ui.theme.typography.textStyles
 @Composable
 fun DistanceMessageCard(
     text: String,
-    backgroundColor: Color = SightUPTheme.colors.primary,
+    textColor: Color = SightUPTheme.sightUPColors.info_300,
+    backgroundColor: Color = SightUPTheme.sightUPColors.background_info,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -35,7 +36,7 @@ fun DistanceMessageCard(
             modifier = Modifier.fillMaxWidth().padding(SightUPTheme.spacing.spacing_base),
             text = text,
             style = SightUPTheme.textStyles.large,
-            color = SightUPTheme.sightUPColors.text_secondary,
+            color = textColor,
             textAlign = TextAlign.Center
         )
     }

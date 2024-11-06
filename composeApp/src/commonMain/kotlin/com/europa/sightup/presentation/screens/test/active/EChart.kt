@@ -98,9 +98,9 @@ enum class EChart {
             2 to "20/100",
             3 to "20/70",
             4 to "20/50",
-            5 to "20/40",
-            6 to "20/30",
-            7 to "20/20",
+            5 to "20/30",
+            6 to "20/20",
+            7 to "20/15",
             8 to "20/10"
         )
 
@@ -116,6 +116,10 @@ enum class EChart {
 
         fun getScoreForRow(row: Int): String? {
             return rowScores[row]
+        }
+
+        fun getRowForScore(score: String): Int {
+            return rowScores.entries.find { it.value == score }!!.key
         }
     }
 }

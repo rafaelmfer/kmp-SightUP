@@ -27,14 +27,14 @@ import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.components.StepProgressBar
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSSwitchBoxContainer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
-import com.europa.sightup.presentation.designsystem.components.SwitchAudio
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
-import com.europa.sightup.presentation.ui.theme.typography.lineHeight
+import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.navigate
 import org.jetbrains.compose.resources.stringResource
@@ -65,7 +65,7 @@ fun TutorialTestScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-        .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
     ) {
         Column {
             if (currentStep > 1) {
@@ -105,7 +105,7 @@ fun TutorialTestScreen(
             // Heading text
             Text(
                 text = titles[currentStep - 1],
-                style = SightUPTheme.textStyles.h1
+                style = SightUPTheme.textStyles.h2
             )
 
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
@@ -115,19 +115,24 @@ fun TutorialTestScreen(
                     1 -> FirstStep(
                         selectedMode,
                         onModeSelected = {
-                            //selectedMode = it
                             tutorialViewModel.updateSelectedMode(it)
                         },
                         onClick = { tutorialViewModel.advanceStep() })
 
                     2 -> SecondStep(
+                        animation =
+                        if (test.title.contains("Astigmatism")) "files/distance_astigmatism.json"
+                        else "files/distance_visual_acuity.json",
                         onClick = { tutorialViewModel.advanceStep() }
                     )
 
                     3 -> ThirdStep(
                         selectedMode = selectedMode,
                         test = test,
-                        onClick = { tutorialViewModel.advanceStep() }
+                        onClick = { tutorialViewModel.advanceStep() },
+                        animation =
+                        if (test.title.contains("Astigmatism")) selectedMode.astigmatismAnimation
+                        else selectedMode.visualAcuityAnimation
                     )
 
                     4 -> FourthStep(
@@ -148,6 +153,8 @@ private fun FirstStep(
     selectedMode: TestModeEnum,
     onModeSelected: (TestModeEnum) -> Unit,
     onClick: () -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
 ) {
     val modes = listOf(TestModeEnum.Touch, TestModeEnum.Voice, TestModeEnum.SmartWatch)
 
@@ -163,7 +170,8 @@ private fun FirstStep(
             Text(
                 text = stringResource(Res.string.test_mode_subtitle),
                 style = SightUPTheme.textStyles.body,
-                lineHeight = SightUPTheme.lineHeight.lineHeight_md,
+                color = SightUPTheme.sightUPColors.text_primary,
+                lineHeight = SightUPLineHeight.default.lineHeight_xs,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
@@ -179,7 +187,11 @@ private fun FirstStep(
         }
 
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
-        SwitchAudio()
+        SDSSwitchBoxContainer(
+            text = "audio support",
+            isChecked = isChecked,
+            onCheckedChanged = onCheckedChanged,
+        )
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
 
         SDSButton(
@@ -194,6 +206,9 @@ private fun FirstStep(
 @Composable
 private fun SecondStep(
     onClick: () -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
+    animation: String,
 ) {
     var showCamera by remember { mutableStateOf(false) }
 
@@ -207,14 +222,16 @@ private fun SecondStep(
         ) {
 
             StepScreenWithAnimation(
-                animationPath = "files/animation_delete_me.json",
+                animationPath = animation,
                 instructionText = "Place yourself and your phone parallel and set the distance to 30 cm.",
-                speed = 0.8f,
-                backgroundColor = SightUPTheme.sightUPColors.neutral_100,
             )
 
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-            SwitchAudio()
+            SDSSwitchBoxContainer(
+                text = "audio support",
+                isChecked = isChecked,
+                onCheckedChanged = onCheckedChanged,
+            )
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
 
             SDSButton(
@@ -234,6 +251,9 @@ private fun ThirdStep(
     test: TestResponse,
     selectedMode: TestModeEnum,
     onClick: () -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
+    animation: String,
 ) {
     val modeText = when (selectedMode) {
         TestModeEnum.Touch -> test.testMode.touch
@@ -246,14 +266,16 @@ private fun ThirdStep(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         StepScreenWithAnimation(
-            animationPath = "files/animation_delete_me.json",
+            animationPath = animation,
             instructionText = modeText,
-            speed = 0.8f,
-            backgroundColor = SightUPTheme.sightUPColors.neutral_100,
         )
 
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-        SwitchAudio()
+        SDSSwitchBoxContainer(
+            text = "audio support",
+            isChecked = isChecked,
+            onCheckedChanged = onCheckedChanged,
+        )
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
 
         SDSButton(
@@ -272,6 +294,8 @@ private fun FourthStep(
     selectedMode: TestModeEnum,
     eyeTested: String,
     onEyeTestedChange: (String) -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
 ) {
     val (animationPath, instructionText) = if (eyeTested == "right") {
         "files/animation_delete_me.json" to "Start with your right eye. If you wear glasses, please take them off and cover your left eye."
@@ -287,12 +311,16 @@ private fun FourthStep(
         StepScreenWithAnimation(
             animationPath = animationPath,
             instructionText = instructionText,
-            speed = 0.8f,
-            backgroundColor = SightUPTheme.sightUPColors.neutral_100,
         )
 
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-        SwitchAudio()
+
+        SDSSwitchBoxContainer(
+            text = "audio support",
+            isChecked = isChecked,
+            onCheckedChanged = onCheckedChanged,
+        )
+
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
 
         SDSButton(
@@ -304,7 +332,7 @@ private fun FourthStep(
                     route = TestScreens.TestActive.toString(),
                     objectToSerialize = test,
                     objectToSerialize2 = selectedMode.displayName,
-                    objectToSerialize3 = eyeTested
+                    objectToSerialize3 = eyeTested,
                 )
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),

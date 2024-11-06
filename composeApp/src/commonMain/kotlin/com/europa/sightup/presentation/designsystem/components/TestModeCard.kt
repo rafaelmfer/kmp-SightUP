@@ -1,7 +1,7 @@
 package com.europa.sightup.presentation.designsystem.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,26 +16,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.clickableWithRipple
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.compose_multiplatform
 import sightupkmpapp.composeapp.generated.resources.smartwatch_mode
 import sightupkmpapp.composeapp.generated.resources.touch_mode
 import sightupkmpapp.composeapp.generated.resources.voice_mode
 
 @Composable
 fun ModeSelectionCard(mode: TestModeEnum, isSelected: Boolean, onClick: () -> Unit) {
-    val borderColor = if (isSelected) SightUPTheme.colors.onBackground else SightUPTheme.colors.outline
+    val borderColor = if (isSelected) SightUPTheme.sightUPColors.background_default else SightUPTheme.colors.outline
+    val iconColor = if (isSelected) SightUPTheme.sightUPColors.primary_700 else SightUPTheme.sightUPColors.neutral_400
+    val backgroundColor = if (isSelected) SightUPTheme.sightUPColors.primary_200 else SightUPTheme.sightUPColors.background_default
+    val textColor = if (isSelected) SightUPTheme.sightUPColors.primary_700 else SightUPTheme.sightUPColors.black
+
     val icon = when (mode) {
-        TestModeEnum.Touch -> Res.drawable.compose_multiplatform
-        TestModeEnum.Voice -> Res.drawable.compose_multiplatform
-        TestModeEnum.SmartWatch -> Res.drawable.compose_multiplatform
+        TestModeEnum.Touch -> Res.drawable.touch_mode
+        TestModeEnum.Voice -> Res.drawable.voice_mode
+        TestModeEnum.SmartWatch -> Res.drawable.smartwatch_mode
     }
 
     Row(
@@ -44,9 +50,11 @@ fun ModeSelectionCard(mode: TestModeEnum, isSelected: Boolean, onClick: () -> Un
             .border(
                 width = 1.dp,
                 color = borderColor,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp)
             )
-            .clickable(onClick = onClick)
+            .clip(SightUPTheme.shapes.medium)
+            .background(backgroundColor)
+            .clickableWithRipple(onClick = onClick)
             .padding(SightUPTheme.spacing.spacing_base)
             .height(72.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -57,38 +65,53 @@ fun ModeSelectionCard(mode: TestModeEnum, isSelected: Boolean, onClick: () -> Un
             contentDescription = mode.displayName,
             modifier = Modifier.size(48.dp)
                 .padding(end = SightUPTheme.spacing.spacing_base),
+            tint = iconColor,
         )
         Column {
             Text(
                 text = mode.displayName,
                 style = SightUPTheme.textStyles.large
+                    .copy(color = textColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = mode.description,
-                style = SightUPTheme.textStyles.button
-                    .copy(color = SightUPTheme.colors.tertiary)
+                style = SightUPTheme.textStyles.body2,
+                color = SightUPTheme.sightUPColors.text_primary,
+                lineHeight = SightUPLineHeight.default.lineHeight_xs,
             )
         }
     }
 }
 
 @Serializable
-enum class TestModeEnum(val displayName: String, val description: String, val iconResource: DrawableResource) {
+enum class TestModeEnum(
+    val displayName: String,
+    val description: String,
+    val iconResource: DrawableResource,
+    val astigmatismAnimation: String,
+    val visualAcuityAnimation: String,
+) {
     Touch(
         "Touch mode",
         "Use mobile screen",
-        Res.drawable.touch_mode
+        Res.drawable.touch_mode,
+        "files/touch_mode_astigmatism.json",
+        "files/touch_mode_visual_acuity.json"
     ),
     Voice(
         "Voice mode",
         "Use voice commands",
-        Res.drawable.voice_mode
+        Res.drawable.voice_mode,
+        "files/voice_mode_astigmatism.json",
+        "files/voice_mode_visual_acuity.json"
     ),
     SmartWatch(
         "Smartwatch mode",
         "Use smartwatch screen by connecting via Bluetooth. You need a pairing process.",
-        Res.drawable.smartwatch_mode
+        Res.drawable.smartwatch_mode,
+        "files/smartwatch_mode_astigmatism.json",
+        "files/smartwatch_mode_visual_acuity.json"
     )
 }
 

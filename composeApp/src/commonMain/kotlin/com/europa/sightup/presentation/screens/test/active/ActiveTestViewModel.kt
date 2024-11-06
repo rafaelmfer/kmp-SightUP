@@ -22,11 +22,6 @@ object EyeTestRepository {
 }
 
 class ActiveTestViewModel : ViewModel() {
-    enum class ActiveTest {
-        VisualAcuity,
-        Astigmatism
-    }
-
     private var activeTest: ActiveTest = ActiveTest.VisualAcuity
         private set
 
@@ -56,7 +51,6 @@ class ActiveTestViewModel : ViewModel() {
 
     private fun displayFinalResults() {
         _testState.value = TestState.Completed
-        println("Test -> Completed! Right Eye: ${EyeTestRepository.rightEyeResult}, Left Eye: ${EyeTestRepository.leftEyeResult}")
     }
 
     fun testButton(navController: NavController) {
@@ -64,8 +58,7 @@ class ActiveTestViewModel : ViewModel() {
             wrongAnswersCount++
             handleEChartSelection(null, navController)
         } else if (activeTest == ActiveTest.Astigmatism) {
-            println("test -> All lines appear the same.")
-            endTestForCurrentEye(navController, "You don't have astigmatism.")
+            endTestForCurrentEye(navController, "0")
         }
     }
 
@@ -78,6 +71,7 @@ class ActiveTestViewModel : ViewModel() {
                     println("Error: Input type mismatch for VisualAcuity test")
                 }
             }
+
             ActiveTest.Astigmatism -> {
                 if (input is Int) {
                     handleAstigmatismSelection(input, navController)
@@ -95,8 +89,6 @@ class ActiveTestViewModel : ViewModel() {
 
         if (currentEye == "right") {
             currentEye = "left"
-            if (activeTest == ActiveTest.VisualAcuity) {
-                resetTestForNextEye()}
             navController.popBackStack()
         } else {
             displayFinalResults()
@@ -111,10 +103,8 @@ class ActiveTestViewModel : ViewModel() {
         selectedDirection?.let {
             if (selectedDirection == currentEFormat?.direction) {
                 correctAnswersCount++
-                println("Test -> Correct answer! Current count: $correctAnswersCount")
             } else {
                 wrongAnswersCount++
-                println("Test -> Wrong answer! Current count: $wrongAnswersCount")
             }
         }
 
@@ -130,21 +120,13 @@ class ActiveTestViewModel : ViewModel() {
             }
 
             wrongAnswersCount >= 3 -> {
-                val finalRow = currentRow -1
+                val finalRow = if (currentRow > 1) currentRow - 1 else currentRow
                 endTestForCurrentEye(navController, EChart.getScoreForRow(finalRow))
                 return
             }
         }
         currentEFormat = EChart.getRandomIcon(currentRow, lastDirection)
         lastDirection = currentEFormat?.direction
-
-    }
-
-    private fun resetTestForNextEye() {
-        correctAnswersCount = 0
-        wrongAnswersCount = 0
-        currentRow = 1
-        currentEFormat = EChart.getRandomIcon(currentRow)
     }
 
     private fun resetCounters() {
@@ -155,7 +137,6 @@ class ActiveTestViewModel : ViewModel() {
     // Function for the Astigmatism test
     private fun handleAstigmatismSelection(direction: Int, navController: NavController) {
         val angle = AstigmatismChart.getAngleForDirection(direction)
-        println("test -> Selected direction for Astigmatism: $direction with angle $angle")
         endTestForCurrentEye(navController, "$angle")
     }
 

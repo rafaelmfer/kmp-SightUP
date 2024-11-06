@@ -1,5 +1,11 @@
 package com.europa.sightup.presentation.screens.test.active
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +36,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -111,7 +119,6 @@ fun ActiveTestScreen(
         }
     }
 
-
     Scaffold(
         topBar = {
             SDSTopBar(
@@ -122,6 +129,7 @@ fun ActiveTestScreen(
                     voiceRecognition.stopListening()
                     navController.navigate(TestScreens.TestRoot)
                 },
+                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
             )
         },
         bottomBar = {
@@ -188,7 +196,8 @@ private fun TestContent(
             ) {
                 DistanceMessageCard(
                     text = distanceText,
-                    backgroundColor = SightUPTheme.sightUPColors.error_300,
+                    backgroundColor = SightUPTheme.sightUPColors.background_error,
+                    textColor = SightUPTheme.sightUPColors.error_300,
                     modifier = Modifier.align(Alignment.TopCenter)
                 )
             }
@@ -220,19 +229,19 @@ private fun TestContent(
                     .background(
                         if (test.title.contains(VisionTestTypes.Astigmatism.title))
                             SightUPTheme.sightUPColors.white
-                        else SightUPTheme.sightUPColors.neutral_100
+                        else SightUPTheme.sightUPColors.background_activate
                     )
                     .padding(vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = if (test.title.contains(VisionTestTypes.Astigmatism.title))
-                    Arrangement.SpaceEvenly else Arrangement.SpaceBetween
+                    Arrangement.SpaceEvenly else Arrangement.SpaceAround
             ) {
 
                 LaunchedEffect(test) {
                     if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {
-                        viewModel.setActiveTest(ActiveTestViewModel.ActiveTest.VisualAcuity)
+                        viewModel.setActiveTest(ActiveTest.VisualAcuity)
                     } else if (test.title.contains(VisionTestTypes.Astigmatism.title)) {
-                        viewModel.setActiveTest(ActiveTestViewModel.ActiveTest.Astigmatism)
+                        viewModel.setActiveTest(ActiveTest.Astigmatism)
                     }
                 }
 
@@ -259,19 +268,32 @@ private fun TestContent(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun VisualAcuityChart(currentEFormat: EChartIcon) {
     Box(
-        modifier = Modifier.fillMaxWidth().height(150.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            painter = painterResource(resource = currentEFormat.resourceId),
-            contentDescription = "Visual acuity chart",
-        )
+        AnimatedContent(
+            targetState = currentEFormat,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(durationMillis = 900, delayMillis = 100)) with
+                        fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
+            }
+        ) { icon ->
+            Icon(
+                painter = painterResource(resource = icon.resourceId),
+                contentDescription = "Visual acuity chart",
+                modifier = Modifier.graphicsLayer {
+                    transformOrigin = TransformOrigin.Center
+                }
+            )
+        }
     }
 }
-
 
 // This composable contains the controller with four buttons for the Visual Acuity Test
 // and the circle with lines for the Astigmatism Test

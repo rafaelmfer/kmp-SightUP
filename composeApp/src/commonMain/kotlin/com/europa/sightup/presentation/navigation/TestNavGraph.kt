@@ -10,9 +10,9 @@ import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens.TestActive
 import com.europa.sightup.presentation.navigation.TestScreens.TestIndividual
 import com.europa.sightup.presentation.navigation.TestScreens.TestInit
+import com.europa.sightup.presentation.navigation.TestScreens.TestResult
 import com.europa.sightup.presentation.navigation.TestScreens.TestRoot
 import com.europa.sightup.presentation.navigation.TestScreens.TestTutorial
-import com.europa.sightup.presentation.navigation.TestScreens.TestResult
 import com.europa.sightup.presentation.screens.test.IndividualTestScreen
 import com.europa.sightup.presentation.screens.test.active.ActiveTestScreen
 import com.europa.sightup.presentation.screens.test.result.TestResultScreen
@@ -57,8 +57,7 @@ fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
             }
         }
 
-
-        composable<TestResult>{
+        composable<TestResult> {
             val testResult = it.toRoute<TestResult>()
 
             TestResultScreen(
@@ -66,7 +65,8 @@ fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
                 testId = testResult.testId,
                 testTitle = testResult.testTitle,
                 left = testResult.left,
-                right = testResult.right
+                right = testResult.right,
+                navController = navController
             )
         }
 

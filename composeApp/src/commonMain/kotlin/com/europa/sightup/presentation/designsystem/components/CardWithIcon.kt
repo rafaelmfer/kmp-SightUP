@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 
 @Composable
@@ -28,14 +29,16 @@ fun CardWithIcon(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(width = 1.dp, color = SightUPTheme.colors.outline, shape = RoundedCornerShape(8.dp))
+            .border(width = 1.dp, color = SightUPTheme.sightUPColors.border_card, shape = RoundedCornerShape(8.dp))
             .padding(SightUPTheme.spacing.spacing_base),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = text,
-            style = SightUPTheme.textStyles.button,
+            style = SightUPTheme.textStyles.body,
+            color = SightUPTheme.sightUPColors.text_primary,
+            lineHeight = SightUPLineHeight.default.lineHeight_xs,
             modifier = Modifier.weight(1f)
         )
 
