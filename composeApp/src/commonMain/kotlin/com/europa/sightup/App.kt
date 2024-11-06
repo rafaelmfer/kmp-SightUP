@@ -39,6 +39,8 @@ import com.europa.sightup.presentation.navigation.WelcomeScreen
 import com.europa.sightup.presentation.navigation.onboardingNavGraph
 import com.europa.sightup.presentation.screens.FlowSeparator
 import com.europa.sightup.presentation.screens.FlowSeparatorScreen
+import com.europa.sightup.presentation.screens.home.SetupProfileScreen
+import com.europa.sightup.presentation.screens.home.StatusScreen
 import com.europa.sightup.presentation.screens.onboarding.WelcomeScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -59,13 +61,19 @@ data object AppInit
 @Composable
 fun Init() {
     val navController = rememberNavController()
-    InitNavGraph(navController = navController)
+//    InitNavGraph(navController = navController)
 
     GoogleAuthProvider.create(
         credentials = GoogleAuthCredentials(
             serverId = BuildConfigKMP.WEB_CLIENT_ID
         )
     )
+
+
+    //StatusScreen()
+
+    SetupProfileScreen()
+
 }
 
 @Composable
