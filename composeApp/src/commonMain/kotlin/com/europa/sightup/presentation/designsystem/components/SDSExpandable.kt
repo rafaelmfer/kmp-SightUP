@@ -46,11 +46,9 @@ data class ExpandableItem(
     var isExpanded: Boolean = false,
 )
 
-
 @Composable
 fun ExpandableListItem(
     item: ExpandableItem,
-    index: Int,
     isExpanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
 ) {
@@ -68,7 +66,7 @@ fun ExpandableListItem(
                 onExpandedChange(!isExpanded)
             }
             .background(SightUPTheme.sightUPColors.background_default)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
 

@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.screens.home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,35 +9,44 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
-import com.europa.sightup.presentation.designsystem.components.SDSButtonArrow
+import com.europa.sightup.presentation.designsystem.components.ExpandableItem
+import com.europa.sightup.presentation.designsystem.components.ExpandableListItem
 import com.europa.sightup.presentation.designsystem.components.SDSCardAssessment
 import com.europa.sightup.presentation.navigation.HomeExample
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -45,18 +55,44 @@ import com.europa.sightup.presentation.ui.theme.layout.SightUPSpacing
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.number
+import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.arrow_right
 import sightupkmpapp.composeapp.generated.resources.close
+import sightupkmpapp.composeapp.generated.resources.excelent
+import sightupkmpapp.composeapp.generated.resources.good
 import sightupkmpapp.composeapp.generated.resources.guide_book
+import sightupkmpapp.composeapp.generated.resources.information
+import sightupkmpapp.composeapp.generated.resources.moderate
+import sightupkmpapp.composeapp.generated.resources.poor
+import sightupkmpapp.composeapp.generated.resources.very_poor
+
+@Composable
+fun IconSort(myIcon: String): Painter {
+    return when (myIcon) {
+        "vPoor" -> painterResource(Res.drawable.very_poor)
+        "poor" -> painterResource(Res.drawable.poor)
+        "good"-> painterResource(Res.drawable.good)
+        "excellent" -> painterResource(Res.drawable.excelent)
+        "moderate" -> painterResource(Res.drawable.moderate)
+        else -> painterResource(Res.drawable.good)
+    }
+}
 
 @Composable
 fun HomeScreen(
     navController: NavController,
 ) {
     val name = "Linda"
-
     val scrollState = rememberScrollState()
 
     Column(
@@ -68,6 +104,18 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         GreetingWithIcons(name)
+
+        ShowCalendar(
+            listOf(
+                "2024-10-07" to "vPoor",
+                "2024-10-06" to "poor",
+                "2024-10-05" to "good",
+                "2024-10-04" to "excellent",
+                "2024-10-03" to "moderate",
+                "2024-10-02" to "good"
+            )
+        )
+
         NextTestCard(
             nameOfTest = "Vision Acuity Test",
             testDate = "Oct 04, 2024",
@@ -85,8 +133,149 @@ fun HomeScreen(
                 )
             }
         )
+
         AssessmentList(navController)
         EyeWellnessTips()
+    }
+}
+
+@Composable
+fun ShowCalendar(myList: List<Pair<String, String>>) {
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+    when (today.month) {
+        Month.JANUARY -> check(today.month.number == 1)
+        Month.FEBRUARY -> check(today.month.number == 2)
+        Month.MARCH -> check(today.month.number == 3)
+        Month.APRIL -> check(today.month.number == 4)
+        Month.MAY -> check(today.month.number == 5)
+        Month.JUNE -> check(today.month.number == 6)
+        Month.JULY -> check(today.month.number == 7)
+        Month.AUGUST -> check(today.month.number == 8)
+        Month.SEPTEMBER -> check(today.month.number == 9)
+        Month.OCTOBER -> check(today.month.number == 10)
+        Month.NOVEMBER -> check(today.month.number == 11)
+        Month.DECEMBER -> check(today.month.number == 12)
+        else -> Month.JANUARY
+    }
+
+    val month = today.month.toString().substring(0, 1).uppercase() + today.month.toString().substring(1, 3).lowercase()
+
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(SightUPTheme.spacing.spacing_side_margin)
+    ) {
+        Text(
+            month,
+            modifier = Modifier.clip(RoundedCornerShape(15.dp))
+                .background(SightUPTheme.sightUPColors.background_activate)
+                .padding(horizontal = 40.dp, vertical = 3.dp),
+            style = SightUPTheme.textStyles.footnote
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val dayAfter = today.plus(DatePeriod(days = 1))
+            for (i in 5 downTo 1) {
+                val daysBefore = today.minus(DatePeriod(days = i))
+                Column(
+                    modifier = Modifier.weight(1f).padding(vertical = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color.Transparent)
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = daysBefore.dayOfWeek.toString().substring(0, 1),
+                            textAlign = TextAlign.Center,
+                            color = Color.Black,
+                        )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = daysBefore.dayOfMonth.toString(),
+                            textAlign = TextAlign.Center,
+                            color = Color.Black,
+                        )
+                    }
+
+                    Spacer(Modifier.height(10.dp))
+                    Image(
+                        painter = IconSort(myList[i].second),
+                        contentDescription = "description",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.weight(1f).padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
+                        .background(SightUPTheme.sightUPColors.background_button).padding(10.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = today.dayOfWeek.toString().substring(0, 1),
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+
+                        )
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = today.dayOfMonth.toString(),
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                    )
+                }
+
+                Spacer(Modifier.height(10.dp))
+
+                Image(
+                    painter = IconSort(myList[0].second),
+                    contentDescription = "description",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier.weight(1f).padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color.Transparent)
+                        .padding(10.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = dayAfter.dayOfWeek.toString().substring(0, 1),
+                        textAlign = TextAlign.Center,
+                        color = Color.Black,
+
+                        )
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = dayAfter.dayOfMonth.toString(),
+                        textAlign = TextAlign.Center,
+                        color = Color.Black,
+                    )
+                }
+
+                Spacer(Modifier.height(10.dp))
+
+                Icon(
+                    painter = painterResource(Res.drawable.good),
+                    tint = Color.Transparent,
+                    contentDescription = "teste",
+                    modifier = Modifier
+                )
+            }
+        }
     }
 }
 
@@ -289,89 +478,88 @@ private fun AssessmentList(navController: NavController? = null) {
 }
 
 @Composable
-private fun HorizontalButtonList(buttons: List<String>, onClick: (String) -> Unit) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(space = SightUPTheme.spacing.spacing_xs),
-        contentPadding = PaddingValues(horizontal = SightUPTheme.spacing.spacing_side_margin)
-    ) {
-        items(buttons) { buttonText ->
-            SDSButtonArrow(
-                text = buttonText,
-                onClick = { onClick(buttonText) },
-                modifier = Modifier
-            )
-        }
-    }
-}
-
-@Composable
-private fun EyeWellnessSection(title: String, buttons: List<String>, onClick: (String) -> Unit) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm)
-    ) {
-        Text(
-            text = title,
-            style = SightUPTheme.textStyles.subtitle,
-            modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-        )
-        HorizontalButtonList(
-            buttons = buttons,
-            onClick = onClick
-        )
-    }
-}
-
-@Composable
 private fun EyeWellnessTipsTitle() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxWidth().fillMaxHeight().background(SightUPTheme.sightUPColors.background_light)
     ) {
-        Text(
-            text = "Eye Wellness Tips",
-            style = SightUPTheme.textStyles.h5,
-            modifier = Modifier.padding(start = SightUPTheme.spacing.spacing_side_margin)
-        )
-        IconButton(
-            onClick = {
-                showToast(
-                    "Info",
-                    bottomPadding = 40
-                )
-            },
-            modifier = Modifier
+        Row(
+            verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = "Info"
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Eye Wellness Tips ", style = SightUPTheme.textStyles.h5
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Image(
+                        painter = painterResource(Res.drawable.information),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+                Button(
+                    {},
+                    colors = ButtonDefaults.buttonColors(Color.Transparent),
+                    modifier = Modifier,
+                    shape = SightUPTheme.shapes.small,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "View All", color = SightUPTheme.sightUPColors.text_primary
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Image(
+                            painter = painterResource(Res.drawable.arrow_right),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun EyeWellnessTips() {
-    val sections = listOf(
-        "Dry eyes" to listOf("Apply eye drops", "Prescription medicines"),
-        "Pink eyes" to listOf("Wash your hands", "Clean your eyes often"),
-        "Blepharitis" to listOf("Apply eye drops", "Medicines", "Treat health problems")
-    )
-
     Column(
-        verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_md),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = SightUPTheme.spacing.spacing_md) // Increase distance between the sections
+        verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
+        modifier = Modifier.fillMaxWidth()
+            .padding(top = SightUPTheme.spacing.spacing_md)
     ) {
         EyeWellnessTipsTitle()
 
-        sections.forEach { (title, buttons) ->
-            EyeWellnessSection(
-                title = title,
-                buttons = buttons,
-                onClick = { action -> println("Clicked on: $action") }
+        val conditions = mutableStateListOf(
+            Condition("Eye Strain", "Message for Eye Strain"),
+            Condition("Dry Eyes", "Message for Dry Eyes"),
+            Condition("Red Eyes", "Message for Red Eyes")
+        )
+        val items = remember {
+            conditions.map { condition ->
+                ExpandableItem(
+                    title = condition.title, message = condition.message, isExpanded = false
+                )
+            }
+        }
+        val expandedStates = remember {
+            mutableStateListOf(
+                *BooleanArray(items.size) { false }.toTypedArray()
             )
+        }
+
+        items.forEachIndexed { index, item ->
+            ExpandableListItem(item = item,
+                isExpanded = expandedStates[index],
+                onExpandedChange = { expandedStates[index] = it })
         }
     }
 }

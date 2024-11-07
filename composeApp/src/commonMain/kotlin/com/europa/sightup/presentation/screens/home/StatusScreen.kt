@@ -94,7 +94,6 @@ fun StatusScreen(
     }
     val expandedStates = remember { mutableStateListOf(*BooleanArray(items.size) { false }.toTypedArray()) }
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,8 +134,6 @@ fun StatusScreen(
         )
 
         Spacer(modifier = Modifier.height(32.dp))
-
-
 
         LazyColumn(
             modifier = Modifier
@@ -260,7 +257,6 @@ fun StatusScreen(
                 itemsIndexed(items) { index, item ->
                     ExpandableListItem(
                         item = item,
-                        index = index,
                         isExpanded = expandedStates[index],
                         onExpandedChange = { expandedStates[index] = it }
                     )
