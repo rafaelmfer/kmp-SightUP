@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchBoxContainer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
+import com.europa.sightup.presentation.designsystem.components.StepScreenWithImage
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -37,9 +39,14 @@ import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.navigate
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.left_eye
+import sightupkmpapp.composeapp.generated.resources.right_eye
 import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
 
 @Composable
@@ -136,11 +143,16 @@ fun TutorialTestScreen(
                     )
 
                     4 -> FourthStep(
+                        viewModel = tutorialViewModel,
                         navController = navController,
                         test = test,
                         selectedMode = selectedMode,
                         eyeTested = eyeTested,
-                        onEyeTestedChange = { tutorialViewModel.updateEyeTested(it) }
+                        animationPath =
+                        if (eyeTested == "right") Res.drawable.right_eye
+                        else Res.drawable.left_eye,
+                        instructionText = if (eyeTested == "right") "Start with your right eye. If you wear glasses, please take them off and cover your left eye."
+                        else "Now it's time to test your left eye. Please, cover your right eye."
                     )
                 }
             }
@@ -289,29 +301,33 @@ private fun ThirdStep(
 
 @Composable
 private fun FourthStep(
+    viewModel: TutorialTestViewModel,
     navController: NavController,
     test: TestResponse,
     selectedMode: TestModeEnum,
     eyeTested: String,
-    onEyeTestedChange: (String) -> Unit,
     isChecked: Boolean = false,
     onCheckedChanged: (Boolean) -> Unit = {},
+    animationPath: DrawableResource,
+    instructionText: String,
 ) {
-    val (animationPath, instructionText) = if (eyeTested == "right") {
-        "files/animation_delete_me.json" to "Start with your right eye. If you wear glasses, please take them off and cover your left eye."
-    } else {
-        "files/animation_delete_me.json" to "Now it's time to test your left eye. Please, cover your right eye."
-    }
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        StepScreenWithAnimation(
-            animationPath = animationPath,
+        StepScreenWithImage(
+            image = animationPath,
             instructionText = instructionText,
         )
+        // TODO: later change back to this
+//        StepScreenWithAnimation(
+//            animationPath = animationPath,
+//            instructionText = instructionText,
+//        )
 
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
 
@@ -326,14 +342,16 @@ private fun FourthStep(
         SDSButton(
             text = "Start",
             onClick = {
-                val nextEye = if (eyeTested == "right") "left" else "right"
-                onEyeTestedChange(nextEye)
                 navController.navigate(
                     route = TestScreens.TestActive.toString(),
                     objectToSerialize = test,
                     objectToSerialize2 = selectedMode.displayName,
                     objectToSerialize3 = eyeTested,
                 )
+                scope.launch {
+                    delay(500)
+                    viewModel.updateEyeTested("left")
+                }
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
             textStyle = SightUPTheme.textStyles.button,
