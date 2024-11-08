@@ -68,6 +68,7 @@ import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -439,26 +440,58 @@ private fun TestTypeContent(
                 }
                 voiceRecognition.startListening { spokenText ->
                     when {
-                        spokenText.contains("one", ignoreCase = true) -> {}
-                        spokenText.contains("two", ignoreCase = true) -> {}
-                        spokenText.contains("three", ignoreCase = true) -> {}
-                        spokenText.contains("four", ignoreCase = true) -> {}
-                        spokenText.contains("five", ignoreCase = true) -> {}
-                        spokenText.contains("six", ignoreCase = true) -> {}
-                        spokenText.contains("seven", ignoreCase = true) -> {}
-                        spokenText.contains("eight", ignoreCase = true) -> {}
-                        spokenText.contains("nine", ignoreCase = true) -> {}
-                        spokenText.contains("ten", ignoreCase = true) || spokenText.contains("10", ignoreCase = true) -> {}
+                        spokenText.contains("one", ignoreCase = true) -> {
+                            onClickChangeUI(1)
+                        }
+
+                        spokenText.contains("two", ignoreCase = true) -> {
+                            onClickChangeUI(2)
+                        }
+
+                        spokenText.contains("three", ignoreCase = true) -> {
+                            onClickChangeUI(3)
+                        }
+
+                        spokenText.contains("four", ignoreCase = true) -> {
+                            onClickChangeUI(4)
+                        }
+
+                        spokenText.contains("five", ignoreCase = true) -> {
+                            onClickChangeUI(5)
+                        }
+
+                        spokenText.contains("six", ignoreCase = true) -> {
+                            onClickChangeUI(6)
+                        }
+
+                        spokenText.contains("seven", ignoreCase = true) -> {
+                            onClickChangeUI(7)
+                        }
+
+                        spokenText.contains("eight", ignoreCase = true) -> {
+                            onClickChangeUI(8)
+                        }
+
+                        spokenText.contains("nine", ignoreCase = true) -> {
+                            onClickChangeUI(9)
+                        }
+
+                        spokenText.contains("ten", ignoreCase = true) || spokenText.contains("10", ignoreCase = true) -> {
+                            onClickChangeUI(10)
+                        }
+
                         spokenText.contains("eleven", ignoreCase = true) || spokenText.contains(
                             "11",
                             ignoreCase = true
                         ) -> {
+                            onClickChangeUI(11)
                         }
 
                         spokenText.contains("twelve", ignoreCase = true) || spokenText.contains(
                             "12",
                             ignoreCase = true
                         ) -> {
+                            onClickChangeUI(12)
                         }
 
                         spokenText.contains("all lines", ignoreCase = true) -> onTestButtonClick()

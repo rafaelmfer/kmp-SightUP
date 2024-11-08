@@ -49,6 +49,7 @@ import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSCardTest
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.screens.test.active.EChart
@@ -120,7 +121,6 @@ fun TestResultScreen(
     LaunchedEffect(saveSuccess) {
         if (saveSuccess) {
             showToast("Test saved successfully")
-            viewModel.resetSaveSuccess()
         }
     }
 
@@ -152,7 +152,10 @@ fun TestResultScreen(
                 title = "$testTitle Result",
                 iconRight = Icons.Default.Close,
                 iconRightVisible = true,
-                onRightButtonClick = {},
+                onRightButtonClick = {
+                    showToast("TODO: Warning message")
+                    navController.navigate(Home)
+                },
                 modifier = Modifier.background(SightUPTheme.sightUPColors.background_light)
             )
         },
