@@ -38,7 +38,7 @@ class SightUpRepository(
         kVaultStorage.set(USER_INFO, userString)
     }
 
-    private fun getUserInfo(): UserResponse? {
+    fun getUserInfo(): UserResponse? {
         val userString = kVaultStorage.get(USER_INFO)
         return try {
             Json.decodeFromString(userString)
@@ -93,8 +93,6 @@ class SightUpRepository(
     }
 
     fun setupProfile(
-        userId: String? = null,
-        email: String? = null,
         userName: String? = null,
         birthday: Int? = null,
         gender: String? = null,
@@ -102,9 +100,10 @@ class SightUpRepository(
         frequency: String? = null,
         unit: String? = null,
     ): Flow<ProfileResponse> {
+        val userInfo = getUserInfo()
         val request = ProfileRequest(
-            userId = userId,
-            email = email!!,
+            userId = userInfo?.id,
+            email = userInfo?.email ?: "",
             userName = userName,
             birthday = birthday,
             gender = gender,

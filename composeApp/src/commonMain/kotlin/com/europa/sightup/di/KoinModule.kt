@@ -10,6 +10,7 @@ import com.europa.sightup.data.repository.SightUpRepository
 import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.MainViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
+import com.europa.sightup.presentation.screens.onboarding.WelcomeViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginViewModel
 import com.europa.sightup.presentation.screens.prescription.PrescriptionMainViewModel
 import com.europa.sightup.presentation.screens.prescription.history.PrescriptionHistoryViewModel
@@ -50,6 +51,7 @@ val commonModule = module {
     // ViewModels
     viewModel { MainViewModel(repository = get()) }
     viewModel { LoginViewModel(repository = get()) }
+    viewModel { WelcomeViewModel(repository = get()) }
     viewModel { TestViewModel(repository = get()) }
     viewModel { ExerciseViewModel(repository = get()) }
     viewModel { TutorialTestViewModel() }

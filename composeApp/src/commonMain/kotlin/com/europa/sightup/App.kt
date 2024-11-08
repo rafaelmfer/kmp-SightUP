@@ -35,11 +35,8 @@ import com.europa.sightup.presentation.designsystem.components.SDSVideoPlayerVie
 import com.europa.sightup.presentation.designsystem.components.data.PlayerConfig
 import com.europa.sightup.presentation.designsystem.designSystemNavGraph
 import com.europa.sightup.presentation.navigation.OnboardingScreens
-import com.europa.sightup.presentation.navigation.WelcomeScreen
-import com.europa.sightup.presentation.navigation.onboardingNavGraph
 import com.europa.sightup.presentation.screens.FlowSeparator
 import com.europa.sightup.presentation.screens.FlowSeparatorScreen
-import com.europa.sightup.presentation.screens.onboarding.WelcomeScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.mmk.kmpauth.google.GoogleAuthCredentials
@@ -87,20 +84,11 @@ fun InitNavGraph(
             ) {
                 AfterSplashScreen(navController = navController)
             }
-            composable<AppInit>(
-                enterTransition = {
-                    fadeIn()
-                }
-            ) {
-                AppEntryPoint(navController = navController)
-            }
+
             composable<FlowSeparator> {
                 FlowSeparatorScreen(navController = navController)
             }
-            onboardingNavGraph(navController)
-            composable<WelcomeScreen> {
-                WelcomeScreen(navController = navController)
-            }
+
             composable<SightUPApp> {
                 AppNavHost()
             }
@@ -121,7 +109,7 @@ fun AfterSplashScreen(navController: NavHostController) {
 
         delay(fadeOutDuration.toLong())
         isPlayerVisible = false
-        navController.navigate(AppInit)
+        navController.navigate(SightUPApp)
     }
 
     Box(
@@ -181,30 +169,3 @@ fun AfterSplashScreen(navController: NavHostController) {
     }
 }
 
-@Composable
-fun AppEntryPoint(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = {
-                navController.navigate(FlowSeparator)
-            },
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text("Start the App")
-        }
-
-        Button(
-            onClick = {
-                navController.navigate(DesignSystemSamples.Home)
-            },
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text("See Design System")
-        }
-    }
-}

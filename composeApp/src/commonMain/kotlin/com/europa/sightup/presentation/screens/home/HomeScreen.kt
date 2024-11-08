@@ -118,8 +118,8 @@ fun HomeScreen(
 
         NextTestCard(
             nameOfTest = "Vision Acuity Test",
-            testDate = "Oct 04, 2024",
-            numberOfDays = 9,
+            testDate = "Nov 09, 2024",
+            numberOfDays = 2,
             onClickClose = {
                 showToast(
                     message = "Close",
