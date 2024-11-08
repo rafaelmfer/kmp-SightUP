@@ -8,15 +8,8 @@ enum class Moods(val value: String) {
     VERY_POOR("very poor");
 
     companion object {
-        fun fromValue(value: String): Moods {
-            return when {
-                value.equals("very good", ignoreCase = true) -> VERY_GOOD
-                value.equals("good", ignoreCase = true) -> GOOD
-                value.equals("moderate", ignoreCase = true) -> MODERATE
-                value.equals("poor", ignoreCase = true) -> POOR
-                value.equals("very poor", ignoreCase = true) -> VERY_POOR
-                else -> MODERATE
-            }
+        fun fromString(value: String): Moods {
+            return entries.find { it.value.equals(value, ignoreCase = true) } ?: MODERATE
         }
     }
 }

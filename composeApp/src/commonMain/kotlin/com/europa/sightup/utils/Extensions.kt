@@ -1,6 +1,9 @@
 package com.europa.sightup.utils
 
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 fun Clock.System.currentTimeMillis(): Long {
     return now().toEpochMilliseconds()
@@ -38,3 +41,37 @@ fun String.capitalizeWords(): String = split(" ")
             }
         }
     }
+
+fun String.toFormattedDate(outputFormat: String = "MMM dd, yyyy"): String {
+    val instant = Instant.parse(this)
+
+    val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+    val year = localDate.year
+    val month = localDate.monthNumber.toString().padStart(2, '0')
+    val monthShortName = localDate.month.name.lowercase().replaceFirstChar { it.uppercase() }.take(3)
+    val day = localDate.dayOfMonth.toString().padStart(2, '0')
+
+    return outputFormat
+        .replace("MMM", monthShortName)
+        .replace("MM", month)
+        .replace("dd", day)
+        .replace("yyyy", year.toString())
+}
+
+fun getTodayDateString(format: String = "MMM dd, yyyy"): String {
+    val currentInstant = Clock.System.now()
+
+    val localDate = currentInstant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+    val year = localDate.year
+    val month = localDate.monthNumber.toString().padStart(2, '0')
+    val monthShortName = localDate.month.name.lowercase().replaceFirstChar { it.uppercase() }.take(3)
+    val day = localDate.dayOfMonth.toString().padStart(2, '0')
+
+    return format
+        .replace("MMM", monthShortName)
+        .replace("MM", month)
+        .replace("dd", day)
+        .replace("yyyy", year.toString())
+}

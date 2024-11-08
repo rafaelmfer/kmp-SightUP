@@ -3,11 +3,14 @@ package com.europa.sightup.data.remote.api
 import com.europa.sightup.data.remote.request.ProfileRequest
 import com.europa.sightup.data.remote.request.auth.LoginRequest
 import com.europa.sightup.data.remote.request.auth.LoginWithProviderRequest
+import com.europa.sightup.data.remote.request.prescription.AddPrescriptionRequest
 import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
+import com.europa.sightup.data.remote.response.AddPrescriptionResponse
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.data.remote.response.auth.LoginEmailResponse
 import com.europa.sightup.data.remote.response.auth.LoginResponse
 import com.europa.sightup.data.remote.response.visionHistory.UserHistoryResponse
@@ -35,6 +38,11 @@ interface SightUpApiService {
         @Body request: LoginWithProviderRequest,
     ): LoginResponse
 
+    @GET("api/user/{user}")
+    suspend fun getUser(
+        @Path("user") user: String
+    ): UserResponse
+
     @POST("api/user/setupProfile")
     suspend fun setupProfile(
         @Body request: ProfileRequest,
@@ -49,6 +57,11 @@ interface SightUpApiService {
     suspend fun getUserTests(
         @Path("user") user: String
     ): UserHistoryResponse
+
+    @POST("api/user/prescriptions")
+    suspend fun addPrescription(
+        @Body request: AddPrescriptionRequest,
+    ): AddPrescriptionResponse
 
     @GET("api/tasks/allTasks")
     suspend fun getTasks(): List<TaskResponse>

@@ -27,6 +27,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSEyeCl
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSListButtonsSelectableScreen
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSRecordsConditionsPreview
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
@@ -58,6 +59,7 @@ fun SDSSamplesScreen(navController: NavHostController) {
         SDSCardDailyCheckScreen to SDSCardDailyCheckScreen::class.simpleName!!,
         SDSListButtonsSelectableScreen to SDSListButtonsSelectableScreen::class.simpleName!!,
         SDSVideoPlayerScreen to SDSVideoPlayerScreen::class.simpleName!!,
+        SDSRecordsConditionsPreview to SDSRecordsConditionsPreview::class.simpleName!!,
     )
 
     Column(
