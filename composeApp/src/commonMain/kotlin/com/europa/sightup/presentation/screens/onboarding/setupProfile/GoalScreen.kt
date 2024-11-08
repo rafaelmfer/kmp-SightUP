@@ -1,8 +1,9 @@
-package com.europa.sightup.presentation.screens.home
+package com.europa.sightup.presentation.screens.onboarding.setupProfile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,37 +30,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.screens.onboarding.WelcomeViewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
+import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 
 @Composable
-fun UnitTwoScreen(btn: (Boolean) -> Unit, unitTwo: (List<String>) -> Unit) {
+fun GoalScreen(
+    viewModel: WelcomeViewModel,
+    onClickLeft: () -> Unit,
+    onClickRight: () -> Unit,
+) {
     val selectedConditions = remember { mutableStateListOf<String>() }
 
-    var strain: Boolean by remember { mutableStateOf(false) }
-    var changes: Boolean by remember { mutableStateOf(false) }
-    var recommendations: Boolean by remember { mutableStateOf(false) }
-    var history: Boolean by remember { mutableStateOf(false) }
+    var strain by remember { mutableStateOf(false) }
+    var changes by remember { mutableStateOf(false) }
+    var recommendations by remember { mutableStateOf(false) }
+    var history by remember { mutableStateOf(false) }
 
 
     fun toggleCondition(condition: String, isSelected: Boolean) {
-        if (isSelected) {
+        if (isSelected && condition !in selectedConditions) {
             selectedConditions.add(condition)
-        } else {
+        } else if (!isSelected && condition in selectedConditions) {
             selectedConditions.remove(condition)
         }
-        println("Selected conditions: $selectedConditions")
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
     ) {
         Spacer(Modifier.height(32.dp))
         Text(
-            "Which unit do you prefer?",
+            "What’s your main goal?",
             style = SightUPTheme.textStyles.h5
         )
 
@@ -69,18 +74,13 @@ fun UnitTwoScreen(btn: (Boolean) -> Unit, unitTwo: (List<String>) -> Unit) {
             style = SightUPTheme.textStyles.body
         )
 
+        Spacer(Modifier.height(8.dp))
         Text(
             "*You can update int the account anytime.",
             style = SightUPTheme.textStyles.body2
         )
 
         Spacer(Modifier.height(32.dp))
-        Text(
-            "Measurement",
-            style = SightUPTheme.textStyles.body2
-        )
-
-        Spacer(Modifier.height(16.dp))
 
         Box(
             modifier = Modifier
@@ -145,7 +145,7 @@ fun UnitTwoScreen(btn: (Boolean) -> Unit, unitTwo: (List<String>) -> Unit) {
                 .background(Color.Yellow)
                 .clickable {
                     recommendations = !recommendations
-                    toggleCondition("recommendations", recommendations)
+                    toggleCondition("Recommendations", recommendations)
                 }
                 .defaultMinSize(
                     minHeight = SightUPTheme.sizes.size_48
@@ -193,22 +193,23 @@ fun UnitTwoScreen(btn: (Boolean) -> Unit, unitTwo: (List<String>) -> Unit) {
         }
 
         Spacer(Modifier.height(40.dp))
-        Row {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm, Alignment.CenterHorizontally),
+        ) {
             SDSButton(
-                "Skip",
-                {},
+                text = "Skip",
+                onClick = onClickLeft,
                 modifier = Modifier
                     .weight(1f),
                 buttonStyle = ButtonStyle.TEXT,
             )
-
-            Spacer(Modifier.width(20.dp))
-
+            Spacer(Modifier.width(SightUPTheme.spacing.spacing_base))
             SDSButton(
-                "Next(4/5)",
-                {
-                    btn(false)
-                    unitTwo(selectedConditions)
+                text = "Next (4/5)",
+                onClick = {
+                    viewModel.updateProfileData(goal = selectedConditions.toList())
+                    onClickRight()
                 },
                 modifier = Modifier
                     .weight(1f),

@@ -13,12 +13,13 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home
+        startDestination = OnboardingScreens.OnboardingInit
     ) {
         composable<HomeExample> {
             // TODO: Replace this screen
             PostsWithState()
         }
+        onboardingNavGraph(navController = navController)
         composable<Home> {
             HomeScreen(navController = navController)
         }

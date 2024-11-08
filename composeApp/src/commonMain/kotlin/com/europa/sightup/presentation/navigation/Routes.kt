@@ -23,10 +23,9 @@ sealed interface OnboardingScreens {
     @Serializable
     data object Tutorial : OnboardingScreens
 
+    @Serializable
+    data object WelcomeScreen : OnboardingScreens
 }
-
-@Serializable
-object WelcomeScreen
 
 // Home Routes
 @Serializable

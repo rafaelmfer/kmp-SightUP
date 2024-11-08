@@ -28,7 +28,26 @@
     <string name="watery_eyes">Watery Eyes</string>
 
 
+    !-- Welcome -->
+    <string name="welcome_title">Welcome to SightUp</string>
+    <string name="welcome_content">Do you want to take your first vision test?</string>
+    <string name="welcome_later_button">Later</string>
+    <string name="welcome_take_test_button">Take Vision Test</string>
+
+    <string name="profile_note">* You can update it in your account at any time.</string>
+    <string name="profile_username_title">What is your username?</string>
+    <string name="profile_username_content">We’ll use the username to personalize your experience within the app.</string>
+    <string name="profile_username_hint">Type your username</string>
+
+    <string name="profile_title">Would you like to setup your profile?</string>
+    <string name="profile_body_one">Sharing detailed profile information enhances your experience with SightUP, allowing us to provide personalized, tailored support for your eye health.</string>
+    <string name="profile_setup_button">Setup now</string>"
+
+    <string name="profile_birthday_title">What is your birthday?</string>
+    <string name="profile_gender_title">What is your gender?</string>
+
     <!-- Onboarding -->
+
     <!-- Disclaimer Screen -->
     <string name="disclaimer_title">Disclaimer</string>
     <string name="disclaimer_content">SightUP does not replace professional eye exams. Always consult with a licensed eye care provider for accurate diagnosis and prescription needs.</string>

@@ -10,64 +10,103 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
-import com.europa.sightup.SightUPApp
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
+import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
-import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
+import com.europa.sightup.presentation.navigation.Home
+import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.onboarding.setupProfile.ProfileStep
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.UIState
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.arrow_back
 import sightupkmpapp.composeapp.generated.resources.welcome
+import sightupkmpapp.composeapp.generated.resources.welcome_content
+import sightupkmpapp.composeapp.generated.resources.welcome_later_button
+import sightupkmpapp.composeapp.generated.resources.welcome_take_test_button
 
 @Composable
-fun WelcomeScreen(navController: NavController? = null) {
-    var currentStep by remember { mutableStateOf(1) }
-    var bottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+fun WelcomeScreen(
+    navController: NavController,
+    // TODO: Change this after testing
+    createProfile: Boolean = false,
+) {
+    val viewModel = koinViewModel<WelcomeViewModel>()
+    val userState by viewModel.user.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.getUser()
+    }
+
+    if (userState is UIState.Success) {
+        val userResponse = (userState as UIState.Success).data
+
+        if (userResponse.email != null && !createProfile) {
+            ShowProfileSetup(viewModel, navController)
+        }
+        MainWelcomeScreen(navController)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ShowProfileSetup(
+    viewModel: WelcomeViewModel,
+    navController: NavController? = null,
+) {
+    val bottomSheetState by viewModel.bottomSheetState.collectAsState()
+
+    val step = when (viewModel.outerStep) {
+        1 -> ProfileStep.Step1
+        2 -> ProfileStep.Step2
+        else -> ProfileStep.Step3
+    }
+
+    SDSBottomSheet(
+        fullHeight = true,
+        isDismissible = false,
+        expanded = bottomSheetState,
+        sheetContent = { step.content(viewModel) },
+        title = step.title,
+        iconLeft = step.iconLeft,
+        onIconLeftClick = {
+            if (viewModel.outerStep == 3) {
+                if (viewModel.currentStep > 1) {
+                    viewModel.currentStep--
+                } else {
+                    navController?.popBackStack()
+                }
+            }
+        },
+        iconRight = step.iconRight,
+        iconRightVisible = step.iconRightVisible,
+        onIconRightClick = { viewModel.hideBottomSheet() }
+    )
+}
+
+
+@Composable
+fun MainWelcomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        if (currentStep > 1) {
-            IconButton(
-                onClick = {
-                    if (currentStep > 1) {
-                        currentStep--
-                    } else {
-                        navController?.popBackStack()
-                    }
-                },
-                modifier = Modifier
-                    .padding(
-                        start = SightUPTheme.spacing.spacing_xs,
-                        top = SightUPTheme.spacing.spacing_xs
-                    )
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.arrow_back),
-                    contentDescription = "Back",
-                    tint = Color.Gray
-                )
-            }
-        }
         Spacer(modifier = Modifier.weight(ONE_FLOAT))
         Image(
             painter = painterResource(Res.drawable.welcome),
@@ -96,7 +135,7 @@ fun WelcomeScreen(navController: NavController? = null) {
             )
             Spacer(modifier = Modifier.height(SightUPTheme.sizes.size_16))
             Text(
-                text = "Do you take the first vision test?",
+                text = stringResource(Res.string.welcome_content),
             )
             Spacer(Modifier.height(SightUPTheme.sizes.size_32))
             Row(
@@ -104,18 +143,18 @@ fun WelcomeScreen(navController: NavController? = null) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 SDSButton(
-                    text = "Later",
+                    text = stringResource(Res.string.welcome_later_button),
                     onClick = {
-                        navController?.navigate(SightUPApp)
+                        navController?.navigate(Home)
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = ButtonStyle.OUTLINED
                 )
                 Spacer(modifier = Modifier.width(SightUPTheme.sizes.size_16))
                 SDSButton(
-                    text = "Take Vision Test",
+                    text = stringResource(Res.string.welcome_take_test_button),
                     onClick = {
-                        navController
+                        navController?.navigate(TestScreens.TestRoot)
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = ButtonStyle.PRIMARY
@@ -123,13 +162,4 @@ fun WelcomeScreen(navController: NavController? = null) {
             }
         }
     }
-
-    // TODO: Call SetupProfile Flow BottomSheet if the user has not setup their profile
-//    LoginSignUpScreen(
-//        bottomSheetVisible = bottomSheetVisibility,
-//        onBottomSheetVisibilityChange = {
-//            bottomSheetVisibility = it
-//        },
-//        navController = navController
-//    )
 }

@@ -51,11 +51,11 @@ interface SightUpApiService {
     @POST("api/user/visionHistory")
     suspend fun saveTestResult(
         @Body request: VisionHistoryRequest,
-    ) : VisionHistoryResponse
+    ): VisionHistoryResponse
 
     @GET("api/user/visionHistory/{user}")
     suspend fun getUserTests(
-        @Path("user") user: String
+        @Path("user") user: String,
     ): UserHistoryResponse
 
     @POST("api/user/prescriptions")

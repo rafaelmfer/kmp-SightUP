@@ -26,7 +26,8 @@ import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
-import com.europa.sightup.presentation.navigation.WelcomeScreen
+import com.europa.sightup.presentation.navigation.Home
+import com.europa.sightup.presentation.navigation.OnboardingScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -144,7 +145,11 @@ fun TutorialScreen(navController: NavController? = null) {
                         stringResource(Res.string.tutorial_secondary_button)
                     },
                     onClick = {
-                        navController?.navigate(WelcomeScreen)
+                        if (currentStep < 4) {
+                            currentStep = 4
+                        } else {
+                            navController?.navigate(Home)
+                        }
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = if (currentStep >= 4) ButtonStyle.OUTLINED else ButtonStyle.TEXT
@@ -178,7 +183,7 @@ fun TutorialScreen(navController: NavController? = null) {
         onSuccessfulLogin = {
             //TODO: verify if the user has profile to send that info to WelcomeScreen to open BottomSheets
             navController?.navigate(
-                WelcomeScreen
+                OnboardingScreens.WelcomeScreen
             ) {
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true
