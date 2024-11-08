@@ -144,6 +144,9 @@ sealed interface PrescriptionsScreens {
 
     @Serializable
     data object PrescriptionsRoot : PrescriptionsScreens
+
+    @Serializable
+    data object PrescriptionsHistory : PrescriptionsScreens
 }
 
 // Account Routes

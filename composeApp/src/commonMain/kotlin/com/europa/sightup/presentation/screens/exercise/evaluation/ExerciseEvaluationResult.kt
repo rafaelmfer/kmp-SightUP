@@ -68,7 +68,7 @@ fun ExerciseEvaluationResult(
     var scheduleSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var bottomSheetTitle by remember { mutableStateOf("") }
 
-    val mood = Moods.fromValue(answerEvaluation)
+    val mood = Moods.fromString(answerEvaluation)
 
     val image = when (mood) {
         Moods.VERY_GOOD,

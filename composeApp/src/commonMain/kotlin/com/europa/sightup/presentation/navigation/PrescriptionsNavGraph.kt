@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens.PrescriptionsInit
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens.PrescriptionsRoot
 import com.europa.sightup.presentation.screens.prescription.PrescriptionScreen
+import com.europa.sightup.presentation.screens.prescription.history.PrescriptionHistory
 
 fun NavGraphBuilder.prescriptionsNavGraph(navController: NavHostController) {
     navigation<PrescriptionsInit>(
@@ -14,6 +15,10 @@ fun NavGraphBuilder.prescriptionsNavGraph(navController: NavHostController) {
     ) {
         composable<PrescriptionsRoot> {
             PrescriptionScreen(navController = navController)
+        }
+
+        composable<PrescriptionsScreens.PrescriptionsHistory> {
+            PrescriptionHistory(navController = navController)
         }
     }
 }

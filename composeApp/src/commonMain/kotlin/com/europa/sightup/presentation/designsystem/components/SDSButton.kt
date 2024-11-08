@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -37,6 +38,8 @@ fun SDSButton(
     buttonStyle: ButtonStyle = ButtonStyle.PRIMARY,
     textStyle: TextStyle = SightUPTheme.textStyles.button,
     shape: Shape = SightUPTheme.shapes.small,
+    containerColor: Color? = null,
+    contentColor: Color? = null,
     contentPadding: PaddingValues = PaddingValues(SightUPTheme.spacing.spacing_base),
     enabled: Boolean = true,
 ) {
@@ -49,8 +52,8 @@ fun SDSButton(
                 ),
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
-                containerColor = SightUPTheme.sightUPColors.primary_600,
-                contentColor = SightUPTheme.sightUPColors.white,
+                containerColor = containerColor ?: SightUPTheme.sightUPColors.primary_600,
+                contentColor = contentColor ?: SightUPTheme.sightUPColors.white,
                 disabledContainerColor = SightUPTheme.sightUPColors.neutral_200,
                 disabledContentColor = SightUPTheme.sightUPColors.neutral_500,
             ),
@@ -72,8 +75,8 @@ fun SDSButton(
                 ),
             enabled = enabled,
             colors = ButtonDefaults.textButtonColors(
-                containerColor = SightUPTheme.sightUPColors.white,
-                contentColor = SightUPTheme.sightUPColors.primary_600,
+                containerColor = containerColor ?: SightUPTheme.sightUPColors.white,
+                contentColor = contentColor ?: SightUPTheme.sightUPColors.primary_600,
                 disabledContainerColor = SightUPTheme.sightUPColors.neutral_200,
                 disabledContentColor = SightUPTheme.sightUPColors.neutral_500,
             ),
@@ -95,8 +98,8 @@ fun SDSButton(
                 ),
             enabled = enabled,
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = SightUPTheme.sightUPColors.white,
-                contentColor = SightUPTheme.sightUPColors.primary_600,
+                containerColor = containerColor ?: SightUPTheme.sightUPColors.white,
+                contentColor = contentColor ?: SightUPTheme.sightUPColors.primary_600,
                 disabledContainerColor = SightUPTheme.sightUPColors.neutral_200,
                 disabledContentColor = SightUPTheme.sightUPColors.neutral_500,
             ),

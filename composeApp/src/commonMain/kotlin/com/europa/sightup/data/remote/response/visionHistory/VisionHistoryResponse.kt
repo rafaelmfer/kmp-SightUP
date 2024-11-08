@@ -11,23 +11,23 @@ data class VisionHistoryResponse(
 
 @Serializable
 data class UserHistoryResponse(
+    @SerialName("_id") val id: String,
     @SerialName("userId") val userId: String,
     @SerialName("userEmail") val userEmail: String,
-    @SerialName("appTest") val appTest: Boolean,
-    @SerialName("tests") val tests: List<TestResponse>,
-    @SerialName("_id") val id: String,
+    @SerialName("tests") val tests: List<HistoryTestResponse>,
 )
 
 @Serializable
-data class TestResponse(
-    @SerialName("testId") val testId: String,
-    @SerialName("testTitle") val testTitle: String,
+data class HistoryTestResponse(
     @SerialName("date") val date: String,
-    @SerialName("result") val result: ResultResponse,
+    @SerialName("appTest") val appTest: Boolean,
+    @SerialName("result") val result: List<ResultResponse>,
 )
 
 @Serializable
 data class ResultResponse(
+    @SerialName("testId") val testId: String? = null,
+    @SerialName("testType") val testTitle: String,
     @SerialName("left") val left: String,
     @SerialName("right") val right: String,
 )

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
@@ -38,11 +39,14 @@ fun SDSInput(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
+    label: String = "",
     isError: Boolean = false,
     isEnabled: Boolean = true,
     hint: String = "Placeholder",
     fullWidth: Boolean = false,
+    singleLine: Boolean = true,
+    minLines: Int = 1,
+    textAlign: TextAlign = TextAlign.Start,
     contentPadding: PaddingValues = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -89,32 +93,40 @@ fun SDSInput(
     Column(
         modifier = Modifier
             .applyIf(fullWidth) { fillMaxWidth() }
-            .width(120.dp)
             .then(modifier)
+            .width(120.dp)
     ) {
-        Text(
-            modifier = Modifier,
-            text = label,
-            color = labelColor,
-            style = SightUPTheme.textStyles.body2
-        )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
+        if (label.isNotBlank()) {
+            Text(
+                modifier = Modifier,
+                text = label,
+                color = labelColor,
+                style = SightUPTheme.textStyles.body2
+            )
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
+        }
         BasicTextField(
             modifier = Modifier
-                .applyIf(fullWidth) { fillMaxWidth() },
+                .applyIf(fullWidth) { fillMaxWidth() }
+                .then(modifier),
             value = value,
             onValueChange = onValueChange,
             enabled = isEnabled,
+            singleLine = singleLine,
+            minLines = minLines,
             interactionSource = interactionSource,
-            textStyle = SightUPTheme.textStyles.body.copy(color = textColor),
+            textStyle = SightUPTheme.textStyles.body.copy(
+                color = textColor,
+                textAlign = textAlign
+            ),
             cursorBrush = SolidColor(textColor),
             decorationBox = { innerTextField ->
                 TextFieldDefaults.DecorationBox(
                     value = value,
                     innerTextField = innerTextField,
                     enabled = isEnabled,
-                    singleLine = true,
-                    visualTransformation = VisualTransformation.None,
+                    singleLine = singleLine,
+                    visualTransformation = visualTransformation,
                     interactionSource = interactionSource,
                     placeholder = {
                         if (value.isEmpty()) {

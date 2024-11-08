@@ -20,6 +20,7 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSEyeCl
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSFilterChip
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSInput
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSListButtonsSelectableScreen
+import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSRecordsConditionsPreview
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
@@ -32,6 +33,7 @@ import com.europa.sightup.presentation.designsystem.components.SDSConditionsScre
 import com.europa.sightup.presentation.designsystem.components.SDSEyeClockScreen
 import com.europa.sightup.presentation.designsystem.components.SDSFilterChipScreen
 import com.europa.sightup.presentation.designsystem.components.SDSListButtonsSelectablePreview
+import com.europa.sightup.presentation.designsystem.components.SDSRecordsConditionsPreview
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTimerScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTopBarScreen
@@ -110,6 +112,9 @@ sealed interface DesignSystemSamples {
 
     @Serializable
     data object SDSVideoPlayerScreen : DesignSystemSamples
+
+    @Serializable
+    data object SDSRecordsConditionsPreview : DesignSystemSamples
 }
 
 fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
@@ -175,6 +180,9 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         }
         composable<SDSVideoPlayerScreen> {
             SDSVideoPlayerPreview()
+        }
+        composable<SDSRecordsConditionsPreview> {
+            SDSRecordsConditionsPreview()
         }
     }
 }
