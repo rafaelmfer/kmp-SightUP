@@ -120,7 +120,7 @@ fun ExerciseEvaluationResult(
             iconRightVisible = true,
             iconRight = Res.drawable.close,
             onRightButtonClick = {
-
+                navController?.goBackToExerciseHome()
             }
         )
         Spacer(Modifier.weight(ONE_FLOAT))
