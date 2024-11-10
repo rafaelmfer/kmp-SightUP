@@ -28,7 +28,7 @@
     <string name="watery_eyes">Watery Eyes</string>
 
 
-    !-- Welcome -->
+    <!-- Welcome -->
     <string name="welcome_title">Welcome to SightUp</string>
     <string name="welcome_content">Do you want to take your first vision test?</string>
     <string name="welcome_later_button">Later</string>
@@ -85,5 +85,13 @@
     <!-- Test Screens -->
     <string name="test_mode_title">Select Mode</string>
     <string name="test_mode_subtitle">Choose the mode that suits you. Mode options will appear during the test and can be changed at any time.</string>
+
+    <!-- Account -->
+    <string name="account">Account</string>
+    <string name="profile">Profile</string>
+    <string name="preferences">Preferences</string>
+    <string name="notifications">Notifications</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="logout">Logout</string>
 
 </resources>

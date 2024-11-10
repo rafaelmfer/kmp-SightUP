@@ -43,7 +43,7 @@ import sightupkmpapp.composeapp.generated.resources.welcome_take_test_button
 
 @Composable
 fun WelcomeScreen(
-    navController: NavController,
+    navController: NavController? = null,
     // TODO: Change this after testing
     createProfile: Boolean = false,
 ) {
@@ -102,7 +102,7 @@ fun ShowProfileSetup(
 
 
 @Composable
-fun MainWelcomeScreen(navController: NavController) {
+fun MainWelcomeScreen(navController: NavController? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -145,7 +145,13 @@ fun MainWelcomeScreen(navController: NavController) {
                 SDSButton(
                     text = stringResource(Res.string.welcome_later_button),
                     onClick = {
-                        navController?.navigate(Home)
+                        navController?.navigate(Home) {
+                            // Navigate to Home and remove all previous screens from the backstack
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = ButtonStyle.OUTLINED
@@ -154,7 +160,13 @@ fun MainWelcomeScreen(navController: NavController) {
                 SDSButton(
                     text = stringResource(Res.string.welcome_take_test_button),
                     onClick = {
-                        navController?.navigate(TestScreens.TestRoot)
+                        navController?.navigate(TestScreens.TestRoot) {
+                            // Navigate to TestRoot and remove all previous screens from the backstack
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = ButtonStyle.PRIMARY
