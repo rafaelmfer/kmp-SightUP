@@ -58,7 +58,7 @@ fun ExerciseRootScreen(
             }
 
             is UIState.Success -> {
-                val exercises = (state as UIState.Success<List<ExerciseResponse>>).data
+                val exercises = (state as UIState.Success).data
                 ExerciseScreenContent(
                     navController = navController,
                     exercises = exercises,
@@ -66,7 +66,7 @@ fun ExerciseRootScreen(
             }
 
             is UIState.Error -> {
-                Text(text = "Error: ${(state as UIState.Error<List<ExerciseResponse>>).message}")
+                Text(text = "Error: ${(state as UIState.Error).message}")
             }
         }
     }

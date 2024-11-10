@@ -1,9 +1,26 @@
 package com.europa.sightup.utils
 
+import androidx.compose.runtime.Composable
+import com.europa.sightup.data.local.KVaultStorage
+import com.europa.sightup.data.local.getObject
+import com.europa.sightup.data.network.NetworkClient.JWT_TOKEN
+import com.europa.sightup.data.remote.response.UserResponse
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.koinInject
+
+val isUserLoggedIn: Boolean
+    @Composable
+    get() {
+        val kVault = koinInject<KVaultStorage>()
+
+        val user = kVault.getObject<UserResponse>(USER_INFO)
+        val token = kVault.get(JWT_TOKEN)
+
+        return user != null && token.isNotBlank()
+    }
 
 fun Clock.System.currentTimeMillis(): Long {
     return now().toEpochMilliseconds()

@@ -1,6 +1,7 @@
 package com.europa.sightup.data.repository
 
 import com.europa.sightup.data.local.KVaultStorage
+import com.europa.sightup.data.local.getObject
 import com.europa.sightup.data.network.NetworkClient.JWT_TOKEN
 import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.request.ProfileRequest
@@ -39,12 +40,8 @@ class SightUpRepository(
     }
 
     fun getUserInfo(): UserResponse? {
-        val userString = kVaultStorage.get(USER_INFO)
-        return try {
-            Json.decodeFromString(userString)
-        } catch (e: Exception) {
-            null
-        }
+        val user = kVaultStorage.getObject<UserResponse>(USER_INFO)
+        return user
     }
 
     fun checkEmail(email: String): Flow<LoginEmailResponse> {
