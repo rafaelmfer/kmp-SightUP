@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -113,6 +114,7 @@ fun SDSBottomSheet(
                 toggleBottomSheet(BottomSheetEnum.HIDE)
                 onDismiss()
             },
+            properties = ModalBottomSheetProperties(shouldDismissOnBackPress = isDismissible),
             sheetState = sheetState,
             shape = RoundedCornerShape(
                 topStart = SightUPBorder.Radius.xl,

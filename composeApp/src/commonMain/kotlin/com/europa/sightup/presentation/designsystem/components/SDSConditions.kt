@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.designsystem.components.data.SDSConditionsEnum
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -81,7 +82,7 @@ fun SDSConditions(
             .background(backgroundColor)
             .padding(
                 horizontal = SightUPTheme.spacing.spacing_sm,
-                vertical = SightUPTheme.spacing.spacing_xs
+                vertical = 7.dp
             )
             .then(modifier),
         text = text,

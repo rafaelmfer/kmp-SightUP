@@ -45,7 +45,7 @@ fun SDSBadgeTime(
                 shape = SightUPTheme.shapes.extraLarge
             )
             .padding(
-                horizontal = SightUPTheme.spacing.spacing_sm,
+                horizontal = SightUPTheme.spacing.spacing_xs,
                 vertical = SightUPTheme.spacing.spacing_2xs
             )
             .then(modifier),

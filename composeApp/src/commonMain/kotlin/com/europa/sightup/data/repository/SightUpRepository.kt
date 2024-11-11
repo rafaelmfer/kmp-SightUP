@@ -5,6 +5,7 @@ import com.europa.sightup.data.local.getObject
 import com.europa.sightup.data.network.NetworkClient.JWT_TOKEN
 import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.request.ProfileRequest
+import com.europa.sightup.data.remote.request.assessment.DailyCheckRequest
 import com.europa.sightup.data.remote.request.auth.LoginRequest
 import com.europa.sightup.data.remote.request.auth.LoginWithProviderRequest
 import com.europa.sightup.data.remote.request.prescription.AddPrescriptionRequest
@@ -16,6 +17,7 @@ import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.data.remote.response.UserResponse
+import com.europa.sightup.data.remote.response.assessment.DailyCheckResponse
 import com.europa.sightup.data.remote.response.auth.LoginEmailResponse
 import com.europa.sightup.data.remote.response.auth.LoginResponse
 import com.europa.sightup.data.remote.response.visionHistory.HistoryTestResponse
@@ -181,5 +183,15 @@ class SightUpRepository(
 
     suspend fun getExercises(): List<ExerciseResponse> {
         return api.getExercises()
+    }
+
+    fun saveDailyCheck(request: DailyCheckRequest): Flow<DailyCheckResponse> {
+        val userInfo = getUserInfo()
+        request.email = userInfo?.email ?: ""
+
+        return flow {
+            val response = api.saveDailyCheck(request)
+            emit(response)
+        }.flowOn(Dispatchers.IO)
     }
 }

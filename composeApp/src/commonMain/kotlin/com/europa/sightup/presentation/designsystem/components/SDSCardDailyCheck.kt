@@ -1,15 +1,15 @@
 package com.europa.sightup.presentation.designsystem.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,46 +17,44 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.europa.sightup.presentation.designsystem.components.data.SDSConditionsEnum
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.SightUPSpacing
+import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.applyIf
+import com.europa.sightup.utils.clickableWithRipple
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.clock
+import sightupkmpapp.composeapp.generated.resources.check
+import sightupkmpapp.composeapp.generated.resources.schedule
 
 @Composable
 fun SDSCardAssessment(
-    btnRound: Boolean = false,
-    onClickCard: () -> Unit,
-    hour: String,
-    exerciseDuration: Int,
+    isDone: Boolean = false,
+    onClickCard: () -> Unit = {},
+    time: String = "",
+    exerciseDuration: Int = 0,
     title: String,
-    subtitle: String,
-    topBar: Boolean,
-    bottomBar: Boolean,
-    eyeConditions: List<String>,
+    subtitle: String = "",
+    lineUp: Boolean = true,
+    lineDown: Boolean = true,
+    eyeConditions: List<String> = listOf(),
     modifier: Modifier = Modifier,
 ) {
-    var btnActive by remember { mutableStateOf(btnRound) }
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,31 +83,37 @@ fun SDSCardAssessment(
                         end.linkTo(mbtCircle.end)
                         height = Dimension.fillToConstraints
                     }
-                    .background(if (topBar) SightUPTheme.sightUPColors.neutral_400 else Color.White)
+                    .background(if (lineUp) SightUPTheme.sightUPColors.background_card else SightUPTheme.sightUPColors.background_light)
             )
 
-            Button(
-                onClick = {
-                    btnActive = !btnActive
-                },
+            Box(
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(SightUPTheme.sizes.size_24)
+                    .background(
+                        color = if (isDone) SightUPTheme.sightUPColors.background_button else SightUPTheme.sightUPColors.background_default,
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = SightUPBorder.Width.sm,
+                        color = if (isDone) SightUPTheme.sightUPColors.border_primary else SightUPTheme.sightUPColors.border_card,
+                        shape = CircleShape
+                    )
                     .constrainAs(mbtCircle) {
                         top.linkTo(lineOne.bottom)
                         bottom.linkTo(lineTwo.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (btnActive) SightUPTheme.sightUPColors.background_info else Color.Transparent
-                ),
-                border = BorderStroke(
-                    width = SightUPBorder.Width.sm,
-                    color = if (btnActive) SightUPTheme.sightUPColors.border_primary else SightUPTheme.sightUPColors.neutral_400
-                )
-
+                contentAlignment = Alignment.Center
             ) {
-
+                if (isDone) {
+                    Icon(
+                        painter = painterResource(Res.drawable.check),
+                        contentDescription = "Done",
+                        tint = Color.White,
+                        modifier = Modifier.size(SightUPTheme.sizes.size_16)
+                    )
+                }
             }
 
             Box(
@@ -122,7 +126,7 @@ fun SDSCardAssessment(
                         end.linkTo(mbtCircle.end)
                         height = Dimension.fillToConstraints
                     }
-                    .background(if (bottomBar) SightUPTheme.sightUPColors.neutral_400 else Color.White)
+                    .background(if (lineDown) SightUPTheme.sightUPColors.background_card else SightUPTheme.sightUPColors.background_light)
             )
         }
 
@@ -149,38 +153,56 @@ fun SDSCardAssessment(
                     color = SightUPTheme.sightUPColors.border_card,
                     shape = SightUPTheme.shapes.small
                 )
-                .padding(SightUPTheme.spacing.spacing_base)
-                .clickable(onClick = onClickCard),
+                .applyIf(isDone) {
+                    alpha(0.6f)
+                }
+                .applyIf(!isDone) {
+                    clickableWithRipple(onClick = onClickCard)
+                }
+                .padding(vertical = SightUPTheme.spacing.spacing_base),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (hour.isNotEmpty()) {
+                if (time.isNotEmpty()) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .padding(horizontal = SightUPTheme.spacing.spacing_base)
                     ) {
+                        if (isDone && title.equals("Daily Check-In", ignoreCase = true)) {
+                            Image(
+                                painter = painterResource(Res.drawable.check),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(end = SightUPTheme.spacing.spacing_2xs)
+                                    .size(SightUPTheme.sizes.size_16)
+                            )
+                        }
                         Text(
-                            hour,
-                            color = Color.Black,
-                            fontSize = 12.sp,
+                            text = time,
+                            color = SightUPTheme.sightUPColors.text_primary,
                             style = SightUPTheme.textStyles.caption
                         )
-                        Image(
-                            painter = painterResource(Res.drawable.clock),
-                            contentDescription = "Descrição da imagem",
-                            modifier = Modifier
-                                .width(15.dp)
-                                .height(15.dp)
-                                .padding(start = 3.dp)
-                        )
+                        if (!title.equals("Daily Check-In", ignoreCase = true)) {
+                            Image(
+                                painter = painterResource(Res.drawable.schedule),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(start = SightUPTheme.spacing.spacing_2xs)
+                                    .size(SightUPTheme.sizes.size_16)
+                            )
+                        }
                     }
+                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_2xs))
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = SightUPTheme.spacing.spacing_base)
                 ) {
                     Text(
                         text = title,
@@ -192,17 +214,25 @@ fun SDSCardAssessment(
                     }
                 }
 
-                if (subtitle.isNotEmpty()) {
+                if (subtitle.isNotBlank()) {
+                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_2xs))
                     Text(
                         text = subtitle,
                         color = SightUPTheme.sightUPColors.text_tertiary,
                         style = SightUPTheme.textStyles.caption,
+                        modifier = Modifier
+                            .padding(horizontal = SightUPTheme.spacing.spacing_base)
                     )
                 }
 
                 if (eyeConditions.isNotEmpty()) {
+                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
                     LazyRow(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(
+                            start = SightUPTheme.spacing.spacing_base,
+                            end = SightUPTheme.spacing.spacing_base
+                        ),
                     ) {
                         items(eyeConditions) { condition ->
                             SDSConditions(
@@ -221,7 +251,6 @@ fun SDSCardAssessment(
 
 @Composable
 fun SDSCardDailyCheckScreen(
-    btnRound: Boolean = false,
     clickCard: () -> Unit = { println("funcionando") },
     hour: String = "10:00 am",
     exerciseDuration: Int = 0,
@@ -229,17 +258,54 @@ fun SDSCardDailyCheckScreen(
     subtitle: String = "subtitle",
     topBar: Boolean = true,
     bottomBar: Boolean = true,
-    eyeConditions: List<String> = listOf("EYE_STRAIN", "DRY_EYES", "RED_EYES"),
+    eyeConditions: List<String> = listOf("EYE_STRAIN", "DRY_EYES", "RED_EYES", "ITCHY_EYES", "WATERY_EYES"),
 ) {
     Column(
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         SDSCardAssessment(
-            btnRound,
+            false,
+            onClickCard = clickCard,
+            "",
+            exerciseDuration,
+            "Daily Check-In",
+            subtitle,
+            topBar,
+            bottomBar,
+            eyeConditions = listOf()
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        SDSCardAssessment(
+            true,
             onClickCard = clickCard,
             hour,
             exerciseDuration,
+            "Daily Check-In",
+            subtitle,
+            topBar,
+            bottomBar,
+            eyeConditions = listOf()
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        SDSCardAssessment(
+            false,
+            onClickCard = clickCard,
+            hour,
+            1,
+            title,
+            subtitle,
+            topBar,
+            bottomBar,
+            eyeConditions = eyeConditions
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        SDSCardAssessment(
+            true,
+            onClickCard = clickCard,
+            hour,
+            1,
             title,
             subtitle,
             topBar,

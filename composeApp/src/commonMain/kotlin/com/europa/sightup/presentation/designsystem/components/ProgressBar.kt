@@ -1,8 +1,12 @@
-package com.europa.sightup.presentation.components
+package com.europa.sightup.presentation.designsystem.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,11 +18,11 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 fun StepProgressBar(
     modifier: Modifier = Modifier,
     numberOfSteps: Int,
-    currentStep: Int
+    currentStep: Int,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
-                            .then(modifier),
+        modifier = Modifier.fillMaxWidth()
+            .then(modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (step in 1..numberOfSteps) {
@@ -27,7 +31,6 @@ fun StepProgressBar(
                 isCurrent = step == currentStep,
                 modifier = Modifier.weight(1f)
             )
-            // Add space between steps, except after the last step
             if (step < numberOfSteps) {
                 Spacer(modifier = Modifier.width(8.dp))
             }
@@ -41,24 +44,22 @@ fun Step(
     isComplete: Boolean,
     isCurrent: Boolean,
 ) {
-    // Current step gets primary color, completed and future steps get secondary
     val color = when {
-        isCurrent -> SightUPTheme.colors.primary
-        isComplete -> SightUPTheme.colors.inversePrimary
-        else -> SightUPTheme.colors.inversePrimary
+        isCurrent -> SightUPTheme.sightUPColors.primary_600
+        isComplete -> SightUPTheme.sightUPColors.primary_200
+        else -> SightUPTheme.sightUPColors.primary_200
     }
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        // Horizontal line to represent the step progress
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .align(Alignment.Center)
-                .height(6.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(100)),
+            thickness = 6.dp,
             color = color
         )
     }
