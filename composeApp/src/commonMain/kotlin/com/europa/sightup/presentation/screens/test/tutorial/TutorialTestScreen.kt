@@ -25,11 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
-import com.europa.sightup.presentation.components.StepProgressBar
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchBoxContainer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.designsystem.components.StepProgressBar
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithImage
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
@@ -99,7 +99,7 @@ fun TutorialTestScreen(
                 numberOfSteps = numberOfSteps,
                 currentStep = currentStep,
                 modifier = Modifier
-                    .padding(bottom = SightUPTheme.spacing.spacing_base, top = SightUPTheme.spacing.spacing_base),
+                    .padding(vertical = SightUPTheme.spacing.spacing_lg),
             )
         }
 

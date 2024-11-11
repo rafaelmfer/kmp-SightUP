@@ -48,7 +48,7 @@ fun String.encodeForUrl(): String {
         .replace("]", "%5D")
 }
 
-fun String.capitalizeWords(): String = split(" ")
+fun String.capitalizeWords(): String = lowercase().split(" ")
     .joinToString(" ") { words ->
         words.replaceFirstChar {
             if (it.isLowerCase()) {
@@ -75,6 +75,20 @@ fun String.toFormattedDate(outputFormat: String = "MMM dd, yyyy"): String {
         .replace("dd", day)
         .replace("yyyy", year.toString())
 }
+
+
+fun String.formatTime(): String {
+    val instant = Instant.parse(this)
+
+    val timeZone = TimeZone.currentSystemDefault()
+
+    val localDateTime = instant.toLocalDateTime(timeZone)
+
+    return localDateTime.hour.toString().padStart(2, '0') + ":" +
+        localDateTime.minute.toString().padStart(2, '0') +
+        " " + (if (localDateTime.hour < 12) "am" else "pm")
+}
+
 
 fun getTodayDateString(format: String = "MMM dd, yyyy"): String {
     val currentInstant = Clock.System.now()

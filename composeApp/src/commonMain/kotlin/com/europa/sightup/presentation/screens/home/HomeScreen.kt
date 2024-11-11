@@ -3,13 +3,16 @@ package com.europa.sightup.presentation.screens.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,18 +22,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Event
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,23 +45,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.europa.sightup.data.remote.response.assessment.DailyCheckInfoResponse
 import com.europa.sightup.presentation.designsystem.components.ExpandableItem
 import com.europa.sightup.presentation.designsystem.components.ExpandableListItem
+import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
+import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSCardAssessment
-import com.europa.sightup.presentation.navigation.HomeExample
+import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
+import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
+import com.europa.sightup.presentation.screens.home.checkinbottomsheet.DailyCheckInFlowBottomSheet
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.SightUPSpacing
+import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.Moods
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.UIState
+import com.europa.sightup.utils.formatTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Month
@@ -64,41 +82,67 @@ import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
 import multiplatform.network.cmptoast.showToast
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.arrow_right
 import sightupkmpapp.composeapp.generated.resources.close
+import sightupkmpapp.composeapp.generated.resources.edit
 import sightupkmpapp.composeapp.generated.resources.excelent
 import sightupkmpapp.composeapp.generated.resources.good
-import sightupkmpapp.composeapp.generated.resources.guide_book
 import sightupkmpapp.composeapp.generated.resources.information
 import sightupkmpapp.composeapp.generated.resources.moderate
 import sightupkmpapp.composeapp.generated.resources.poor
+import sightupkmpapp.composeapp.generated.resources.schedule
+import sightupkmpapp.composeapp.generated.resources.today
 import sightupkmpapp.composeapp.generated.resources.very_poor
+
+data class Condition(
+    val title: String,
+    val message: String,
+)
 
 @Composable
 fun IconSort(myIcon: String): Painter {
     return when (myIcon) {
         "vPoor" -> painterResource(Res.drawable.very_poor)
         "poor" -> painterResource(Res.drawable.poor)
-        "good"-> painterResource(Res.drawable.good)
+        "good" -> painterResource(Res.drawable.good)
         "excellent" -> painterResource(Res.drawable.excelent)
         "moderate" -> painterResource(Res.drawable.moderate)
         else -> painterResource(Res.drawable.good)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
 ) {
     val name = "Linda"
-    val scrollState = rememberScrollState()
+
+    val scope = rememberCoroutineScope()
+    var dailyCheckBottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+    var dailyResultBottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+
+    val dailyCheckInSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { false },
+    )
+
+    val viewModel = koinViewModel<DailyCheckViewModel>()
+    val dailyCheckState by viewModel.dailyCheck.collectAsStateWithLifecycle()
+
+    var dailyCheckResult by remember { mutableStateOf<DailyCheckInfoResponse?>(null) }
+    var dailyCheckIsDone by remember { mutableStateOf(false) }
+    var dailyCheckTime by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
             .background(SightUPTheme.sightUPColors.background_light)
             .padding(bottom = SightUPTheme.spacing.spacing_md),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -134,9 +178,92 @@ fun HomeScreen(
             }
         )
 
-        AssessmentList(navController)
+        AssessmentList(
+            navController = navController,
+            onDailyCheckClick = {
+                dailyCheckBottomSheetVisibility = BottomSheetEnum.SHOW
+            },
+            dailyCheckIsDone = dailyCheckIsDone,
+            dailyCheckTime = if (dailyCheckTime.isNotBlank()) dailyCheckTime.formatTime() else ""
+        )
+
         EyeWellnessTips()
     }
+
+    SDSBottomSheet(
+        isDismissible = false,
+        expanded = dailyCheckBottomSheetVisibility,
+        onExpandedChange = {
+            dailyCheckBottomSheetVisibility = it
+        },
+        onDismiss = {
+            dailyCheckBottomSheetVisibility = BottomSheetEnum.HIDE
+        },
+        sheetState = dailyCheckInSheetState,
+        fullHeight = true,
+        title = null,
+        sheetContent = {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                DailyCheckInFlowBottomSheet(
+                    onCloseIconTopBar = {
+                        dailyCheckBottomSheetVisibility = BottomSheetEnum.HIDE
+                    },
+                    onComplete = {
+                        viewModel.saveDailyCheck(it)
+                    },
+                    modifier = Modifier
+                )
+                when (dailyCheckState) {
+                    is UIState.Loading<*> -> {
+                        CircularProgressIndicator(
+                            Modifier.align(Alignment.Center)
+                        )
+                    }
+
+                    is UIState.Success -> {
+                        showToast(
+                            message = "Success",
+                            bottomPadding = 40
+                        )
+                        dailyCheckResult = (dailyCheckState as UIState.Success).data.updatedDaily.dailyCheckInfo
+                        dailyCheckIsDone = dailyCheckResult?.done ?: false
+                        dailyCheckTime = dailyCheckResult?.infoTime ?: ""
+
+                        scope.hideBottomSheetWithAnimation(
+                            sheetState = dailyCheckInSheetState,
+                            onBottomSheetVisibilityChange = {
+                                dailyCheckBottomSheetVisibility = BottomSheetEnum.HIDE
+                            },
+                            onFinish = {
+                                dailyResultBottomSheetVisibility = BottomSheetEnum.SHOW
+                            }
+                        )
+                    }
+
+                    is UIState.Error -> {
+                        println("Error: ${(dailyCheckState as UIState.Error).message}")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    )
+
+
+    DailyCheckStatusResultBottomSheet(
+        bottomSheetVisibility = dailyResultBottomSheetVisibility,
+        onBottomSheetVisibilityChange = { dailyResultBottomSheetVisibility = it },
+        visionStatus = Moods.fromString(dailyCheckResult?.visionStatus ?: "").value,
+        imageIcon = Moods.fromString(dailyCheckResult?.visionStatus ?: "").icon,
+        conditions = dailyCheckResult?.condition ?: listOf(),
+        causes = dailyCheckResult?.causes ?: listOf(),
+        onDismiss = {
+            viewModel.resetDailyCheckState()
+        },
+    )
 }
 
 @Composable
@@ -301,30 +428,40 @@ private fun GreetingWithIcons(name: String) {
             }
         )
 
-        Icon(
-            imageVector = Icons.Default.Event,
-            contentDescription = "Today",
+        IconButton(
+            onClick = {},
             modifier = Modifier
-                .size(24.dp)
                 .constrainAs(todayIcon) {
                     top.linkTo(greetingText.top)
                     bottom.linkTo(greetingText.bottom)
                     start.linkTo(greetingText.end, margin = 8.dp)
                 }
-        )
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.today),
+                contentDescription = "Today",
+                modifier = Modifier
+                    .size(SightUPTheme.sizes.size_32)
+            )
+        }
 
-        Icon(
-            imageVector = Icons.Default.DateRange,
-            contentDescription = "Calendar",
+        IconButton(
+            onClick = {},
             modifier = Modifier
-                .size(24.dp)
                 .constrainAs(calendarIcon) {
                     top.linkTo(todayIcon.top)
                     bottom.linkTo(todayIcon.bottom)
-                    start.linkTo(todayIcon.end, margin = 8.dp)
+                    start.linkTo(todayIcon.end)
                     end.linkTo(parent.end)
                 }
-        )
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.schedule),
+                contentDescription = "Calendar",
+                modifier = Modifier
+                    .size(SightUPTheme.sizes.size_32)
+            )
+        }
     }
 }
 
@@ -340,12 +477,12 @@ private fun NextTestCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-            .background(SightUPTheme.sightUPColors.background_default),
+            .background(SightUPTheme.sightUPColors.background_info),
         shape = SightUPTheme.shapes.small,
-        color = SightUPTheme.sightUPColors.neutral_0,
+        color = SightUPTheme.sightUPColors.background_info,
         border = BorderStroke(
             width = SightUPBorder.Width.sm,
-            color = SightUPTheme.sightUPColors.info_100
+            color = SightUPTheme.sightUPColors.border_info
         )
     ) {
         ConstraintLayout(
@@ -356,7 +493,9 @@ private fun NextTestCard(
 
             Text(
                 text = "Next: $nameOfTest",
-                style = SightUPTheme.textStyles.body,
+                style = SightUPTheme.textStyles.body2.copy(
+                    fontWeight = FontWeight.Bold
+                ),
                 color = SightUPTheme.sightUPColors.text_primary,
                 modifier = Modifier.constrainAs(title) {
                     top.linkTo(parent.top, margin = SightUPSpacing.default.spacing_sm)
@@ -375,19 +514,20 @@ private fun NextTestCard(
                 Icon(
                     painter = painterResource(Res.drawable.close),
                     contentDescription = "Close",
-                    tint = Color.Gray,
                     modifier = Modifier
+                        .size(SightUPTheme.sizes.size_16)
                 )
             }
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clickable {
                         onClickEdit()
                     }
                     .constrainAs(dateText) {
                         top.linkTo(title.bottom, margin = SightUPSpacing.default.spacing_xs)
-                        start.linkTo(parent.start, margin = SightUPSpacing.default.spacing_base)
                         bottom.linkTo(parent.bottom, margin = SightUPSpacing.default.spacing_sm)
+                        start.linkTo(parent.start, margin = SightUPSpacing.default.spacing_base)
                         verticalBias = ONE_FLOAT
                     }
             ) {
@@ -397,13 +537,12 @@ private fun NextTestCard(
                     color = SightUPTheme.sightUPColors.text_primary,
                     modifier = Modifier
                 )
-                Spacer(modifier = Modifier.width(SightUPTheme.spacing.spacing_2xs))
+                Spacer(Modifier.width(SightUPTheme.sizes.size_4))
                 Icon(
-                    painter = painterResource(Res.drawable.guide_book),
+                    painter = painterResource(Res.drawable.edit),
                     contentDescription = "Edit",
-                    tint = Color.Gray,
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(SightUPTheme.sizes.size_16)
                 )
             }
             Text(
@@ -428,6 +567,7 @@ private fun NextTestCard(
                     start.linkTo(editIcon.end, margin = SightUPSpacing.default.spacing_lg)
                     end.linkTo(parent.end, margin = SightUPSpacing.default.spacing_base)
                     horizontalBias = ONE_FLOAT
+                    verticalBias = ONE_FLOAT
                 }
             )
         }
@@ -435,55 +575,56 @@ private fun NextTestCard(
 }
 
 @Composable
-private fun AssessmentList(navController: NavController? = null) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
+private fun AssessmentList(
+    navController: NavController? = null,
+    onDailyCheckClick: () -> Unit = {},
+    dailyCheckIsDone: Boolean = false,
+    dailyCheckTime: String = "",
+) {
+
+    SDSCardAssessment(
+        title = "Daily Check-In",
+        isDone = dailyCheckIsDone,
+        time = dailyCheckTime,
+        exerciseDuration = 0,
+        subtitle = "Log your eye condition",
+        lineUp = false,
+        lineDown = true,
+        eyeConditions = listOf(),
+        onClickCard = onDailyCheckClick,
+        modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+    )
+
+    repeat(2) { index ->
         SDSCardAssessment(
-            title = "Daily Check-In",
-            hour = "9:00 am",
-            btnRound = true,
-            exerciseDuration = 0,
-            subtitle = "Log your eye condition",
-            topBar = false,
-            bottomBar = true,
-            eyeConditions = listOf(),
+            title = "Vision Acuity Test",
+            time = "10:00 AM",
+            isDone = false,
+            exerciseDuration = 2,
+            lineUp = true,
+            lineDown = index != 1,
+            eyeConditions = listOf("Eye Strain", "Red Eyes"),
             onClickCard = {
-                navController?.navigate(HomeExample)
+                showToast(
+                    message = "Vision Acuity Test $index",
+                    bottomPadding = 40
+                )
             },
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
         )
-
-        repeat(2) { index ->
-            SDSCardAssessment(
-                title = "Vision Acuity Test",
-                hour = "10:00 AM",
-                btnRound = true,
-                exerciseDuration = 2,
-                subtitle = "Take the test",
-                topBar = true,
-                bottomBar = index != 1,
-                eyeConditions = listOf("Eye Strain", "Red Eyes"),
-                onClickCard = {
-                    showToast(
-                        message = "Vision Acuity Test",
-                        bottomPadding = 40
-                    )
-                },
-                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-            )
-        }
     }
 }
 
 @Composable
 private fun EyeWellnessTipsTitle() {
     Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight().background(SightUPTheme.sightUPColors.background_light)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(SightUPTheme.sightUPColors.background_light)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -492,37 +633,41 @@ private fun EyeWellnessTipsTitle() {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        "Eye Wellness Tips ", style = SightUPTheme.textStyles.h5
+                        text = "Eye Wellness Tips",
+                        style = SightUPTheme.textStyles.h5
                     )
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
+                    Spacer(Modifier.width(SightUPTheme.sizes.size_4))
                     Image(
                         painter = painterResource(Res.drawable.information),
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier
+                            .size(SightUPTheme.sizes.size_16)
                     )
                 }
                 Button(
-                    {},
-                    colors = ButtonDefaults.buttonColors(Color.Transparent),
+                    onClick = {},
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SightUPTheme.sightUPColors.background_light,
+                        contentColor = SightUPTheme.sightUPColors.text_primary
+                    ),
                     modifier = Modifier,
                     shape = SightUPTheme.shapes.small,
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "View All", color = SightUPTheme.sightUPColors.text_primary
+                    Text(
+                        text = "View All",
+                        color = SightUPTheme.sightUPColors.text_primary,
+                        style = SightUPTheme.textStyles.caption.copy(
+                            fontWeight = FontWeight.Bold
                         )
-                        Spacer(Modifier.width(8.dp))
-                        Image(
-                            painter = painterResource(Res.drawable.arrow_right),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
+                    )
+                    Spacer(Modifier.width(SightUPTheme.sizes.size_8))
+                    Image(
+                        painter = painterResource(Res.drawable.arrow_right),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(SightUPTheme.sizes.size_16)
+                    )
                 }
             }
         }
@@ -535,6 +680,7 @@ private fun EyeWellnessTips() {
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
         modifier = Modifier.fillMaxWidth()
             .padding(top = SightUPTheme.spacing.spacing_md)
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         EyeWellnessTipsTitle()
 
@@ -543,6 +689,7 @@ private fun EyeWellnessTips() {
             Condition("Dry Eyes", "Message for Dry Eyes"),
             Condition("Red Eyes", "Message for Red Eyes")
         )
+
         val items = remember {
             conditions.map { condition ->
                 ExpandableItem(
@@ -562,4 +709,178 @@ private fun EyeWellnessTips() {
                 onExpandedChange = { expandedStates[index] = it })
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun DailyCheckStatusResultBottomSheet(
+    bottomSheetVisibility: BottomSheetEnum,
+    onBottomSheetVisibilityChange: (BottomSheetEnum) -> Unit,
+    onDismiss: () -> Unit = {},
+    visionStatus: String = Moods.MODERATE.value,
+    imageIcon: DrawableResource = Moods.MODERATE.icon,
+    conditions: List<String> = listOf(),
+    causes: List<String> = listOf(),
+) {
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { true },
+    )
+
+    SDSBottomSheet(
+        isDismissible = true,
+        expanded = bottomSheetVisibility,
+        onExpandedChange = {
+            onBottomSheetVisibilityChange(it)
+        },
+        onDismiss = {
+            onBottomSheetVisibilityChange(BottomSheetEnum.HIDE)
+        },
+        sheetState = sheetState,
+        fullHeight = true,
+        title = null,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                SDSTopBar(
+                    modifier = Modifier,
+                    title = "Status",
+                    iconLeftVisible = false,
+                    iconRightVisible = false
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_24))
+                    Image(
+                        painter = painterResource(imageIcon),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                            .size(SightUPTheme.sizes.size_72)
+                    )
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_8))
+                    Text(
+                        text = visionStatus,
+                        textAlign = TextAlign.Center,
+                        style = SightUPTheme.textStyles.body.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier
+                            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                            .fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_32))
+
+                    if (conditions.isNotEmpty()) {
+                        Text(
+                            text = "Conditions",
+                            style = SightUPTheme.textStyles.subtitle,
+                            modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                        )
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_12))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm),
+                            verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm),
+                            modifier = Modifier
+                                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                                .fillMaxWidth()
+                        ) {
+                            for (condition in conditions) {
+                                Text(
+                                    text = condition,
+                                    style = SightUPTheme.textStyles.body,
+                                    color = SightUPTheme.sightUPColors.text_primary,
+                                    modifier = Modifier
+                                        .clip(SightUPTheme.shapes.small)
+                                        .background(
+                                            color = SightUPTheme.sightUPColors.background_default,
+                                            shape = SightUPTheme.shapes.small
+                                        )
+                                        .border(
+                                            width = SightUPBorder.Width.sm,
+                                            color = SightUPTheme.sightUPColors.border_card,
+                                            shape = SightUPTheme.shapes.small
+                                        )
+                                        .padding(
+                                            horizontal = SightUPTheme.spacing.spacing_base,
+                                            vertical = 9.dp
+                                        )
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_24))
+                        Text(
+                            text = "Cause(s)",
+                            style = SightUPTheme.textStyles.subtitle,
+                            modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                        )
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_12))
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm),
+                            verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_sm),
+                            modifier = Modifier
+                                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                                .fillMaxWidth()
+                        ) {
+                            for (cause in causes) {
+                                Text(
+                                    text = cause,
+                                    style = SightUPTheme.textStyles.body,
+                                    color = SightUPTheme.sightUPColors.text_primary,
+                                    modifier = Modifier
+                                        .clip(SightUPTheme.shapes.small)
+                                        .background(
+                                            color = SightUPTheme.sightUPColors.background_default,
+                                            shape = SightUPTheme.shapes.small
+                                        )
+                                        .border(
+                                            width = SightUPBorder.Width.sm,
+                                            color = SightUPTheme.sightUPColors.border_card,
+                                            shape = SightUPTheme.shapes.small
+                                        )
+                                        .padding(
+                                            horizontal = SightUPTheme.spacing.spacing_base,
+                                            vertical = 9.dp
+                                        )
+                                )
+                            }
+                        }
+
+                        EyeWellnessTips()
+                    }
+
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_24))
+
+                    SDSButton(
+                        text = stringResource(Res.string.close),
+                        onClick = {
+                            scope.hideBottomSheetWithAnimation(
+                                sheetState = sheetState,
+                                onBottomSheetVisibilityChange = {
+                                    onBottomSheetVisibilityChange(BottomSheetEnum.HIDE)
+                                },
+                                onFinish = {
+                                    onDismiss()
+                                }
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                            .fillMaxWidth()
+                            .padding(bottom = SightUPTheme.spacing.spacing_md)
+                    )
+                }
+            }
+        }
+    )
 }
