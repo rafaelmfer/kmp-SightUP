@@ -1,6 +1,7 @@
 package com.europa.sightup.data.local
 
 import com.liftric.kvault.KVault
+import kotlinx.serialization.json.Json
 
 @Deprecated(
     "Use koin injection instead",
@@ -41,6 +42,19 @@ interface KVaultStorage {
     fun get(key: String): String {
         return kVault.string(key) ?: ""
     }
+
+}
+
+inline fun <reified Type : Any> KVaultStorage.getObject(key: String): Type? {
+    val stringObject = kVault.string(key)
+
+    return stringObject?.let {
+        try {
+            Json.decodeFromString<Type>(it)
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
 
 inline fun <reified Type> KVaultStorage.get(key: String, defaultValue: Type): Type {
@@ -52,6 +66,15 @@ inline fun <reified Type> KVaultStorage.get(key: String, defaultValue: Type): Ty
         Long::class -> (kVault.long(key) ?: defaultValue) as Type
         Double::class -> (kVault.double(key) ?: defaultValue) as Type
         ByteArray::class -> (kVault.data(key) ?: defaultValue) as Type
-        else -> defaultValue
+        else -> {
+            val stringObject = kVault.string(key)
+            stringObject?.let {
+                try {
+                    Json.decodeFromString<Type>(it)
+                } catch (e: Exception) {
+                    defaultValue
+                }
+            } ?: defaultValue
+        }
     }
 }

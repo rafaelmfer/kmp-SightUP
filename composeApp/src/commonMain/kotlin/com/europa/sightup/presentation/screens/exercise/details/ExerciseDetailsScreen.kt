@@ -28,13 +28,18 @@ import androidx.navigation.NavController
 import androidx.navigation.toRoute
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseCountdown
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
+import com.europa.sightup.presentation.screens.JoinInBottomSheet
+import com.europa.sightup.presentation.screens.onboarding.LoginSignUpScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.goBackToExerciseHome
+import com.europa.sightup.utils.isUserLoggedIn
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -51,6 +56,10 @@ fun ExerciseDetailsScreen(
     buttonText: String = "",
     navController: NavController? = null,
 ) {
+    val showLoginSignUp = !isUserLoggedIn && !title.equals("Circular Motion", ignoreCase = true)
+    var joinInSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+    var loginSignUpSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+
     var isChecked by remember { mutableStateOf(true) }
 
     val scrollState = rememberScrollState()
@@ -134,17 +143,22 @@ fun ExerciseDetailsScreen(
             duration = duration,
             buttonText = buttonText,
             onClick = {
-                navController?.navigate(
-                    ExerciseCountdown(
-                        exerciseId = idExercise,
-                        category = arguments?.category ?: "",
-                        exerciseName = title,
-                        duration = duration,
-                        video = arguments?.video ?: "",
-                        finishTitle = arguments?.finishTitle ?: "",
-                        advice = arguments?.advice ?: "",
+                if (showLoginSignUp) {
+                    joinInSheetVisibility = BottomSheetEnum.SHOW
+                    return@SDSCardExerciseBottom
+                } else {
+                    navController?.navigate(
+                        ExerciseCountdown(
+                            exerciseId = idExercise,
+                            category = arguments?.category ?: "",
+                            exerciseName = title,
+                            duration = duration,
+                            video = arguments?.video ?: "",
+                            finishTitle = arguments?.finishTitle ?: "",
+                            advice = arguments?.advice ?: "",
+                        )
                     )
-                )
+                }
             },
             isChecked = isChecked,
             onCheckedChanged = { isChecked = it },
@@ -156,4 +170,28 @@ fun ExerciseDetailsScreen(
                 )
         )
     }
+
+    JoinInBottomSheet(
+        bottomSheetVisible = joinInSheetVisibility,
+        onBottomSheetVisibilityChange = {
+            joinInSheetVisibility = it
+        },
+        onCloseClick = {
+            navController?.goBackToExerciseHome()
+        },
+        onCloseBottomSheet = {
+            loginSignUpSheetVisibility = BottomSheetEnum.SHOW
+        }
+    )
+
+    LoginSignUpScreen(
+        bottomSheetVisible = loginSignUpSheetVisibility,
+        onBottomSheetVisibilityChange = {
+            loginSignUpSheetVisibility = it
+        },
+        onSuccessfulLogin = {
+            navController?.goBackToExerciseHome()
+        },
+        navController = navController
+    )
 }

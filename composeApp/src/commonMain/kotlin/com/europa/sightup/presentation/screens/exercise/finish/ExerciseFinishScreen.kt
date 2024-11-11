@@ -10,28 +10,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.europa.sightup.data.local.KVaultStorage
+import com.europa.sightup.data.local.getObject
+import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
-import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseEvaluationResult
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
-import com.europa.sightup.presentation.screens.JoinInBlockLoadScreen
+import com.europa.sightup.presentation.screens.JoinInBottomSheet
 import com.europa.sightup.presentation.screens.exercise.evaluation.EvaluateExercise
 import com.europa.sightup.presentation.screens.onboarding.LoginSignUpScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -39,12 +38,16 @@ import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.USER_INFO
+import com.europa.sightup.utils.isUserLoggedIn
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.koin.compose.koinInject
 import sightupkmpapp.composeapp.generated.resources.Res
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,26 +61,12 @@ fun ExerciseFinishScreen(
     buttonText: String = "",
     navController: NavController? = null,
 ) {
-    // TODO: Get if the user is logged
-    val userIsLogged = true
 
-    val scope = rememberCoroutineScope()
+    val userIsLogged = isUserLoggedIn
+
     var evaluateSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var joinInSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var loginSignUpSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
-
-    var joinInSheetIsDismissible by remember { mutableStateOf(false) }
-
-    val joinInSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-        confirmValueChange = {
-            if (joinInSheetIsDismissible) {
-                true
-            } else {
-                it != SheetValue.Hidden
-            }
-        },
-    )
 
     var titleAnimation by remember { mutableStateOf("") }
     var finishAnimation by remember { mutableStateOf("") }
@@ -147,47 +136,16 @@ fun ExerciseFinishScreen(
         )
     }
 
-    SDSBottomSheet(
-        title = "",
-        isDismissible = joinInSheetIsDismissible,
-        expanded = joinInSheetVisibility,
-        onExpandedChange = {
+    JoinInBottomSheet(
+        bottomSheetVisible = joinInSheetVisibility,
+        onBottomSheetVisibilityChange = {
             joinInSheetVisibility = it
         },
-        sheetState = joinInSheetState,
-        fullHeight = true,
-        iconRightVisible = true,
-        onIconRightClick = {
+        onCloseClick = {
             navController?.popBackStack<ExerciseRoot>(inclusive = false)
         },
-        onDismiss = {
-            joinInSheetIsDismissible = true
-            joinInSheetVisibility = BottomSheetEnum.HIDE
-        },
-        sheetContent = {
-            if (navController != null) {
-                JoinInBlockLoadScreen(
-                    onLoginClicked = {
-                        joinInSheetIsDismissible = true
-                        scope.hideBottomSheetWithAnimation(
-                            sheetState = joinInSheetState,
-                            onBottomSheetVisibilityChange = { joinInSheetVisibility = it },
-                            onFinish = {
-                                loginSignUpSheetVisibility = BottomSheetEnum.SHOW
-                                joinInSheetIsDismissible = false
-                            }
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = SightUPTheme.spacing.spacing_side_margin,
-                            top = SightUPTheme.spacing.spacing_xs,
-                            end = SightUPTheme.spacing.spacing_side_margin,
-                            bottom = SightUPTheme.spacing.spacing_lg,
-                        )
-                )
-            }
+        onCloseBottomSheet = {
+            loginSignUpSheetVisibility = BottomSheetEnum.SHOW
         }
     )
 
@@ -244,10 +202,21 @@ fun ExerciseFinishScreen(
 
 @Composable
 private fun Header() {
+    val kVault = koinInject<KVaultStorage>()
+
     SDSTopBar(
         title = "",
-        iconLeftVisible = false,
-        iconRightVisible = false,
+        iconLeftVisible = true,
+        onLeftButtonClick = {
+            showToast(
+                kVault.getObject<UserResponse>(USER_INFO)?.email.toString(),
+                bottomPadding = 40
+            )
+        },
+        iconRightVisible = true,
+        onRightButtonClick = {
+            kVault.clear()
+        },
         modifier = Modifier
             .padding(
                 horizontal = SightUPTheme.spacing.spacing_sm,

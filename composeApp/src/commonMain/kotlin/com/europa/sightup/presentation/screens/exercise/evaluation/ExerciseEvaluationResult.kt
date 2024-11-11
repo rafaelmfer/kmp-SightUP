@@ -36,13 +36,13 @@ import com.europa.sightup.presentation.designsystem.components.SDSInput
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
-import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.Moods
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.goBackToExerciseHome
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.close
@@ -393,6 +393,3 @@ fun ExerciseEvaluationResult(
     )
 }
 
-private fun NavController?.goBackToExerciseHome() {
-    this?.popBackStack<ExerciseRoot>(inclusive = false)
-}

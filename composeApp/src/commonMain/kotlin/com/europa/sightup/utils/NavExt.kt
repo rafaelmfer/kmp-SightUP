@@ -3,6 +3,7 @@ package com.europa.sightup.utils
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -44,4 +45,8 @@ fun NavHostController.navigateToRootScreen(rootScreen: Any) {
         launchSingleTop = true
         restoreState = true
     }
+}
+
+fun NavController?.goBackToExerciseHome() {
+    this?.popBackStack<ExerciseRoot>(inclusive = false)
 }
