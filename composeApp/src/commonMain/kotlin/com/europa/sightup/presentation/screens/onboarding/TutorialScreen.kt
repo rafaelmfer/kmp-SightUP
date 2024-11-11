@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.europa.sightup.data.local.KVaultStorage
+import com.europa.sightup.data.network.NetworkClient.JWT_TOKEN
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
@@ -33,8 +35,10 @@ import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.USER_INFO
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.arrow_back
 import sightupkmpapp.composeapp.generated.resources.tutorial_four
@@ -56,6 +60,8 @@ import sightupkmpapp.composeapp.generated.resources.tutorial_two_title
 
 @Composable
 fun TutorialScreen(navController: NavController? = null) {
+    val kVault = koinInject<KVaultStorage>()
+
     var currentStep by remember { mutableStateOf(1) }
     var bottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
 
@@ -148,7 +154,17 @@ fun TutorialScreen(navController: NavController? = null) {
                         if (currentStep < 4) {
                             currentStep = 4
                         } else {
-                            navController?.navigate(Home)
+                            kVault.run {
+                                remove(USER_INFO)
+                                remove(JWT_TOKEN)
+                            }
+                            navController?.navigate(Home) {
+                                // Navigate to Home and remove all previous screens from the backstack
+                                popUpTo(0) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         }
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
@@ -185,7 +201,8 @@ fun TutorialScreen(navController: NavController? = null) {
             navController?.navigate(
                 OnboardingScreens.WelcomeScreen
             ) {
-                popUpTo(navController.graph.startDestinationId) {
+                // Navigate to WelcomeScreen and remove all previous screens from the backstack
+                popUpTo(0) {
                     inclusive = true
                 }
                 launchSingleTop = true

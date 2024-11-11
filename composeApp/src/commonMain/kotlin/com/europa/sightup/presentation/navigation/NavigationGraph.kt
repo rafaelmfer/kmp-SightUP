@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.europa.sightup.platformspecific.getPlatform
+import com.europa.sightup.presentation.designsystem.designSystemNavGraph
 import com.europa.sightup.presentation.screens.home.HomeScreen
 import com.europa.sightup.utils.PostsWithState
 
@@ -15,11 +17,8 @@ fun NavigationGraph(
         navController = navController,
         startDestination = OnboardingScreens.OnboardingInit
     ) {
-        composable<HomeExample> {
-            // TODO: Replace this screen
-            PostsWithState()
-        }
         onboardingNavGraph(navController = navController)
+
         composable<Home> {
             HomeScreen(navController = navController)
         }
@@ -27,5 +26,13 @@ fun NavigationGraph(
         testNavGraph(navController = navController)
         prescriptionsNavGraph(navController = navController)
         accountNavGraph(navController = navController)
+
+        if (getPlatform().isDebug) {
+            composable<HomeExample> {
+                // TODO: Replace this screen
+                PostsWithState()
+            }
+            designSystemNavGraph(navController)
+        }
     }
 }

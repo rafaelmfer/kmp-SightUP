@@ -5,15 +5,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,21 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.platformspecific.videoplayer.ScreenResize
 import com.europa.sightup.presentation.AppNavHost
-import com.europa.sightup.presentation.designsystem.DesignSystemSamples
 import com.europa.sightup.presentation.designsystem.components.SDSVideoPlayerView
 import com.europa.sightup.presentation.designsystem.components.data.PlayerConfig
-import com.europa.sightup.presentation.designsystem.designSystemNavGraph
-import com.europa.sightup.presentation.navigation.OnboardingScreens
-import com.europa.sightup.presentation.screens.FlowSeparator
-import com.europa.sightup.presentation.screens.FlowSeparatorScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.mmk.kmpauth.google.GoogleAuthCredentials
@@ -49,9 +39,6 @@ data object SightUPApp
 
 @Serializable
 data object AfterSplashScreen
-
-@Serializable
-data object AppInit
 
 @Composable
 fun Init() {
@@ -72,7 +59,7 @@ fun InitNavGraph(
     SightUPTheme {
         NavHost(
             navController = navController,
-            startDestination = if (getPlatform().isDebug) AfterSplashScreen else OnboardingScreens.OnboardingInit
+            startDestination = AfterSplashScreen
         ) {
             composable<AfterSplashScreen>(
                 enterTransition = {
@@ -84,15 +71,9 @@ fun InitNavGraph(
             ) {
                 AfterSplashScreen(navController = navController)
             }
-
-            composable<FlowSeparator> {
-                FlowSeparatorScreen(navController = navController)
-            }
-
             composable<SightUPApp> {
                 AppNavHost()
             }
-            designSystemNavGraph(navController)
         }
     }
 }
@@ -109,7 +90,12 @@ fun AfterSplashScreen(navController: NavHostController) {
 
         delay(fadeOutDuration.toLong())
         isPlayerVisible = false
-        navController.navigate(SightUPApp)
+        navController.navigate(SightUPApp) {
+            popUpTo(0) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
     }
 
     Box(
