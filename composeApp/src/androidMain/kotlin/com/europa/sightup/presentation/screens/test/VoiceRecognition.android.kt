@@ -12,7 +12,7 @@ actual fun getVoiceRecognition(context: Any?): VoiceRecognition = AndroidVoiceRe
 
 class AndroidVoiceRecognition(context: Context) : VoiceRecognition {
 
-    private val speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
+    private var speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
     private var isListening = false
 
     override fun startListening(onResult: (String) -> Unit) {
@@ -23,7 +23,7 @@ class AndroidVoiceRecognition(context: Context) : VoiceRecognition {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         }
 
-        speechRecognizer.setRecognitionListener(object : RecognitionListener {
+        speechRecognizer?.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 Log.d("VoiceRecognition", "Speak now")
             }
@@ -54,13 +54,13 @@ class AndroidVoiceRecognition(context: Context) : VoiceRecognition {
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
 
-        speechRecognizer.startListening(intent)
+        speechRecognizer?.startListening(intent)
     }
 
     override fun stopListening() {
         isListening = false
-        speechRecognizer.stopListening()
-        speechRecognizer.destroy()
+        speechRecognizer?.stopListening()
+        speechRecognizer?.destroy()
     }
 
     private fun restartListening(onResult: (String) -> Unit) {

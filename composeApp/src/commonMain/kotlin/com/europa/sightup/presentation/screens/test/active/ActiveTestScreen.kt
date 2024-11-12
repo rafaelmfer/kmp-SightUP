@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,16 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.data.remote.response.VisionTestTypes
 import com.europa.sightup.platformspecific.createWearMessageReceiver
 import com.europa.sightup.presentation.designsystem.components.AudioVisualizer
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
-import com.europa.sightup.presentation.designsystem.components.Countdown
 import com.europa.sightup.presentation.designsystem.components.DistanceMessageCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSControlE
@@ -56,9 +53,11 @@ import com.europa.sightup.presentation.designsystem.components.SDSEyeClock
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.CountdownScreen
 import com.europa.sightup.presentation.screens.test.DistanceToCamera
 import com.europa.sightup.presentation.screens.test.VoiceRecognition
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import dev.icerock.moko.permissions.Permission
@@ -67,8 +66,8 @@ import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -79,6 +78,7 @@ fun ActiveTestScreen(
     test: TestResponse,
     testMode: String,
     eyeTested: String,
+    voiceController: VoiceRecognition = koinInject<VoiceRecognition>(),
 ) {
     val viewModel = koinViewModel<ActiveTestViewModel>()
 
@@ -86,7 +86,7 @@ fun ActiveTestScreen(
         viewModel.updateCurrentEye(eyeTested)
     }
 
-    val voiceRecognition = koinInject<VoiceRecognition>()
+    var voiceRecognition: VoiceRecognition? = remember { voiceController }
 
     var testStarted by remember { mutableStateOf(false) }
     var currentMode by remember { mutableStateOf(testMode) }
@@ -100,16 +100,19 @@ fun ActiveTestScreen(
     val distance = distanceState.value.toFloatOrNull() ?: 0f
 
     // Move when the test has been completed move to the result screen
-    val testState by viewModel.testState.collectAsState()
+    val testState by viewModel.testState.collectAsStateWithLifecycle()
 
     LaunchedEffect(testState) {
         if (testState is ActiveTestViewModel.TestState.Completed) {
             val leftEyeResult = EyeTestRepository.leftEyeResult ?: ""
             val rightEyeResult = EyeTestRepository.rightEyeResult ?: ""
 
+            voiceRecognition?.stopListening()
+            voiceRecognition = null
+            currentMode = TestModeEnum.Touch.displayName
+            delay(3000L)
             navController.navigate(
-                TestScreens.TestResult
-                    (
+                TestScreens.TestResult(
                     appTest = true,
                     testId = test.taskId,
                     testTitle = test.title,
@@ -120,6 +123,12 @@ fun ActiveTestScreen(
         }
     }
 
+    LaunchedEffect(currentMode) {
+        if (currentMode != TestModeEnum.Voice.displayName) {
+            voiceRecognition?.stopListening()
+        }
+    }
+
     Scaffold(
         topBar = {
             SDSTopBar(
@@ -127,7 +136,7 @@ fun ActiveTestScreen(
                 iconRight = Icons.Default.Close,
                 iconRightVisible = true,
                 onRightButtonClick = {
-                    voiceRecognition.stopListening()
+                    voiceRecognition?.stopListening()
                     navController.navigate(TestScreens.TestRoot)
                 },
                 modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
@@ -152,7 +161,7 @@ fun ActiveTestScreen(
         },
         content = { paddingValues ->
             if (!testStarted) {
-                CountdownScreen(onTestStart = { testStarted = true })
+                CountdownBeforeTest(onTestStart = { testStarted = true })
             } else {
                 TestContent(
                     test = test,
@@ -177,7 +186,7 @@ private fun TestContent(
     perfectRange: Boolean,
     distance: Float,
     viewModel: ActiveTestViewModel,
-    voiceRecognition: VoiceRecognition,
+    voiceRecognition: VoiceRecognition?,
     modifier: Modifier,
 ) {
     Box(
@@ -239,10 +248,13 @@ private fun TestContent(
             ) {
 
                 LaunchedEffect(test) {
-                    if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {
-                        viewModel.setActiveTest(ActiveTest.VisualAcuity)
-                    } else if (test.title.contains(VisionTestTypes.Astigmatism.title)) {
-                        viewModel.setActiveTest(ActiveTest.Astigmatism)
+                    when {
+                        test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
+                            viewModel.setActiveTest(ActiveTest.VisualAcuity)
+                        }
+                        test.title.contains(VisionTestTypes.Astigmatism.title) -> {
+                            viewModel.setActiveTest(ActiveTest.Astigmatism)
+                        }
                     }
                 }
 
@@ -282,7 +294,7 @@ private fun VisualAcuityChart(currentEFormat: EChartIcon) {
             targetState = currentEFormat,
             transitionSpec = {
                 fadeIn(animationSpec = tween(durationMillis = 900, delayMillis = 100)) with
-                        fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
+                    fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
             }
         ) { icon ->
             Icon(
@@ -302,7 +314,7 @@ private fun VisualAcuityChart(currentEFormat: EChartIcon) {
 private fun TestTypeContent(
     test: TestResponse,
     currentMode: String,
-    voiceRecognition: VoiceRecognition,
+    voiceRecognition: VoiceRecognition?,
     onClickChangeUI: (Any) -> Unit,
     onTestButtonClick: () -> Unit,
 ) {
@@ -315,73 +327,160 @@ private fun TestTypeContent(
     val messageReceiver = remember { createWearMessageReceiver("/actions") }
 
     DisposableEffect(currentMode) {
-        if (currentMode == TestModeEnum.SmartWatch.displayName) {
-            when {
-                test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
-                    messageReceiver.startListening { message ->
-                        when (message) {
-                            "up" -> onClickChangeUI(EChart.UP)
-                            "down" -> onClickChangeUI(EChart.DOWN)
-                            "left" -> onClickChangeUI(EChart.LEFT)
-                            "right" -> onClickChangeUI(EChart.RIGHT)
-                            "cannot see" -> onTestButtonClick()
+        when (currentMode) {
+            TestModeEnum.SmartWatch.displayName -> {
+                when {
+                    test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
+                        messageReceiver.startListening { message ->
+                            when (message) {
+                                "up" -> onClickChangeUI(EChart.UP)
+                                "down" -> onClickChangeUI(EChart.DOWN)
+                                "left" -> onClickChangeUI(EChart.LEFT)
+                                "right" -> onClickChangeUI(EChart.RIGHT)
+                                "cannot see" -> onTestButtonClick()
+                            }
+                        }
+                    }
+
+                    test.title.contains(VisionTestTypes.Astigmatism.title) -> {
+                        messageReceiver.startListening { message ->
+                            val direction = message.toInt()
+                            when (message) {
+                                "1" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "2" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "3" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "4" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "5" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "6" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "7" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "8" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "9" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "10" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "11" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "12" -> {
+                                    onClickChangeUI(direction)
+                                }
+
+                                "all lines" -> onTestButtonClick()
+                            }
                         }
                     }
                 }
-
-                test.title.contains(VisionTestTypes.Astigmatism.title) -> {
-                    messageReceiver.startListening { message ->
-                        val direction = message.toInt()
-                        when (message) {
-                            "1" -> {
-                                onClickChangeUI(direction)
+            }
+            TestModeEnum.Voice.displayName -> {
+                coroutineScope.launch {
+                    controller.providePermission(Permission.RECORD_AUDIO)
+                }
+                when {
+                    test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
+                        voiceRecognition?.startListening { spokenText ->
+                            when {
+                                spokenText.contains("down", ignoreCase = true) -> onClickChangeUI(EChart.DOWN)
+                                spokenText.contains("left", ignoreCase = true) -> onClickChangeUI(EChart.LEFT)
+                                spokenText.contains("right", ignoreCase = true) -> onClickChangeUI(EChart.RIGHT)
+                                spokenText.contains("up", ignoreCase = true) -> onClickChangeUI(EChart.UP)
+                                spokenText.contains("cannot see", ignoreCase = true) -> onTestButtonClick()
                             }
+                        }
+                    }
 
-                            "2" -> {
-                                onClickChangeUI(direction)
+                    test.title.contains(VisionTestTypes.Astigmatism.title) -> {
+                        voiceRecognition?.startListening { spokenText ->
+                            when {
+                                spokenText.contains("one", ignoreCase = true) -> {
+                                    onClickChangeUI(1)
+                                }
+
+                                spokenText.contains("two", ignoreCase = true) -> {
+                                    onClickChangeUI(2)
+                                }
+
+                                spokenText.contains("three", ignoreCase = true) -> {
+                                    onClickChangeUI(3)
+                                }
+
+                                spokenText.contains("four", ignoreCase = true) -> {
+                                    onClickChangeUI(4)
+                                }
+
+                                spokenText.contains("five", ignoreCase = true) -> {
+                                    onClickChangeUI(5)
+                                }
+
+                                spokenText.contains("six", ignoreCase = true) -> {
+                                    onClickChangeUI(6)
+                                }
+
+                                spokenText.contains("seven", ignoreCase = true) -> {
+                                    onClickChangeUI(7)
+                                }
+
+                                spokenText.contains("eight", ignoreCase = true) -> {
+                                    onClickChangeUI(8)
+                                }
+
+                                spokenText.contains("nine", ignoreCase = true) -> {
+                                    onClickChangeUI(9)
+                                }
+
+                                spokenText.contains("ten", ignoreCase = true) || spokenText.contains(
+                                    "10",
+                                    ignoreCase = true
+                                ) -> {
+                                    onClickChangeUI(10)
+                                }
+
+                                spokenText.contains("eleven", ignoreCase = true) || spokenText.contains(
+                                    "11",
+                                    ignoreCase = true
+                                ) -> {
+                                    onClickChangeUI(11)
+                                }
+
+                                spokenText.contains("twelve", ignoreCase = true) || spokenText.contains(
+                                    "12",
+                                    ignoreCase = true
+                                ) -> {
+                                    onClickChangeUI(12)
+                                }
+
+                                spokenText.contains("all lines", ignoreCase = true) -> {
+                                    onTestButtonClick()
+                                }
                             }
-
-                            "3" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "4" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "5" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "6" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "7" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "8" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "9" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "10" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "11" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "12" -> {
-                                onClickChangeUI(direction)
-                            }
-
-                            "all lines" -> onTestButtonClick()
                         }
                     }
                 }
@@ -390,6 +489,12 @@ private fun TestTypeContent(
 
         onDispose {
             messageReceiver.stopListening()
+        }
+    }
+
+    LaunchedEffect(currentMode) {
+        if (currentMode != TestModeEnum.Voice.displayName) {
+            voiceRecognition?.stopListening()
         }
     }
 
@@ -402,20 +507,6 @@ private fun TestTypeContent(
                 downButtonOnClickResult = { onClickChangeUI(EChart.DOWN) },
                 modifier = Modifier.fillMaxWidth()
             )
-            if (currentMode == TestModeEnum.Voice.displayName) {
-                coroutineScope.launch {
-                    controller.providePermission(Permission.RECORD_AUDIO)
-                }
-                voiceRecognition.startListening { spokenText ->
-                    when {
-                        spokenText.contains("down", ignoreCase = true) -> onClickChangeUI(EChart.DOWN)
-                        spokenText.contains("left", ignoreCase = true) -> onClickChangeUI(EChart.LEFT)
-                        spokenText.contains("right", ignoreCase = true) -> onClickChangeUI(EChart.RIGHT)
-                        spokenText.contains("up", ignoreCase = true) -> onClickChangeUI(EChart.UP)
-                        spokenText.contains("cannot see", ignoreCase = true) -> onTestButtonClick()
-                    }
-                }
-            }
         }
 
         test.title.contains(VisionTestTypes.Astigmatism.title) -> {
@@ -433,71 +524,6 @@ private fun TestTypeContent(
                 buttonElevenOnClick = { onClickChangeUI(11) },
                 buttonTwelveOnClick = { onClickChangeUI(12) }
             )
-
-            if (currentMode == TestModeEnum.Voice.displayName) {
-                coroutineScope.launch {
-                    controller.providePermission(Permission.RECORD_AUDIO)
-                }
-                voiceRecognition.startListening { spokenText ->
-                    when {
-                        spokenText.contains("one", ignoreCase = true) -> {
-                            onClickChangeUI(1)
-                        }
-
-                        spokenText.contains("two", ignoreCase = true) -> {
-                            onClickChangeUI(2)
-                        }
-
-                        spokenText.contains("three", ignoreCase = true) -> {
-                            onClickChangeUI(3)
-                        }
-
-                        spokenText.contains("four", ignoreCase = true) -> {
-                            onClickChangeUI(4)
-                        }
-
-                        spokenText.contains("five", ignoreCase = true) -> {
-                            onClickChangeUI(5)
-                        }
-
-                        spokenText.contains("six", ignoreCase = true) -> {
-                            onClickChangeUI(6)
-                        }
-
-                        spokenText.contains("seven", ignoreCase = true) -> {
-                            onClickChangeUI(7)
-                        }
-
-                        spokenText.contains("eight", ignoreCase = true) -> {
-                            onClickChangeUI(8)
-                        }
-
-                        spokenText.contains("nine", ignoreCase = true) -> {
-                            onClickChangeUI(9)
-                        }
-
-                        spokenText.contains("ten", ignoreCase = true) || spokenText.contains("10", ignoreCase = true) -> {
-                            onClickChangeUI(10)
-                        }
-
-                        spokenText.contains("eleven", ignoreCase = true) || spokenText.contains(
-                            "11",
-                            ignoreCase = true
-                        ) -> {
-                            onClickChangeUI(11)
-                        }
-
-                        spokenText.contains("twelve", ignoreCase = true) || spokenText.contains(
-                            "12",
-                            ignoreCase = true
-                        ) -> {
-                            onClickChangeUI(12)
-                        }
-
-                        spokenText.contains("all lines", ignoreCase = true) -> onTestButtonClick()
-                    }
-                }
-            }
         }
     }
 }
@@ -570,7 +596,8 @@ private fun BottomModeBar(
                 Icon(
                     painter = painterResource(mode.iconResource),
                     contentDescription = mode.displayName,
-                    tint = iconColor
+                    tint = iconColor,
+                    modifier = Modifier.size(SightUPTheme.sizes.size_48)
                 )
             }
         }
@@ -578,7 +605,7 @@ private fun BottomModeBar(
 }
 
 @Composable
-private fun CountdownScreen(
+private fun CountdownBeforeTest(
     onTestStart: () -> Unit,
 ) {
     Column(
@@ -586,12 +613,11 @@ private fun CountdownScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Countdown(onCountdownFinished = { onTestStart() }, startsIn = 3)
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_2xl))
-        Text(
-            text = "Now let's get started!",
-            textAlign = TextAlign.Center,
-            style = SightUPTheme.textStyles.h3,
+        CountdownScreen(
+            animationPath = "files/countdown_animation.json",
+            onFinish = {
+                onTestStart()
+            }
         )
     }
 }

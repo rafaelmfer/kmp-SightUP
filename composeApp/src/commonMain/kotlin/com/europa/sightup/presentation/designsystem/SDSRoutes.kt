@@ -45,7 +45,7 @@ import com.europa.sightup.presentation.designsystem.screens.SDSBottomSheetScreen
 import com.europa.sightup.presentation.designsystem.screens.SDSControlEScreen
 import com.europa.sightup.presentation.designsystem.screens.SDSInputScreen
 import com.europa.sightup.presentation.designsystem.screens.TextStylesScreen
-import com.europa.sightup.presentation.screens.exercise.countdownscreen.SDSExerciseCountdownScreen
+import com.europa.sightup.presentation.screens.SDSCountdownScreen
 import kotlinx.serialization.Serializable
 
 sealed interface DesignSystemSamples {
@@ -167,7 +167,7 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
             SDSEyeClockScreen()
         }
         composable<SDSExerciseCountdownScreen> {
-            SDSExerciseCountdownScreen()
+            SDSCountdownScreen()
         }
         composable<SDSButtonArrow> {
             SDSButtonArrowScreen()

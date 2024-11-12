@@ -12,8 +12,8 @@ import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseFinish
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseInit
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRunning
+import com.europa.sightup.presentation.screens.CountdownScreen
 import com.europa.sightup.presentation.screens.exercise.ExerciseRootScreen
-import com.europa.sightup.presentation.screens.exercise.countdownscreen.ExerciseCountdownScreen
 import com.europa.sightup.presentation.screens.exercise.details.ExerciseDetailsScreen
 import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResult
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreen
@@ -49,7 +49,7 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
         composable<ExerciseCountdown> {
             val arguments = it.toRoute<ExerciseCountdown>()
 
-            ExerciseCountdownScreen(
+            CountdownScreen(
                 animationPath = "files/countdown_animation.json",
                 titleHeader = arguments.exerciseName,
                 onLeftButtonHeaderClick = {

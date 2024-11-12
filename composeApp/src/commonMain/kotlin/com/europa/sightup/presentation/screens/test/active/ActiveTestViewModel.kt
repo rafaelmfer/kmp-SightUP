@@ -22,8 +22,13 @@ object EyeTestRepository {
 }
 
 class ActiveTestViewModel : ViewModel() {
+
+    sealed class TestState {
+        data object InProgress : TestState()
+        data object Completed : TestState()
+    }
+
     private var activeTest: ActiveTest = ActiveTest.VisualAcuity
-        private set
 
     private val _testState = MutableStateFlow<TestState>(TestState.InProgress)
     val testState: StateFlow<TestState> = _testState
@@ -37,6 +42,7 @@ class ActiveTestViewModel : ViewModel() {
 
     var currentEFormat by mutableStateOf(EChart.getRandomIcon(1))
         private set
+
     private var lastDirection: EChart? = null // To ensure the same direction is not repeated
 
 
@@ -138,11 +144,6 @@ class ActiveTestViewModel : ViewModel() {
     private fun handleAstigmatismSelection(direction: Int, navController: NavController) {
         val angle = AstigmatismChart.getAngleForDirection(direction)
         endTestForCurrentEye(navController, "$angle")
-    }
-
-    sealed class TestState {
-        data object InProgress : TestState()
-        data object Completed : TestState()
     }
 }
 
