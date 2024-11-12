@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.fontWeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -41,7 +42,9 @@ fun SDSFilterChip(
         label = {
             Text(
                 text = text,
-                style = SightUPTheme.textStyles.body2,
+                style = SightUPTheme.textStyles.caption.copy(
+                    fontWeight = SightUPTheme.fontWeight.fontWeight_bold
+                )
             )
         },
         leadingIcon = null,
@@ -49,11 +52,11 @@ fun SDSFilterChip(
         elevation = FilterChipDefaults.filterChipElevation(),
         colors = FilterChipDefaults.filterChipColors(
             containerColor = SightUPTheme.sightUPColors.white,
-            selectedContainerColor = SightUPTheme.sightUPColors.primary_600,
+            selectedContainerColor = SightUPTheme.sightUPColors.background_activate,
             disabledContainerColor = SightUPTheme.sightUPColors.neutral_200,
             disabledSelectedContainerColor = SightUPTheme.sightUPColors.neutral_200,
-            labelColor = SightUPTheme.sightUPColors.text_primary,
-            selectedLabelColor = SightUPTheme.sightUPColors.text_secondary,
+            labelColor = SightUPTheme.sightUPColors.neutral_600,
+            selectedLabelColor = SightUPTheme.sightUPColors.primary_700,
             disabledLabelColor = SightUPTheme.sightUPColors.text_disabled,
         ),
         shape = SightUPTheme.shapes.extraLarge,
