@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.screens.exercise
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -27,7 +32,6 @@ import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
-import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.UIState
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -40,6 +44,7 @@ fun ExerciseRootScreen(
         viewModel.getExercises()
     }
     val state by viewModel.exercise.collectAsStateWithLifecycle()
+
 
     Column(
         modifier = Modifier
@@ -54,7 +59,13 @@ fun ExerciseRootScreen(
         when (state) {
             is UIState.InitialState -> {}
             is UIState.Loading -> {
-                CircularProgressIndicator()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
 
             is UIState.Success -> {
@@ -77,28 +88,27 @@ private fun ExerciseScreenContent(
     navController: NavController,
     exercises: List<ExerciseResponse>,
 ) {
+    var selectedFilter by remember { mutableStateOf("All") }
+
+    val filteredExercises = if (selectedFilter == "All") {
+        exercises
+    } else {
+        exercises.filter { it.helps.contains(selectedFilter) }
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = "Filter according to your eye condition:",
-            style = SightUPTheme.textStyles.body,
-            modifier = Modifier
-                .padding(
-                    top = SightUPTheme.spacing.spacing_base,
-                    start = SightUPTheme.spacing.spacing_side_margin,
-                    end = SightUPTheme.spacing.spacing_side_margin,
-                )
-        )
         FilterChips(
+            selectedFilter = selectedFilter,
             onChipClick = { text ->
-                //TODO: Handle chip click to filter exercises list
+                selectedFilter = text
             }
         )
-        ExerciseList(exercises = exercises, navController = navController)
+        ExerciseList(exercises = filteredExercises, navController = navController)
     }
 }
 
 @Composable
-private fun FilterChips(onChipClick: (String) -> Unit) {
+private fun FilterChips(onChipClick: (String) -> Unit, selectedFilter: String) {
     val listOfFilters = listOf(
         "All",
         "Eye Strain",
@@ -108,6 +118,7 @@ private fun FilterChips(onChipClick: (String) -> Unit) {
         "Watery Eyes",
         "Itchy Eyes"
     )
+
     LazyRow(
         contentPadding = PaddingValues(
             start = SightUPTheme.spacing.spacing_side_margin,
@@ -118,15 +129,15 @@ private fun FilterChips(onChipClick: (String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(),
     ) {
-        items(listOfFilters) {
+        items(listOfFilters) { filter ->
             SDSFilterChip(
-                text = it,
-                isSelected = it == "All",
-                onClick = { text ->
-                    onChipClick(text)
+                text = filter,
+                isSelected = filter == selectedFilter,
+                onClick = {
+                    onChipClick(filter)
                 }
             )
-            if (it != listOfFilters.last()) {
+            if (filter != listOfFilters.last()) {
                 Spacer(Modifier.width(SightUPTheme.spacing.spacing_xs))
             }
         }

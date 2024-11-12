@@ -30,7 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +43,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.europa.sightup.data.remote.response.visionHistory.HistoryTestResponse
 import com.europa.sightup.data.remote.response.visionHistory.ResultResponse
 import com.europa.sightup.data.remote.response.visionHistory.UserHistoryResponse
 import com.europa.sightup.presentation.designsystem.components.SDSFilterChip
@@ -64,12 +67,13 @@ fun PrescriptionHistory(
     navController: NavController? = null,
     viewModel: PrescriptionHistoryViewModel = koinViewModel<PrescriptionHistoryViewModel>(),
 ) {
-
     LaunchedEffect(Unit) {
         viewModel.getVisionHistory()
     }
 
     val state by viewModel.history.collectAsStateWithLifecycle()
+
+    var selectedFilter by remember { mutableStateOf("All") }
 
     Column(
         modifier = Modifier
@@ -89,8 +93,9 @@ fun PrescriptionHistory(
         )
 
         FilterChips(
+            selectedFilter = selectedFilter,
             onChipClick = { text ->
-                //TODO: Handle chip click to filter the list
+                selectedFilter = text
             }
         )
 
@@ -100,8 +105,14 @@ fun PrescriptionHistory(
             }
 
             is UIState.Success -> {
-                val history = state as UIState.Success<UserHistoryResponse>
-                HistoryList(history.data)
+                val history = (state as UIState.Success<UserHistoryResponse>).data
+
+                val filteredHistory = when (selectedFilter) {
+                    "SightUP" -> history.tests.filter { it.appTest }
+                    "Clinic" -> history.tests.filter { !it.appTest }
+                    else -> history.tests
+                }
+                HistoryList(filteredHistory)
             }
 
             is UIState.Error -> {
@@ -113,7 +124,7 @@ fun PrescriptionHistory(
 }
 
 @Composable
-private fun FilterChips(onChipClick: (String) -> Unit) {
+private fun FilterChips(onChipClick: (String) -> Unit, selectedFilter: String) {
     val listOfFilters = listOf(
         "All",
         "Clinic",
@@ -121,9 +132,7 @@ private fun FilterChips(onChipClick: (String) -> Unit) {
     )
     LazyRow(
         contentPadding = PaddingValues(
-            start = SightUPTheme.spacing.spacing_side_margin,
             top = SightUPTheme.spacing.spacing_sm,
-            end = SightUPTheme.spacing.spacing_side_margin,
             bottom = SightUPTheme.spacing.spacing_base
         ),
         modifier = Modifier
@@ -132,7 +141,7 @@ private fun FilterChips(onChipClick: (String) -> Unit) {
         items(listOfFilters) {
             SDSFilterChip(
                 text = it,
-                isSelected = it == "All",
+                isSelected = it == selectedFilter,
                 onClick = { text ->
                     onChipClick(text)
                 }
@@ -145,15 +154,15 @@ private fun FilterChips(onChipClick: (String) -> Unit) {
 }
 
 @Composable
-private fun HistoryList(history: UserHistoryResponse) {
-    val isExpanded = remember { mutableStateListOf(*BooleanArray(history.tests.size) { false }.toTypedArray()) }
+private fun HistoryList(history: List<HistoryTestResponse>) {
+    val isExpanded = remember { mutableStateListOf(*BooleanArray(history.size) { false }.toTypedArray()) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        history.tests.forEachIndexed { index, test ->
+        history.forEachIndexed { index, test ->
             ExpandableHistoryItem(
                 title = test.date.toFormattedDate(),
                 appTested = test.appTest,
@@ -239,8 +248,6 @@ private fun ExpandableHistoryItem(
             }
         }
     }
-
-
 }
 
 @Composable
