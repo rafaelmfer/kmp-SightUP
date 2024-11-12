@@ -23,10 +23,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.europa.sightup.platformspecific.videoplayer.ScreenResize
+import chaintech.videoplayer.model.PlayerConfig
+import chaintech.videoplayer.model.ScreenResize
+import chaintech.videoplayer.ui.video.VideoPlayerView
 import com.europa.sightup.presentation.AppNavHost
-import com.europa.sightup.presentation.designsystem.components.SDSVideoPlayerView
-import com.europa.sightup.presentation.designsystem.components.data.PlayerConfig
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.mmk.kmpauth.google.GoogleAuthCredentials
@@ -105,7 +105,7 @@ fun AfterSplashScreen(navController: NavHostController) {
         contentAlignment = Alignment.Center,
     ) {
         if (isPlayerVisible) {
-            SDSVideoPlayerView(
+            VideoPlayerView(
                 modifier = Modifier
                     .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
                     .fillMaxWidth()

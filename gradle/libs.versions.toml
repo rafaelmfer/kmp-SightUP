@@ -59,6 +59,9 @@ kmpauth = "2.1.0"
 # Permissions KMP Moko
 permissionsCompose = "0.18.1"
 
+# Compose Multiplatform Media Player
+composeMultiplatformMediaPlayer = "1.0.26"
+
 
 ## Android
 # Camera Android
@@ -153,6 +156,10 @@ kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.r
 
 # KMP Permissions - Moko
 permissions = { module = "dev.icerock.moko:permissions-compose", version.ref = "permissionsCompose" }
+
+# Compose Multiplatform Media Player
+compose-multiplatform-media-player = { module = "network.chaintech:compose-multiplatform-media-player", version.ref = "composeMultiplatformMediaPlayer" }
+
 
 ## Android
 # Camera X

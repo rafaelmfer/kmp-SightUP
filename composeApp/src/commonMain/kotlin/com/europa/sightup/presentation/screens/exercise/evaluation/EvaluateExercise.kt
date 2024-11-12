@@ -23,12 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import chaintech.videoplayer.model.PlayerConfig
+import chaintech.videoplayer.model.ScreenResize
+import chaintech.videoplayer.ui.video.VideoPlayerView
 import com.europa.sightup.platformspecific.getPlatform
-import com.europa.sightup.platformspecific.videoplayer.ScreenResize
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSListButtonsSelectable
-import com.europa.sightup.presentation.designsystem.components.SDSVideoPlayerView
-import com.europa.sightup.presentation.designsystem.components.data.PlayerConfig
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
@@ -78,7 +78,7 @@ fun EvaluateExercise(
                     .size(240.dp)
                     .background(Color.Transparent),
             ) {
-                SDSVideoPlayerView(
+                VideoPlayerView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1f, false)

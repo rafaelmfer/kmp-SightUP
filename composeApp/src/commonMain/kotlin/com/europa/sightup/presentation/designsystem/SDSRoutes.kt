@@ -24,7 +24,6 @@ import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSRecor
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSSwitch
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTimer
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSTopBar
-import com.europa.sightup.presentation.designsystem.DesignSystemSamples.SDSVideoPlayerScreen
 import com.europa.sightup.presentation.designsystem.DesignSystemSamples.TextStyles
 import com.europa.sightup.presentation.designsystem.components.SDSBadgeTimeScreen
 import com.europa.sightup.presentation.designsystem.components.SDSButtonArrowScreen
@@ -37,7 +36,6 @@ import com.europa.sightup.presentation.designsystem.components.SDSRecordsConditi
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTimerScreen
 import com.europa.sightup.presentation.designsystem.components.SDSTopBarScreen
-import com.europa.sightup.presentation.designsystem.components.SDSVideoPlayerPreview
 import com.europa.sightup.presentation.designsystem.components.SdsButtonScreen
 import com.europa.sightup.presentation.designsystem.screens.AudioVisualizerScreen
 import com.europa.sightup.presentation.designsystem.screens.CountdownScreen
@@ -177,9 +175,6 @@ fun NavGraphBuilder.designSystemNavGraph(navController: NavHostController) {
         }
         composable<SDSListButtonsSelectableScreen> {
             SDSListButtonsSelectablePreview()
-        }
-        composable<SDSVideoPlayerScreen> {
-            SDSVideoPlayerPreview()
         }
         composable<SDSRecordsConditionsPreview> {
             SDSRecordsConditionsPreview()
