@@ -159,6 +159,9 @@ kotlin {
 
             // Helper to Asks Permissions - Moko Permissions
             api(libs.permissions)
+
+            // Media Player
+            implementation(libs.compose.multiplatform.media.player)
         }
 
         iosMain.dependencies {

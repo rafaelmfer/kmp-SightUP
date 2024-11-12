@@ -21,9 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.europa.sightup.data.local.KVaultStorage
-import com.europa.sightup.data.local.getObject
-import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
@@ -38,16 +35,13 @@ import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
-import com.europa.sightup.utils.USER_INFO
 import com.europa.sightup.utils.isUserLoggedIn
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
-import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.koin.compose.koinInject
 import sightupkmpapp.composeapp.generated.resources.Res
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -202,21 +196,10 @@ fun ExerciseFinishScreen(
 
 @Composable
 private fun Header() {
-    val kVault = koinInject<KVaultStorage>()
-
     SDSTopBar(
         title = "",
-        iconLeftVisible = true,
-        onLeftButtonClick = {
-            showToast(
-                kVault.getObject<UserResponse>(USER_INFO)?.email.toString(),
-                bottomPadding = 40
-            )
-        },
-        iconRightVisible = true,
-        onRightButtonClick = {
-            kVault.clear()
-        },
+        iconLeftVisible = false,
+        iconRightVisible = false,
         modifier = Modifier
             .padding(
                 horizontal = SightUPTheme.spacing.spacing_sm,

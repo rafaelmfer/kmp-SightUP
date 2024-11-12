@@ -26,7 +26,7 @@ fun Modifier.clickableWithRipple(
             onClickLabel = onClickLabel,
             role = role,
             interactionSource = interactionSource ?: remember { MutableInteractionSource() },
-            indication = ripple(color = Color(0xffA9C8DC)),
+            indication = ripple(color = Color(0xff5691B9)),
             onClick = onClick,
         )
     }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,22 +24,17 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun startTimer(
     seconds: Int,
-    minutes: Int,
     onTick: (Int, Int) -> Unit,
     onFinish: () -> Unit,
 ) {
-    var secondsLeft = seconds
-    var minutesLeft = minutes
+    var remainingSeconds = seconds
 
-    LaunchedEffect(key1 = secondsLeft, key2 = minutesLeft) {
-        while (minutesLeft > 0 || secondsLeft > 0) {
+    LaunchedEffect(key1 = remainingSeconds) {
+        while (remainingSeconds > 0) {
             delay(1000L)
-            if (secondsLeft > 0) {
-                secondsLeft--
-            } else if (minutesLeft > 0) {
-                secondsLeft = 59
-                minutesLeft--
-            }
+            remainingSeconds--
+            val minutesLeft = remainingSeconds / 60
+            val secondsLeft = remainingSeconds % 60
             onTick(minutesLeft, secondsLeft)
         }
         onFinish()
@@ -50,15 +44,14 @@ fun startTimer(
 @Composable
 fun SDSTimer(
     title: String = "Duration",
-    seconds: Int = 0,
-    minutes: Int = 2,
+    seconds: Int = 60,
     onTimerFinish: () -> Unit = { },
     modifier: Modifier = Modifier,
 ) {
-    var secondsLeft by remember { mutableStateOf(seconds) }
-    var minutesLeft by remember { mutableStateOf(minutes) }
+    var secondsLeft by remember { mutableStateOf(seconds % 60) }
+    var minutesLeft by remember { mutableStateOf(seconds / 60) }
 
-    startTimer(seconds, minutes, { min, sec ->
+    startTimer(seconds, { min, sec ->
         minutesLeft = min
         secondsLeft = sec
     }, {
@@ -67,7 +60,6 @@ fun SDSTimer(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .then(modifier),
     ) {
         Text(
@@ -116,8 +108,7 @@ fun SDSTimerScreen() {
     ) {
         SDSTimer(
             title = "Duration",
-            seconds = 10,
-            minutes = 2,
+            seconds = 60,
             onTimerFinish = {
                 showToast(
                     "Timer finished",
