@@ -2,7 +2,6 @@ package com.europa.sightup.presentation.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +30,7 @@ import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.fontWeight
 import com.europa.sightup.presentation.ui.theme.typography.lineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.clickableWithRipple
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import org.jetbrains.compose.resources.painterResource
@@ -54,7 +54,7 @@ fun SDSCardTest(
                 color = SightUPTheme.sightUPColors.border_card,
                 shape = SightUPTheme.shapes.large
             )
-            .clickable { navigateToTest() }
+            .clickableWithRipple { navigateToTest() }
             .padding(SightUPTheme.spacing.spacing_base)
             .then(modifier),
         colors = CardDefaults.cardColors(

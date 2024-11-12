@@ -92,7 +92,6 @@ fun TestResultScreen(
     var testType by remember { mutableStateOf("") }
     var showLoadingAnimation by remember { mutableStateOf(true) }
 
-
     LaunchedEffect(testTitle) {
         if (testTitle.contains(VisionTestTypes.VisionAcuity.title)) {
             viewModel.setActiveTest(ActiveTest.VisualAcuity)

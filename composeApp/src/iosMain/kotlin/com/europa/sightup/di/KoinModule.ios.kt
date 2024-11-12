@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 actual val targetModule: Module = module {
     single<KVaultStorage> { IOSKeychainKVault() }
-    factory<VoiceRecognition> { IOSVoiceRecognition() }
+    single<VoiceRecognition> { IOSVoiceRecognition() }
 }
 
 // Swift Helper to inject Koin dependencies on iOS

@@ -9,5 +9,5 @@ import org.koin.dsl.module
 
 actual val targetModule: Module = module {
     single<KVaultStorage> { SharedPreferencesKVault(context = get()) }
-    factory<VoiceRecognition> { AndroidVoiceRecognition(context = get()) }
+    single<VoiceRecognition> { AndroidVoiceRecognition(context = get()) }
 }

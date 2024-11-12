@@ -582,36 +582,40 @@ private fun AssessmentList(
     dailyCheckTime: String = "",
 ) {
 
-    SDSCardAssessment(
-        title = "Daily Check-In",
-        isDone = dailyCheckIsDone,
-        time = dailyCheckTime,
-        exerciseDuration = 0,
-        subtitle = "Log your eye condition",
-        lineUp = false,
-        lineDown = true,
-        eyeConditions = listOf(),
-        onClickCard = onDailyCheckClick,
-        modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-    )
-
-    repeat(2) { index ->
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         SDSCardAssessment(
-            title = "Vision Acuity Test",
-            time = "10:00 AM",
-            isDone = false,
-            exerciseDuration = 2,
-            lineUp = true,
-            lineDown = index != 1,
-            eyeConditions = listOf("Eye Strain", "Red Eyes"),
-            onClickCard = {
-                showToast(
-                    message = "Vision Acuity Test $index",
-                    bottomPadding = 40
-                )
-            },
+            title = "Daily Check-In",
+            isDone = dailyCheckIsDone,
+            time = dailyCheckTime,
+            exerciseDuration = 0,
+            subtitle = "Log your eye condition",
+            lineUp = false,
+            lineDown = true,
+            eyeConditions = listOf(),
+            onClickCard = onDailyCheckClick,
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
         )
+
+        repeat(2) { index ->
+            SDSCardAssessment(
+                title = "Vision Acuity Test",
+                time = "10:00 AM",
+                isDone = false,
+                exerciseDuration = 2,
+                lineUp = true,
+                lineDown = index != 1,
+                eyeConditions = listOf("Eye Strain", "Red Eyes"),
+                onClickCard = {
+                    showToast(
+                        message = "Vision Acuity Test $index",
+                        bottomPadding = 40
+                    )
+                },
+                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+            )
+        }
     }
 }
 

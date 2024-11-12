@@ -75,7 +75,7 @@ fun SDSCardAssessment(
 
             Box(
                 modifier = Modifier
-                    .width(1.dp)
+                    .width(2.dp)
                     .constrainAs(lineOne) {
                         top.linkTo(parent.top)
                         bottom.linkTo(mbtCircle.top, margin = SightUPSpacing.default.spacing_md)
@@ -94,7 +94,7 @@ fun SDSCardAssessment(
                         shape = CircleShape
                     )
                     .border(
-                        width = SightUPBorder.Width.sm,
+                        width = SightUPBorder.Width.md,
                         color = if (isDone) SightUPTheme.sightUPColors.border_primary else SightUPTheme.sightUPColors.border_card,
                         shape = CircleShape
                     )
@@ -118,7 +118,7 @@ fun SDSCardAssessment(
 
             Box(
                 modifier = Modifier
-                    .width(1.dp)
+                    .width(2.dp)
                     .constrainAs(lineTwo) {
                         top.linkTo(mbtCircle.bottom, margin = SightUPSpacing.default.spacing_md)
                         bottom.linkTo(parent.bottom)
@@ -156,9 +156,7 @@ fun SDSCardAssessment(
                 .applyIf(isDone) {
                     alpha(0.6f)
                 }
-                .applyIf(!isDone) {
-                    clickableWithRipple(onClick = onClickCard)
-                }
+                .clickableWithRipple(enabled = !isDone, onClick = onClickCard)
                 .padding(vertical = SightUPTheme.spacing.spacing_base),
         ) {
             Column(

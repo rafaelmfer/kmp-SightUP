@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.exercise.countdownscreen
+package com.europa.sightup.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,11 +32,11 @@ import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.close
 
 @Composable
-fun SDSExerciseCountdownScreen() {
+fun SDSCountdownScreen() {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        ExerciseCountdownScreen(
+        CountdownScreen(
             onFinish = {
                 showToast(
                     "new screen"
@@ -48,11 +48,11 @@ fun SDSExerciseCountdownScreen() {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ExerciseCountdownScreen(
+fun CountdownScreen(
     animationPath: String = "",
-    titleHeader: String = "",
-    onLeftButtonHeaderClick: () -> Unit = {},
-    onRightButtonHeaderClick: () -> Unit = {},
+    titleHeader: String? = null,
+    onLeftButtonHeaderClick: (() -> Unit)? = null,
+    onRightButtonHeaderClick: (() -> Unit)? = null,
     onFinish: () -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(true) }
@@ -85,21 +85,23 @@ fun ExerciseCountdownScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SDSTopBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter),
-            title = titleHeader,
-            iconLeftVisible = true,
-            onLeftButtonClick = {
-                onLeftButtonHeaderClick()
-            },
-            iconRightVisible = true,
-            iconRight = Res.drawable.close,
-            onRightButtonClick = {
-                onRightButtonHeaderClick()
-            }
-        )
+        if (titleHeader != null || onLeftButtonHeaderClick != null || onRightButtonHeaderClick != null) {
+            SDSTopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter),
+                title = titleHeader ?: "",
+                iconLeftVisible = onLeftButtonHeaderClick != null,
+                onLeftButtonClick = {
+                    onLeftButtonHeaderClick?.invoke()
+                },
+                iconRightVisible = true,
+                iconRight = Res.drawable.close,
+                onRightButtonClick = {
+                    onRightButtonHeaderClick?.invoke()
+                }
+            )
+        }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
