@@ -57,6 +57,9 @@ dependencies {
     implementation(libs.wear.compose.foundation)
     implementation(libs.wear.tooling.preview)
 
+    // Navigation
+    implementation(libs.wear.compose.navigation)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
