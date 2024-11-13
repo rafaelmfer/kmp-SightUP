@@ -61,7 +61,7 @@ sealed interface ExerciseScreens {
         val video: String,
         val finishTitle: String,
         val advice: String,
-
+        val musicAudioGuidanceEnabled: Boolean,
     ) : ExerciseScreens
 
     @Serializable
@@ -73,6 +73,7 @@ sealed interface ExerciseScreens {
         val video: String,
         val finishTitle: String,
         val advice: String,
+        val musicAudioGuidanceEnabled: Boolean,
     ) : ExerciseScreens
 
     @Serializable

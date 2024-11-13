@@ -24,20 +24,23 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun startTimer(
     seconds: Int,
+    isRunning: Boolean,
     onTick: (Int, Int) -> Unit,
     onFinish: () -> Unit,
 ) {
     var remainingSeconds = seconds
 
-    LaunchedEffect(key1 = remainingSeconds) {
-        while (remainingSeconds > 0) {
-            delay(1000L)
-            remainingSeconds--
-            val minutesLeft = remainingSeconds / 60
-            val secondsLeft = remainingSeconds % 60
-            onTick(minutesLeft, secondsLeft)
+    LaunchedEffect(key1 = isRunning) {
+        if (isRunning) {
+            while (remainingSeconds > 0) {
+                delay(1000L)
+                remainingSeconds--
+                val minutesLeft = remainingSeconds / 60
+                val secondsLeft = remainingSeconds % 60
+                onTick(minutesLeft, secondsLeft)
+            }
+            onFinish()
         }
-        onFinish()
     }
 }
 
@@ -45,13 +48,14 @@ fun startTimer(
 fun SDSTimer(
     title: String = "Duration",
     seconds: Int = 60,
+    isRunning: Boolean,
     onTimerFinish: () -> Unit = { },
     modifier: Modifier = Modifier,
 ) {
     var secondsLeft by remember { mutableStateOf(seconds % 60) }
     var minutesLeft by remember { mutableStateOf(seconds / 60) }
 
-    startTimer(seconds, { min, sec ->
+    startTimer(seconds, isRunning, { min, sec ->
         minutesLeft = min
         secondsLeft = sec
     }, {
@@ -109,6 +113,7 @@ fun SDSTimerScreen() {
         SDSTimer(
             title = "Duration",
             seconds = 60,
+            isRunning = true,
             onTimerFinish = {
                 showToast(
                     "Timer finished",

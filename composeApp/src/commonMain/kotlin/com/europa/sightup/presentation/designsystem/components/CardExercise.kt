@@ -123,7 +123,7 @@ fun CardExercise(
                 color = SightUPTheme.sightUPColors.text_primary,
             )
             SDSBadgeTime(
-                timeMinutes = exercise.duration,
+                timeSeconds = exercise.duration,
             )
         }
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_2xs))

@@ -18,6 +18,10 @@ import com.europa.sightup.presentation.screens.exercise.details.ExerciseDetailsS
 import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResult
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreen
 import com.europa.sightup.presentation.screens.exercise.running.ExerciseRunningScreen
+import com.europa.sightup.utils.slideInFromLeft
+import com.europa.sightup.utils.slideInFromRight
+import com.europa.sightup.utils.slideOutToLeft
+import com.europa.sightup.utils.slideOutToRight
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.complete
@@ -27,11 +31,21 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
     navigation<ExerciseInit>(
         startDestination = ExerciseRoot,
     ) {
-        composable<ExerciseRoot> {
+        composable<ExerciseRoot>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             ExerciseRootScreen(navController = navController)
         }
 
-        composable<ExerciseDetails> { backStackEntry ->
+        composable<ExerciseDetails>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { backStackEntry ->
             val arguments = backStackEntry.toRoute<ExerciseDetails>()
 
             ExerciseDetailsScreen(
@@ -46,7 +60,12 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             )
         }
 
-        composable<ExerciseCountdown> {
+        composable<ExerciseCountdown>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             val arguments = it.toRoute<ExerciseCountdown>()
 
             CountdownScreen(
@@ -69,13 +88,19 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                             video = arguments.video,
                             finishTitle = arguments.finishTitle,
                             advice = arguments.advice,
+                            musicAudioGuidanceEnabled = arguments.musicAudioGuidanceEnabled
                         )
                     )
                 }
             )
         }
 
-        composable<ExerciseRunning> {
+        composable<ExerciseRunning>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             val arguments = it.toRoute<ExerciseRunning>()
 
             ExerciseRunningScreen(
@@ -83,11 +108,17 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                 exerciseName = arguments.exerciseName,
                 exerciseDuration = arguments.duration,
                 exerciseVideo = arguments.video,
+                musicAudioGuidanceEnabled = arguments.musicAudioGuidanceEnabled,
                 navController = navController,
             )
         }
 
-        composable<ExerciseFinish> { backStackEntry ->
+        composable<ExerciseFinish>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { backStackEntry ->
             val arguments = backStackEntry.toRoute<ExerciseFinish>()
 
             ExerciseFinishScreen(
@@ -100,7 +131,12 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                 navController = navController,
             )
         }
-        composable<ExerciseEvaluationResult> { backStackEntry ->
+        composable<ExerciseEvaluationResult>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { backStackEntry ->
             val arguments = backStackEntry.toRoute<ExerciseEvaluationResult>()
 
             ExerciseEvaluationResult(

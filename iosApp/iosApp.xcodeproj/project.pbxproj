@@ -12,6 +12,7 @@
 		043826772CE3FD3100AAE7DB /* circular_motion_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 043826702CE3FBF900AAE7DB /* circular_motion_music.mp3 */; };
 		043826782CE3FD3100AAE7DB /* color_game_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 043826712CE3FBF900AAE7DB /* color_game_music.mp3 */; };
 		043826792CE3FD3100AAE7DB /* stretching_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 043826722CE3FBF900AAE7DB /* stretching_music.mp3 */; };
+		0438267B2CE465CE00AAE7DB /* logo_animation.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */; };
 		047C49C92CB3788A0020D659 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047C49C82CB3788A0020D659 /* GoogleService-Info.plist */; };
 		047C49CD2CB381960020D659 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 047C49CC2CB381960020D659 /* Launch Screen.storyboard */; };
 		04AB1B9F2CC1932D00206492 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 04AB1B9E2CC1932D00206492 /* GoogleSignIn */; };
@@ -27,12 +28,11 @@
 
 /* Begin PBXFileReference section */
 		041327242CD4BBB300CA60BC /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
-		0438266D2CE3FBF900AAE7DB /* blink_relaxation_exercise_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = blink_relaxation_exercise_1.mp4; sourceTree = "<group>"; };
-		0438266E2CE3FBF900AAE7DB /* blink_relaxation_exercise.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = blink_relaxation_exercise.mp4; sourceTree = "<group>"; };
 		0438266F2CE3FBF900AAE7DB /* blink_relaxation_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blink_relaxation_music.mp3; sourceTree = "<group>"; };
 		043826702CE3FBF900AAE7DB /* circular_motion_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = circular_motion_music.mp3; sourceTree = "<group>"; };
 		043826712CE3FBF900AAE7DB /* color_game_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = color_game_music.mp3; sourceTree = "<group>"; };
 		043826722CE3FBF900AAE7DB /* stretching_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = stretching_music.mp3; sourceTree = "<group>"; };
+		0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo_animation.mp4; sourceTree = "<group>"; };
 		047C49C82CB3788A0020D659 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		047C49CC2CB381960020D659 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -71,8 +71,7 @@
 		043826732CE3FBF900AAE7DB /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0438266D2CE3FBF900AAE7DB /* blink_relaxation_exercise_1.mp4 */,
-				0438266E2CE3FBF900AAE7DB /* blink_relaxation_exercise.mp4 */,
+				0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */,
 				0438266F2CE3FBF900AAE7DB /* blink_relaxation_music.mp3 */,
 				043826702CE3FBF900AAE7DB /* circular_motion_music.mp3 */,
 				043826712CE3FBF900AAE7DB /* color_game_music.mp3 */,
@@ -209,6 +208,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0438267B2CE465CE00AAE7DB /* logo_animation.mp4 in Resources */,
 				043826762CE3FD3100AAE7DB /* blink_relaxation_music.mp3 in Resources */,
 				043826772CE3FD3100AAE7DB /* circular_motion_music.mp3 in Resources */,
 				043826782CE3FD3100AAE7DB /* color_game_music.mp3 in Resources */,
