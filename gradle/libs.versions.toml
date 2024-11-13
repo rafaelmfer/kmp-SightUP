@@ -73,8 +73,9 @@ media3Exoplayer = "1.4.1"
 
 ## Android Wearable
 playServicesWearable = "18.2.0"
-composeBom = "2024.10.01"
-composeMaterial = "1.0.0-alpha28"
+composeBom = "2024.11.00"
+composeMaterial = "1.0.0-alpha29"
+composeNavigation = "1.4.0"
 composeFoundation = "1.4.0"
 wearToolingPreview = "1.0.0"
 
@@ -183,6 +184,7 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "composeNavigation" }
 wear-compose-material = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "composeMaterial" }
 wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
 wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
