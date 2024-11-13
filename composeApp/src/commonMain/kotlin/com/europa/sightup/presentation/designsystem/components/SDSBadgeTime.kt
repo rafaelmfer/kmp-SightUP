@@ -30,13 +30,28 @@ import sightupkmpapp.composeapp.generated.resources.clock
 @Preview
 @Composable
 fun SDSBadgeTime(
-    timeMinutes: Int = 1,
+    timeSeconds: Int = 1,
     modifier: Modifier = Modifier,
 ) {
+    val timeText = when {
+        timeSeconds >= 60 -> "${timeSeconds / 60} min"
+        else -> "$timeSeconds sec"
+    }
+
+    val contentDescriptionText = when {
+        timeSeconds >= 60 -> {
+            val minutes = timeSeconds / 60
+            if (minutes == 1) "$minutes minute" else "$minutes minutes"
+        }
+        else -> {
+            if (timeSeconds == 1) "$timeSeconds second" else "$timeSeconds seconds"
+        }
+    }
+
     Row(
         modifier = Modifier
             .semantics {
-                contentDescription = if (timeMinutes > 1) "$timeMinutes minutes" else "$timeMinutes minute"
+                contentDescription = contentDescriptionText
             }
             .clip(SightUPTheme.shapes.extraLarge)
             .border(
@@ -62,7 +77,7 @@ fun SDSBadgeTime(
         Spacer(Modifier.width(SightUPTheme.spacing.spacing_2xs))
         Text(
             modifier = Modifier,
-            text = "$timeMinutes min",
+            text = timeText,
             color = SightUPTheme.sightUPColors.text_primary,
             style = SightUPTheme.textStyles.caption
         )

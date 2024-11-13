@@ -49,8 +49,6 @@ fun SDSSwitchBoxContainer(
     onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isChecked2 by remember { mutableStateOf(isChecked) }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,7 +58,7 @@ fun SDSSwitchBoxContainer(
                 color = SightUPTheme.sightUPColors.border_info,
             )
             .clickable {
-                isChecked2 = !isChecked2
+                onCheckedChanged(!isChecked)  // Inverte o estado e notifica o pai
             }
             .background(SightUPTheme.sightUPColors.background_light)
             .padding(
@@ -72,12 +70,12 @@ fun SDSSwitchBoxContainer(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            if (isChecked2) "${stringResource(Res.string.disable)} $text" else "${stringResource(Res.string.enable)} $text"
+            if (isChecked) "${stringResource(Res.string.disable)} $text" else "${stringResource(Res.string.enable)} $text"
         )
         SDSSwitch(
-            isClickable = false,
-            isChecked = isChecked2,
-            onCheckedChanged = onCheckedChanged,
+            isClickable = true,
+            isChecked = isChecked,
+            onCheckedChanged = onCheckedChanged,  // Passa o callback diretamente
         )
     }
 }
@@ -92,6 +90,7 @@ fun SDSSwitch(
     val height = 20.dp
     val width = 36.dp
 
+    // Animação do offset do botão switch
     val offset by animateDpAsState(
         targetValue = if (isChecked) width - height else 0.dp,
         animationSpec = tween(durationMillis = 300)
@@ -106,7 +105,9 @@ fun SDSSwitch(
             .clickable(
                 enabled = isClickable,
                 role = Role.Switch,
-                onClick = { onCheckedChanged(!isChecked) }
+                onClick = {
+                    onCheckedChanged(!isChecked)  // Inverte o estado e notifica o pai
+                }
             )
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically

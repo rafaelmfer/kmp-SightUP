@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
@@ -57,6 +59,7 @@ fun CountdownScreen(
 ) {
     var isVisible by remember { mutableStateOf(true) }
     var isPlaying by remember { mutableStateOf(false) }
+    var hasFinished by remember { mutableStateOf(false) }
 
     val compositionResult by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
@@ -76,7 +79,8 @@ fun CountdownScreen(
     }
 
     LaunchedEffect(progress) {
-        if (progress >= 0.99f) {
+        if (progress >= 0.99f && !hasFinished) {
+            hasFinished = true
             onFinish()
         }
     }
@@ -89,6 +93,7 @@ fun CountdownScreen(
             SDSTopBar(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_sm)
                     .align(Alignment.TopCenter),
                 title = titleHeader ?: "",
                 iconLeftVisible = onLeftButtonHeaderClick != null,

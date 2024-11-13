@@ -1,5 +1,8 @@
 package com.europa.sightup.utils
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -50,3 +53,26 @@ fun NavHostController.navigateToRootScreen(rootScreen: Any) {
 fun NavController?.goBackToExerciseHome() {
     this?.popBackStack<ExerciseRoot>(inclusive = false)
 }
+
+
+
+// Transitions
+fun slideOutToRight() = slideOutHorizontally(
+    targetOffsetX = { fullWidth -> fullWidth },
+    animationSpec = tween(durationMillis = 500)
+)
+
+fun slideOutToLeft() = slideOutHorizontally(
+    targetOffsetX = { fullWidth -> -fullWidth },
+    animationSpec = tween(durationMillis = 500)
+)
+
+fun slideInFromLeft() = slideInHorizontally(
+    initialOffsetX = { fullWidth -> -fullWidth },
+    animationSpec = tween(durationMillis = 500)
+)
+
+fun slideInFromRight() = slideInHorizontally(
+    initialOffsetX = { fullWidth -> fullWidth },
+    animationSpec = tween(durationMillis = 500)
+)

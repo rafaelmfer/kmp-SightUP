@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +61,7 @@ fun ExerciseDetailsScreen(
     var joinInSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var loginSignUpSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
 
-    var isChecked by remember { mutableStateOf(true) }
+    var isMusicAudioGuidanceEnable by rememberSaveable { mutableStateOf(true) }
 
     val scrollState = rememberScrollState()
 
@@ -156,12 +157,15 @@ fun ExerciseDetailsScreen(
                             video = arguments?.video ?: "",
                             finishTitle = arguments?.finishTitle ?: "",
                             advice = arguments?.advice ?: "",
+                            musicAudioGuidanceEnabled = isMusicAudioGuidanceEnable
                         )
                     )
                 }
             },
-            isChecked = isChecked,
-            onCheckedChanged = { isChecked = it },
+            isChecked = isMusicAudioGuidanceEnable,
+            onCheckedChanged = { isChecked ->
+                isMusicAudioGuidanceEnable = isChecked
+            },
             modifier = Modifier
                 .padding(
                     start = SightUPTheme.spacing.spacing_side_margin,

@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import chaintech.videoplayer.model.PlayerConfig
 import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.video.VideoPlayerView
+import com.europa.sightup.platformspecific.getLocalFilePathFor
 import com.europa.sightup.presentation.AppNavHost
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -111,7 +112,7 @@ fun AfterSplashScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .aspectRatio(1f, true)
                     .fillMaxSize(),
-                url = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/logo_animation.mp4?alt=media&token=8403dfa9-ebe8-4423-b5a7-015a947fbf91",
+                url = getLocalFilePathFor("logo_animation.mp4"),
                 playerConfig = PlayerConfig(
                     isPauseResumeEnabled = false,
                     isSeekBarVisible = false,

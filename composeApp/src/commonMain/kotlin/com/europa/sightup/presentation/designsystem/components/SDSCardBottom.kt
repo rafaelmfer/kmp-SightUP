@@ -104,6 +104,7 @@ fun SDSCardExerciseBottom(
     onCheckedChanged: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,7 +131,7 @@ fun SDSCardExerciseBottom(
                         color = SightUPTheme.sightUPColors.text_primary,
                     )
                 }
-                SDSBadgeTime(timeMinutes = duration)
+                SDSBadgeTime(timeSeconds = duration)
             }
         } else {
             Text(
