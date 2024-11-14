@@ -106,7 +106,7 @@ data class Condition(
 )
 
 @Composable
-fun IconSort(myIcon: String): Painter {
+private fun IconSort(myIcon: String): Painter {
     return when (myIcon) {
         Moods.VERY_POOR.value -> painterResource(Moods.VERY_POOR.icon)
         Moods.POOR.value -> painterResource(Moods.POOR.icon)
@@ -118,7 +118,7 @@ fun IconSort(myIcon: String): Painter {
     }
 }
 
-fun GetIconDate(daysBefore: LocalDate, state: UIState<List<DailyCheckInResponse>>): String {
+private fun getIconDate(daysBefore: LocalDate, state: UIState<List<DailyCheckInResponse>>): String {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     return when (state) {
@@ -138,7 +138,6 @@ fun GetIconDate(daysBefore: LocalDate, state: UIState<List<DailyCheckInResponse>
 
         else -> "Any"
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -151,7 +150,6 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getAllDay()
-        println(viewModel.getAllDay())
     }
 
     val name = "Linda"
@@ -176,22 +174,11 @@ fun HomeScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(SightUPTheme.sightUPColors.background_light),
-            //.padding(bottom = SightUPTheme.spacing.spacing_md),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
     ) {
         GreetingWithIcons(name)
 
-        ShowCalendar(
-            listOf(
-                "2024-10-07" to "vPoor",
-                "2024-10-06" to "poor",
-                "2024-10-05" to "good",
-                "2024-10-04" to "excellent",
-                "2024-10-03" to "moderate",
-                "2024-10-02" to "good"
-            ),
-            state
-        )
+        ShowCalendar(state)
 
         NextTestCard(
             nameOfTest = "Vision Acuity Test",
@@ -300,7 +287,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCheckInResponse>>) {
+fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     when (today.month) {
@@ -328,19 +315,19 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
     ) {
         Text(
             month,
-            modifier = Modifier.clip(RoundedCornerShape(15.dp))
+            modifier = Modifier
+                .clip(SightUPTheme.shapes.extraLarge)
                 .background(SightUPTheme.sightUPColors.background_activate)
                 .padding(horizontal = 8.dp, vertical = 6.dp),
             style = SightUPTheme.textStyles.footnote
         )
 
-        Spacer( Modifier.height(4.dp))
+        Spacer(Modifier.height(SightUPTheme.sizes.size_4))
 
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.spacedBy(16.dp)
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val dayAfter = today.plus(DatePeriod(days = 1))
@@ -350,13 +337,13 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
 
                 Column(
                     modifier = Modifier
-                        .width(40.dp),
+                        .width(SightUPTheme.sizes.size_40),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Column(
                         modifier = Modifier
-                            .width(40.dp)
-                            .clip(RoundedCornerShape(10.dp))
+                            .width(SightUPTheme.sizes.size_40)
+                            .clip(SightUPTheme.shapes.small)
                             .background(Color.Transparent)
                             .padding(vertical = 10.dp)
                     ) {
@@ -368,7 +355,7 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                             color = Color.Black,
                             style = SightUPTheme.textStyles.caption,
                         )
-                        Spacer(Modifier.height(6.dp))
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_6))
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -378,25 +365,25 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                             style = SightUPTheme.textStyles.body2,
                         )
                     }
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_4))
                     Image(
-                        painter = IconSort(GetIconDate(daysBefore, state)),
+                        painter = IconSort(getIconDate(daysBefore, state)),
                         contentDescription = "description",
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
-                            .size(32.dp)
+                            .size(SightUPTheme.sizes.size_32)
                     )
                 }
             }
 
             Column(
                 modifier = Modifier
-                    .width(40.dp),
+                    .width(SightUPTheme.sizes.size_40),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
                     modifier = Modifier
-                        .width(40.dp)
+                        .width(SightUPTheme.sizes.size_40)
                         .clip(RoundedCornerShape(10.dp))
                         .background(SightUPTheme.sightUPColors.background_button)
                         .padding(vertical = 10.dp)
@@ -410,7 +397,7 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                         fontWeight = SightUPTheme.fontWeight.fontWeight_regular,
                         style = SightUPTheme.textStyles.caption,
                     )
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_6))
                     Text(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -419,36 +406,36 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         style = SightUPTheme.textStyles.body2,
-                        )
+                    )
                 }
 
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(SightUPTheme.sizes.size_4))
 
                 Image(
-                    painter = IconSort(GetIconDate(today, state)),
+                    painter = IconSort(getIconDate(today, state)),
                     contentDescription = "description",
-                    modifier = if (GetIconDate(today, state) == "Add")
+                    modifier = if (getIconDate(today, state) == "Add")
                         Modifier
                             .padding(horizontal = 4.dp)
                             .padding(8.dp)
                             .size(16.dp)
                     else Modifier
                         .padding(horizontal = 4.dp)
-                        .size(32.dp)
+                        .size(SightUPTheme.sizes.size_32)
                 )
             }
 
             Column(
                 modifier = Modifier
-                    .width(40.dp),
+                    .width(SightUPTheme.sizes.size_40),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
-                        .width(40.dp)
+                        .width(SightUPTheme.sizes.size_40)
                         .background(Color.Transparent)
-                        .padding( vertical = 10.dp)
+                        .padding(vertical = 10.dp)
                 ) {
                     Text(
                         modifier = Modifier
@@ -458,7 +445,7 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                         color = Color.Black,
                         style = SightUPTheme.textStyles.caption,
                     )
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_6))
                     Text(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -469,7 +456,7 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                     )
                 }
 
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(SightUPTheme.sizes.size_4))
 
                 Icon(
                     painter = painterResource(Res.drawable.good),
@@ -477,11 +464,11 @@ fun ShowCalendar(myList: List<Pair<String, String>>, state: UIState<List<DailyCh
                     contentDescription = "teste",
                     modifier = Modifier
                         .padding(horizontal = 4.dp)
-                        .size(32.dp)
+                        .size(SightUPTheme.sizes.size_32)
                 )
             }
         }
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(SightUPTheme.sizes.size_24))
     }
 }
 

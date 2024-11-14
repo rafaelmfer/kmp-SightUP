@@ -8,7 +8,6 @@ import com.europa.sightup.data.remote.request.prescription.AddPrescriptionReques
 import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
 import com.europa.sightup.data.remote.response.AddPrescriptionResponse
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
-import com.europa.sightup.data.remote.response.DailyExerciseInfo
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
@@ -42,7 +41,7 @@ interface SightUpApiService {
         @Body request: LoginWithProviderRequest,
     ): LoginResponse
 
-    @GET("api/user/{user}")
+    @GET("api/user/info/{user}")
     suspend fun getUser(
         @Path("user") user: String
     ): UserResponse
