@@ -45,6 +45,7 @@ import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.goBackToExerciseHome
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.add
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.evaluate_exercise_good
 import sightupkmpapp.composeapp.generated.resources.evaluate_exercise_neutral
@@ -77,6 +78,8 @@ fun ExerciseEvaluationResult(
 
         Moods.MODERATE -> Res.drawable.evaluate_exercise_neutral
 
+        Moods.ADD -> Res.drawable.add
+
         Moods.POOR,
         Moods.VERY_POOR,
             -> Res.drawable.evaluate_exercise_tired
@@ -88,16 +91,21 @@ fun ExerciseEvaluationResult(
 
         Moods.MODERATE -> "Keep up the great work!"
 
+        Moods.ADD -> "Add new Icon"
+
         Moods.POOR,
         Moods.VERY_POOR,
             -> "We’re sorry to know your eyes are still tired."
     }
+
     val subtitle = when (mood) {
         Moods.VERY_GOOD,
         Moods.GOOD,
             -> "We'll add this to your routine, but feel free to adjust it as you prefer."
 
         Moods.MODERATE -> "We believe that after a few more exercises, you'll really notice the difference, and your eyes will feel much better!"
+
+        Moods.ADD -> "Adding new Icon"
 
         Moods.POOR,
         Moods.VERY_POOR,

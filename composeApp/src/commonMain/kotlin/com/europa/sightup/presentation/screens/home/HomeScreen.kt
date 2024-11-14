@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.europa.sightup.data.remote.response.DailyCheckInResponse
 import com.europa.sightup.data.remote.response.assessment.DailyCheckInfoResponse
 import com.europa.sightup.presentation.designsystem.components.ExpandableItem
 import com.europa.sightup.presentation.designsystem.components.ExpandableListItem
@@ -68,6 +70,7 @@ import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.SightUPSpacing
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.fontWeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.Moods
 import com.europa.sightup.utils.ONE_FLOAT
@@ -75,6 +78,7 @@ import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.formatTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
@@ -90,14 +94,11 @@ import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.arrow_right
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.edit
-import sightupkmpapp.composeapp.generated.resources.excelent
 import sightupkmpapp.composeapp.generated.resources.good
+import sightupkmpapp.composeapp.generated.resources.gray_nothing
 import sightupkmpapp.composeapp.generated.resources.information
-import sightupkmpapp.composeapp.generated.resources.moderate
-import sightupkmpapp.composeapp.generated.resources.poor
 import sightupkmpapp.composeapp.generated.resources.schedule
 import sightupkmpapp.composeapp.generated.resources.today
-import sightupkmpapp.composeapp.generated.resources.very_poor
 
 data class Condition(
     val title: String,
@@ -105,14 +106,37 @@ data class Condition(
 )
 
 @Composable
-fun IconSort(myIcon: String): Painter {
+private fun IconSort(myIcon: String): Painter {
     return when (myIcon) {
-        "vPoor" -> painterResource(Res.drawable.very_poor)
-        "poor" -> painterResource(Res.drawable.poor)
-        "good" -> painterResource(Res.drawable.good)
-        "excellent" -> painterResource(Res.drawable.excelent)
-        "moderate" -> painterResource(Res.drawable.moderate)
-        else -> painterResource(Res.drawable.good)
+        Moods.VERY_POOR.value -> painterResource(Moods.VERY_POOR.icon)
+        Moods.POOR.value -> painterResource(Moods.POOR.icon)
+        Moods.MODERATE.value -> painterResource(Moods.MODERATE.icon)
+        Moods.GOOD.value -> painterResource(Moods.GOOD.icon)
+        Moods.VERY_GOOD.value -> painterResource(Moods.VERY_GOOD.icon)
+        Moods.ADD.value -> painterResource(Moods.ADD.icon)
+        else -> painterResource(Res.drawable.gray_nothing)
+    }
+}
+
+private fun getIconDate(daysBefore: LocalDate, state: UIState<List<DailyCheckInResponse>>): String {
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+    return when (state) {
+        is UIState.Success -> {
+            val list = state.data
+
+            val matchedItem = list.firstOrNull { item ->
+                daysBefore.toString() == item.dailyCheckDate
+            }
+
+            if (today == daysBefore) {
+                matchedItem?.dailyCheckInfo?.visionStatus ?: "Add"
+            } else {
+                matchedItem?.dailyCheckInfo?.visionStatus ?: "Any"
+            }
+        }
+
+        else -> "Any"
     }
 }
 
@@ -121,6 +145,13 @@ fun IconSort(myIcon: String): Painter {
 fun HomeScreen(
     navController: NavController,
 ) {
+    val viewModel = koinViewModel<HomeViewModel>()
+    val state by viewModel.dailyCheckGet.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getAllDay()
+    }
+
     val name = "Linda"
 
     val scope = rememberCoroutineScope()
@@ -132,7 +163,6 @@ fun HomeScreen(
         confirmValueChange = { false },
     )
 
-    val viewModel = koinViewModel<DailyCheckViewModel>()
     val dailyCheckState by viewModel.dailyCheck.collectAsStateWithLifecycle()
 
     var dailyCheckResult by remember { mutableStateOf<DailyCheckInfoResponse?>(null) }
@@ -143,22 +173,12 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(SightUPTheme.sightUPColors.background_light)
-            .padding(bottom = SightUPTheme.spacing.spacing_md),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+            .background(SightUPTheme.sightUPColors.background_light),
+        verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
     ) {
         GreetingWithIcons(name)
 
-        ShowCalendar(
-            listOf(
-                "2024-10-07" to "vPoor",
-                "2024-10-06" to "poor",
-                "2024-10-05" to "good",
-                "2024-10-04" to "excellent",
-                "2024-10-03" to "moderate",
-                "2024-10-02" to "good"
-            )
-        )
+        ShowCalendar(state)
 
         NextTestCard(
             nameOfTest = "Vision Acuity Test",
@@ -267,7 +287,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun ShowCalendar(myList: List<Pair<String, String>>) {
+fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     when (today.month) {
@@ -289,120 +309,166 @@ fun ShowCalendar(myList: List<Pair<String, String>>) {
     val month = today.month.toString().substring(0, 1).uppercase() + today.month.toString().substring(1, 3).lowercase()
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(SightUPTheme.spacing.spacing_side_margin)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         Text(
             month,
-            modifier = Modifier.clip(RoundedCornerShape(15.dp))
+            modifier = Modifier
+                .clip(SightUPTheme.shapes.extraLarge)
                 .background(SightUPTheme.sightUPColors.background_activate)
-                .padding(horizontal = 40.dp, vertical = 3.dp),
+                .padding(horizontal = 8.dp, vertical = 6.dp),
             style = SightUPTheme.textStyles.footnote
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(Modifier.height(SightUPTheme.sizes.size_4))
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val dayAfter = today.plus(DatePeriod(days = 1))
+
             for (i in 5 downTo 1) {
                 val daysBefore = today.minus(DatePeriod(days = i))
+
                 Column(
-                    modifier = Modifier.weight(1f).padding(vertical = 10.dp),
+                    modifier = Modifier
+                        .width(SightUPTheme.sizes.size_40),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color.Transparent)
-                            .padding(10.dp)
+                        modifier = Modifier
+                            .width(SightUPTheme.sizes.size_40)
+                            .clip(SightUPTheme.shapes.small)
+                            .background(Color.Transparent)
+                            .padding(vertical = 10.dp)
                     ) {
                         Text(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth(),
                             text = daysBefore.dayOfWeek.toString().substring(0, 1),
                             textAlign = TextAlign.Center,
                             color = Color.Black,
+                            style = SightUPTheme.textStyles.caption,
                         )
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_6))
                         Text(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth(),
                             text = daysBefore.dayOfMonth.toString(),
                             textAlign = TextAlign.Center,
                             color = Color.Black,
+                            style = SightUPTheme.textStyles.body2,
                         )
                     }
-
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_4))
                     Image(
-                        painter = IconSort(myList[i].second),
+                        painter = IconSort(getIconDate(daysBefore, state)),
                         contentDescription = "description",
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .size(SightUPTheme.sizes.size_32)
                     )
                 }
             }
 
             Column(
-                modifier = Modifier.weight(1f).padding(vertical = 10.dp),
+                modifier = Modifier
+                    .width(SightUPTheme.sizes.size_40),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
-                        .background(SightUPTheme.sightUPColors.background_button).padding(10.dp)
+                    modifier = Modifier
+                        .width(SightUPTheme.sizes.size_40)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(SightUPTheme.sightUPColors.background_button)
+                        .padding(vertical = 10.dp)
                 ) {
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         text = today.dayOfWeek.toString().substring(0, 1),
                         textAlign = TextAlign.Center,
                         color = Color.White,
-
-                        )
+                        fontWeight = SightUPTheme.fontWeight.fontWeight_regular,
+                        style = SightUPTheme.textStyles.caption,
+                    )
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_6))
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         text = today.dayOfMonth.toString(),
+                        fontWeight = SightUPTheme.fontWeight.fontWeight_regular,
                         textAlign = TextAlign.Center,
                         color = Color.White,
+                        style = SightUPTheme.textStyles.body2,
                     )
                 }
 
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(SightUPTheme.sizes.size_4))
 
                 Image(
-                    painter = IconSort(myList[0].second),
+                    painter = IconSort(getIconDate(today, state)),
                     contentDescription = "description",
-                    modifier = Modifier.size(32.dp)
+                    modifier = if (getIconDate(today, state) == "Add")
+                        Modifier
+                            .padding(horizontal = 4.dp)
+                            .padding(8.dp)
+                            .size(16.dp)
+                    else Modifier
+                        .padding(horizontal = 4.dp)
+                        .size(SightUPTheme.sizes.size_32)
                 )
             }
 
             Column(
-                modifier = Modifier.weight(1f).padding(vertical = 10.dp),
+                modifier = Modifier
+                    .width(SightUPTheme.sizes.size_40),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color.Transparent)
-                        .padding(10.dp)
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .width(SightUPTheme.sizes.size_40)
+                        .background(Color.Transparent)
+                        .padding(vertical = 10.dp)
                 ) {
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         text = dayAfter.dayOfWeek.toString().substring(0, 1),
                         textAlign = TextAlign.Center,
                         color = Color.Black,
-
-                        )
+                        style = SightUPTheme.textStyles.caption,
+                    )
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_6))
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         text = dayAfter.dayOfMonth.toString(),
                         textAlign = TextAlign.Center,
                         color = Color.Black,
+                        style = SightUPTheme.textStyles.body2,
                     )
                 }
 
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(SightUPTheme.sizes.size_4))
 
                 Icon(
                     painter = painterResource(Res.drawable.good),
                     tint = Color.Transparent,
                     contentDescription = "teste",
                     modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .size(SightUPTheme.sizes.size_32)
                 )
             }
         }
+        Spacer(Modifier.height(SightUPTheme.sizes.size_24))
     }
 }
 
@@ -411,7 +477,7 @@ private fun GreetingWithIcons(name: String) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(SightUPTheme.spacing.spacing_side_margin)
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         val (greetingText, todayIcon, calendarIcon) = createRefs()
 

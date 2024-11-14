@@ -2,6 +2,7 @@ package com.europa.sightup.utils
 
 import org.jetbrains.compose.resources.DrawableResource
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.add
 import sightupkmpapp.composeapp.generated.resources.excelent
 import sightupkmpapp.composeapp.generated.resources.good
 import sightupkmpapp.composeapp.generated.resources.moderate
@@ -13,7 +14,9 @@ enum class Moods(val value: String, val icon: DrawableResource) {
     GOOD(value = "Good", icon = Res.drawable.good),
     MODERATE(value = "Moderate", icon = Res.drawable.moderate),
     POOR(value = "Poor", icon = Res.drawable.poor),
+    ADD(value = "Add", icon = Res.drawable.add),
     VERY_POOR(value = "Very Poor", icon = Res.drawable.very_poor);
+
 
     companion object {
         fun fromString(value: String): Moods {
