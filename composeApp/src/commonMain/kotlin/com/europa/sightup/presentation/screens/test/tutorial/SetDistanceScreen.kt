@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.europa.sightup.presentation.designsystem.components.DistanceMessageCard
-import com.europa.sightup.presentation.designsystem.components.SwitchAudio
 import com.europa.sightup.presentation.screens.test.DistanceToCamera
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -105,32 +102,23 @@ fun SetDistanceScreen(
 
                         if (underRange) {
                             val distanceText = "${distance.toInt()} cm \n Step back further"
-                            DistanceMessageCard(text = distanceText,
+                            DistanceMessageCard(
+                                text = distanceText,
                                 backgroundColor = SightUPTheme.sightUPColors.background_error,
-                                textColor = SightUPTheme.sightUPColors.error_300)
+                                textColor = SightUPTheme.sightUPColors.error_300
+                            )
                         } else if (perfectRange) {
                             DistanceMessageCard(text = "${distance.toInt()} cm \n Perfect distance!")
                         } else if (overRange) {
                             val distanceText = "${distance.toInt()} cm \n Move closer"
-                            DistanceMessageCard(text = distanceText,
+                            DistanceMessageCard(
+                                text = distanceText,
                                 backgroundColor = SightUPTheme.sightUPColors.background_error,
-                                textColor = SightUPTheme.sightUPColors.error_300)
+                                textColor = SightUPTheme.sightUPColors.error_300
+                            )
                         }
                     }
-
                     MiddleCrux()
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-                            .align(Alignment.BottomCenter),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Spacer(modifier = Modifier.width(16.dp).fillMaxWidth(1f))
-                        SwitchAudio()
-                    }
                 }
                 BottomBlackBar()
             }

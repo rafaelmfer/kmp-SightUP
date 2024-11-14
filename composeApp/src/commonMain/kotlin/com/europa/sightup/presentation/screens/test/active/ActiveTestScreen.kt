@@ -1,11 +1,10 @@
 package com.europa.sightup.presentation.screens.test.active
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -60,6 +59,10 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.slideInFromLeft
+import com.europa.sightup.utils.slideInFromRight
+import com.europa.sightup.utils.slideOutToLeft
+import com.europa.sightup.utils.slideOutToRight
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -137,9 +140,9 @@ fun ActiveTestScreen(
                 iconRightVisible = true,
                 onRightButtonClick = {
                     voiceRecognition?.stopListening()
-                    navController.navigate(TestScreens.TestRoot)
+                    navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
                 },
-                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs)
             )
         },
         bottomBar = {
@@ -159,20 +162,33 @@ fun ActiveTestScreen(
                 }
             }
         },
+
         content = { paddingValues ->
-            if (!testStarted) {
-                CountdownBeforeTest(onTestStart = { testStarted = true })
-            } else {
-                TestContent(
-                    test = test,
-                    currentMode = currentMode,
-                    navController = navController,
-                    perfectRange = perfectRange,
-                    distance = distance,
-                    viewModel = viewModel,
-                    voiceRecognition = voiceRecognition,
-                    modifier = Modifier.padding(paddingValues)
-                )
+            AnimatedContent(
+                targetState = testStarted,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        slideInFromRight() togetherWith slideOutToLeft()
+                    } else {
+                        slideInFromLeft() togetherWith slideOutToRight()
+                    }
+                },
+                modifier = Modifier.padding(paddingValues)
+            ) { targetState ->
+                if (!targetState) {
+                    CountdownBeforeTest(onTestStart = { testStarted = true })
+                } else {
+                    TestContent(
+                        test = test,
+                        currentMode = currentMode,
+                        navController = navController,
+                        perfectRange = perfectRange,
+                        distance = distance,
+                        viewModel = viewModel,
+                        voiceRecognition = voiceRecognition,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
     )
@@ -252,6 +268,7 @@ private fun TestContent(
                         test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
                             viewModel.setActiveTest(ActiveTest.VisualAcuity)
                         }
+
                         test.title.contains(VisionTestTypes.Astigmatism.title) -> {
                             viewModel.setActiveTest(ActiveTest.Astigmatism)
                         }
@@ -281,7 +298,6 @@ private fun TestContent(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun VisualAcuityChart(currentEFormat: EChartIcon) {
     Box(
@@ -293,8 +309,8 @@ private fun VisualAcuityChart(currentEFormat: EChartIcon) {
         AnimatedContent(
             targetState = currentEFormat,
             transitionSpec = {
-                fadeIn(animationSpec = tween(durationMillis = 900, delayMillis = 100)) with
-                    fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
+                fadeIn(animationSpec = tween(durationMillis = 900, delayMillis = 100)) togetherWith
+                        fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
             }
         ) { icon ->
             Icon(
@@ -400,6 +416,7 @@ private fun TestTypeContent(
                     }
                 }
             }
+
             TestModeEnum.Voice.displayName -> {
                 coroutineScope.launch {
                     controller.providePermission(Permission.RECORD_AUDIO)

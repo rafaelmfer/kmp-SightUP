@@ -19,31 +19,52 @@ import com.europa.sightup.presentation.screens.test.result.TestResultScreen
 import com.europa.sightup.presentation.screens.test.root.TestScreenWithState
 import com.europa.sightup.presentation.screens.test.tutorial.TutorialTestScreen
 import com.europa.sightup.utils.getObjectFromArgs
+import com.europa.sightup.utils.slideInFromLeft
+import com.europa.sightup.utils.slideInFromRight
+import com.europa.sightup.utils.slideOutToLeft
+import com.europa.sightup.utils.slideOutToRight
 
 fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
     navigation<TestInit>(startDestination = TestRoot) {
 
-        composable<TestRoot> {
+        composable<TestRoot>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             TestScreenWithState(navController = navController)
         }
 
         composable(
-            route = "$TestIndividual/{${TestIndividual().testResponse}}"
+            route = "$TestIndividual/{${TestIndividual().testResponse}}",
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
         ) { navBackStackEntry ->
             val testResponse = navBackStackEntry.getObjectFromArgs<TestResponse>(TestIndividual().testResponse)
             testResponse?.let { IndividualTestScreen(navController = navController, test = testResponse) }
         }
 
         composable(
-            route = "$TestTutorial/{${TestTutorial().testResponse}}"
+            route = "$TestTutorial/{${TestTutorial().testResponse}}",
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
         ) {
             val testResponse = it.getObjectFromArgs<TestResponse>(TestTutorial().testResponse)
             testResponse?.let { TutorialTestScreen(navController = navController, test = testResponse) }
         }
 
         composable(
-            route = "${TestActive}/{${TestActive().testResponse}}/{testMode}/{eyeTested}"
-        ) { it ->
+            route = "${TestActive}/{${TestActive().testResponse}}/{testMode}/{eyeTested}",
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             val testResponse = it.getObjectFromArgs<TestResponse>(TestActive().testResponse)
             val testMode = it.arguments?.getString("testMode") ?: TestModeEnum.Touch.displayName
             val eyeTested = it.arguments?.getString("eyeTested") ?: ""
@@ -57,7 +78,12 @@ fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
             }
         }
 
-        composable<TestResult> {
+        composable<TestResult>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             val testResult = it.toRoute<TestResult>()
 
             TestResultScreen(
@@ -69,6 +95,5 @@ fun NavGraphBuilder.testNavGraph(navController: NavHostController) {
                 navController = navController
             )
         }
-
     }
 }

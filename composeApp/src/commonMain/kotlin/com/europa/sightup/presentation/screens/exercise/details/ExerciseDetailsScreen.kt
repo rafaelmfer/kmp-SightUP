@@ -194,7 +194,7 @@ fun ExerciseDetailsScreen(
             loginSignUpSheetVisibility = it
         },
         onSuccessfulLogin = {
-            navController?.goBackToExerciseHome()
+            loginSignUpSheetVisibility = BottomSheetEnum.HIDE
         },
         navController = navController
     )

@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.screens.test.tutorial
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,35 +20,44 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
+import com.europa.sightup.platformspecific.getLocalFilePathFor
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchBoxContainer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepProgressBar
 import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
-import com.europa.sightup.presentation.designsystem.components.StepScreenWithImage
+import com.europa.sightup.presentation.designsystem.components.StepScreenWithVideo
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.navigate
+import com.europa.sightup.utils.slideInFromLeft
+import com.europa.sightup.utils.slideInFromRight
+import com.europa.sightup.utils.slideOutToLeft
+import com.europa.sightup.utils.slideOutToRight
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.left_eye
-import sightupkmpapp.composeapp.generated.resources.right_eye
+import sightupkmpapp.composeapp.generated.resources.test_distance_instruction
+import sightupkmpapp.composeapp.generated.resources.test_left_eye
 import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
+import sightupkmpapp.composeapp.generated.resources.test_right_eye
 
 @Composable
 fun TutorialTestScreen(
@@ -63,6 +73,9 @@ fun TutorialTestScreen(
     val numberOfSteps = 4
     val scrollState = rememberScrollState()
 
+    var isAudioPaused by rememberSaveable { mutableStateOf(false) }
+
+
     LaunchedEffect(currentStep) {
         scrollState.animateScrollTo(0)
     }
@@ -72,25 +85,26 @@ fun TutorialTestScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
     ) {
         Column {
             if (currentStep > 1) {
                 SDSTopBar(
+                    modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
                     title = test.title,
                     iconRight = Icons.Default.Close,
                     iconRightVisible = true,
-                    onRightButtonClick = { navController.navigate(TestScreens.TestRoot) },
+                    onRightButtonClick = { navController.popBackStack<TestScreens.TestRoot>(inclusive = false) },
                     iconLeftVisible = true,
                     onLeftButtonClick = { tutorialViewModel.goBackStep() },
                 )
             } else {
                 SDSTopBar(
+                    modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
                     title = test.title,
                     iconRight = Icons.Default.Close,
                     iconRightVisible = true,
                     onRightButtonClick = {
-                        navController.navigate(TestScreens.TestRoot)
+                        navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
                     },
                 )
             }
@@ -99,13 +113,15 @@ fun TutorialTestScreen(
                 numberOfSteps = numberOfSteps,
                 currentStep = currentStep,
                 modifier = Modifier
-                    .padding(vertical = SightUPTheme.spacing.spacing_lg),
+                    .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                    .padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_lg),
             )
         }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -117,29 +133,47 @@ fun TutorialTestScreen(
 
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
 
-            AnimatedContent(targetState = currentStep) { targetState ->
+            AnimatedContent(
+                targetState = currentStep,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        slideInFromRight() togetherWith slideOutToLeft()
+                    } else {
+                        slideInFromLeft() togetherWith slideOutToRight()
+                    }
+                }
+            ) { targetState ->
                 when (targetState) {
                     1 -> FirstStep(
                         selectedMode,
                         onModeSelected = {
                             tutorialViewModel.updateSelectedMode(it)
                         },
-                        onClick = { tutorialViewModel.advanceStep() })
+                        onClick = { tutorialViewModel.advanceStep() },
+                        isChecked = isAudioPaused,
+                        onCheckedChanged = { checked -> isAudioPaused = checked }
+                    )
 
                     2 -> SecondStep(
                         animation =
-                        if (test.title.contains("Astigmatism")) "files/distance_astigmatism.json"
-                        else "files/distance_visual_acuity.json",
-                        onClick = { tutorialViewModel.advanceStep() }
+                        if (test.title.contains(ActiveTest.Astigmatism.name)) ActiveTest.Astigmatism.distanceLottie
+                        else ActiveTest.VisualAcuity.distanceLottie,
+                        onClick = { tutorialViewModel.advanceStep() },
+                        isChecked = isAudioPaused,
+                        onCheckedChanged = { checked -> isAudioPaused = checked }
                     )
 
                     3 -> ThirdStep(
                         selectedMode = selectedMode,
                         test = test,
                         onClick = { tutorialViewModel.advanceStep() },
-                        animation =
-                        if (test.title.contains("Astigmatism")) selectedMode.astigmatismAnimation
-                        else selectedMode.visualAcuityAnimation
+                        isChecked = isAudioPaused,
+                        onCheckedChanged = { checked -> isAudioPaused = checked },
+                        video = when (selectedMode) {
+                            TestModeEnum.Touch -> test.videoMode.touch.replace("test_videos/", "test_videos%2F")
+                            TestModeEnum.Voice -> test.videoMode.voice.replace("test_videos/", "test_videos%2F")
+                            TestModeEnum.SmartWatch -> test.videoMode.smartwatch.replace("test_videos/", "test_videos%2F")
+                        }
                     )
 
                     4 -> FourthStep(
@@ -148,11 +182,13 @@ fun TutorialTestScreen(
                         test = test,
                         selectedMode = selectedMode,
                         eyeTested = eyeTested,
-                        animationPath =
-                        if (eyeTested == "right") Res.drawable.right_eye
-                        else Res.drawable.left_eye,
-                        instructionText = if (eyeTested == "right") "Start with your right eye. If you wear glasses, please take them off and cover your left eye."
-                        else "Now it's time to test your left eye. Please, cover your right eye."
+                        isChecked = isAudioPaused,
+                        onCheckedChanged = { checked -> isAudioPaused = checked },
+                        video =
+                        if (eyeTested == "right") test.videoEyes.right.replace("test_videos/", "test_videos%2F")
+                        else test.videoEyes.left.replace("test_videos/", "test_videos%2F"),
+                        instructionText = if (eyeTested == "right") stringResource(Res.string.test_right_eye)
+                        else stringResource(Res.string.test_left_eye)
                     )
                 }
             }
@@ -194,7 +230,7 @@ private fun FirstStep(
                     isSelected = selectedMode == mode,
                     onClick = { onModeSelected(mode) }
                 )
-                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
             }
         }
 
@@ -204,7 +240,19 @@ private fun FirstStep(
             isChecked = isChecked,
             onCheckedChanged = onCheckedChanged,
         )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        CMPAudioPlayer(
+            modifier = Modifier.height(0.dp),
+            url = getLocalFilePathFor("select_test_mode.m4a"),
+            isPause = !isChecked,
+            totalTime = { },
+            currentTime = { },
+            isSliding = false,
+            sliderTime = null,
+            isRepeat = true,
+            loadingState = { },
+            didEndAudio = { }
+        )
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
 
         SDSButton(
             text = "Next",
@@ -235,7 +283,7 @@ private fun SecondStep(
 
             StepScreenWithAnimation(
                 animationPath = animation,
-                instructionText = "Place yourself and your phone parallel and set the distance to 30 cm.",
+                instructionText = stringResource(Res.string.test_distance_instruction),
             )
 
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
@@ -244,7 +292,21 @@ private fun SecondStep(
                 isChecked = isChecked,
                 onCheckedChanged = onCheckedChanged,
             )
-            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+
+            CMPAudioPlayer(
+                modifier = Modifier.height(0.dp),
+                url = getLocalFilePathFor("test_distance.m4a"),
+                isPause = !isChecked,
+                totalTime = { },
+                currentTime = { },
+                isSliding = false,
+                sliderTime = null,
+                isRepeat = true,
+                loadingState = { },
+                didEndAudio = { }
+            )
+
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
 
             SDSButton(
                 text = "Set Distance",
@@ -265,7 +327,7 @@ private fun ThirdStep(
     onClick: () -> Unit,
     isChecked: Boolean = false,
     onCheckedChanged: (Boolean) -> Unit = {},
-    animation: String,
+    video: String,
 ) {
     val modeText = when (selectedMode) {
         TestModeEnum.Touch -> test.testMode.touch
@@ -277,8 +339,9 @@ private fun ThirdStep(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        StepScreenWithAnimation(
-            animationPath = animation,
+        StepScreenWithVideo(
+            videoPath = video,
+            muteVideo = !isChecked,
             instructionText = modeText,
         )
 
@@ -288,7 +351,7 @@ private fun ThirdStep(
             isChecked = isChecked,
             onCheckedChanged = onCheckedChanged,
         )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
 
         SDSButton(
             text = "Next",
@@ -308,10 +371,9 @@ private fun FourthStep(
     eyeTested: String,
     isChecked: Boolean = false,
     onCheckedChanged: (Boolean) -> Unit = {},
-    animationPath: DrawableResource,
+    video: String,
     instructionText: String,
 ) {
-
     val scope = rememberCoroutineScope()
 
     Column(
@@ -319,15 +381,11 @@ private fun FourthStep(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        StepScreenWithImage(
-            image = animationPath,
-            instructionText = instructionText,
+        StepScreenWithVideo(
+            videoPath = video,
+            muteVideo = !isChecked,
+            instructionText = instructionText
         )
-        // TODO: later change back to this
-//        StepScreenWithAnimation(
-//            animationPath = animationPath,
-//            instructionText = instructionText,
-//        )
 
         Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
 
@@ -337,7 +395,7 @@ private fun FourthStep(
             onCheckedChanged = onCheckedChanged,
         )
 
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
 
         SDSButton(
             text = "Start",

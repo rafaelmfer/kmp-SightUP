@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -52,13 +53,14 @@ fun SDSSwitchBoxContainer(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(SightUPTheme.shapes.small)
             .border(
                 width = SightUPBorder.Width.sm,
                 color = SightUPTheme.sightUPColors.border_info,
+                shape = SightUPTheme.shapes.small
             )
+            .clip(SightUPTheme.shapes.small)
             .clickable {
-                onCheckedChanged(!isChecked)  // Inverte o estado e notifica o pai
+                onCheckedChanged(!isChecked)
             }
             .background(SightUPTheme.sightUPColors.background_light)
             .padding(
@@ -70,12 +72,13 @@ fun SDSSwitchBoxContainer(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            if (isChecked) "${stringResource(Res.string.disable)} $text" else "${stringResource(Res.string.enable)} $text"
+            if (isChecked) "${stringResource(Res.string.disable)} $text" else "${stringResource(Res.string.enable)} $text",
+            style = SightUPTheme.textStyles.body2
         )
         SDSSwitch(
             isClickable = true,
             isChecked = isChecked,
-            onCheckedChanged = onCheckedChanged,  // Passa o callback diretamente
+            onCheckedChanged = onCheckedChanged,
         )
     }
 }
@@ -90,7 +93,6 @@ fun SDSSwitch(
     val height = 20.dp
     val width = 36.dp
 
-    // Animação do offset do botão switch
     val offset by animateDpAsState(
         targetValue = if (isChecked) width - height else 0.dp,
         animationSpec = tween(durationMillis = 300)
@@ -106,7 +108,7 @@ fun SDSSwitch(
                 enabled = isClickable,
                 role = Role.Switch,
                 onClick = {
-                    onCheckedChanged(!isChecked)  // Inverte o estado e notifica o pai
+                    onCheckedChanged(!isChecked)
                 }
             )
             .then(modifier),
@@ -163,7 +165,6 @@ fun SDSSwitchScreen() {
         )
     ) {
         var isChecked by remember { mutableStateOf(false) }
-
         var isChecked2 by remember { mutableStateOf(true) }
 
         Box(

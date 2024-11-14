@@ -20,11 +20,11 @@ import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 
 @Composable
-fun CardWithIcon(
+fun CardWithTestInstructions(
     text: String,
     icon: ImageVector? = null,
     iconDescription: String? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = Modifier

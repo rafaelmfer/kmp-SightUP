@@ -1,16 +1,11 @@
 package com.europa.sightup.presentation.designsystem.components
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,10 +18,10 @@ import com.europa.sightup.presentation.ui.theme.typography.textStyles
 @Composable
 fun SDSCardTestBottom(
     title: String = "Visual Acuity",
-    description: String = "Visual acuity refers to the clarity or sharpness of vision, which is measured by your ability to discern letters or details at a specific distance.",
+    description: String = " ",
     requirements: List<String> = listOf(
-        "• This test utilizes the camera",
-        "• Test can be done by holding your phone or from a distance."
+        "• ",
+        "• "
     ),
     buttonText: String = "Start",
     onClick: () -> Unit = {},
@@ -54,23 +49,17 @@ fun SDSCardTestBottom(
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         Text(
             text = "Test Overview",
-            style = SightUPTheme.textStyles.body2,
+            style = SightUPTheme.textStyles.body,
             color = SightUPTheme.sightUPColors.text_primary,
         )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
-        LazyColumn(
+        Column(
             verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_xs),
-            modifier = Modifier
-                .scrollable(
-                    enabled = false,
-                    state = rememberScrollState(),
-                    orientation = Orientation.Vertical,
-                ),
         ) {
-            items(requirements) { requirement ->
+            for (requirement in requirements) {
                 Text(
                     text = requirement,
-                    style = SightUPTheme.textStyles.caption,
+                    style = SightUPTheme.textStyles.body2.copy(lineHeight = SightUPLineHeight.default.lineHeight_2xs),
                     color = SightUPTheme.sightUPColors.text_primary,
                 )
             }
@@ -81,7 +70,7 @@ fun SDSCardTestBottom(
             isChecked = isChecked,
             onCheckedChanged = onCheckedChanged,
         )
-        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         SDSButton(
             text = buttonText,
             onClick = onClick,
@@ -104,7 +93,6 @@ fun SDSCardExerciseBottom(
     onCheckedChanged: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

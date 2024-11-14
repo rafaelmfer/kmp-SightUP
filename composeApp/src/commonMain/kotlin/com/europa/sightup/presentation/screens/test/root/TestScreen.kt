@@ -54,8 +54,7 @@ private fun TestScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(SightUPTheme.sightUPColors.background_light)
-                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
+                .background(SightUPTheme.sightUPColors.background_light),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -92,6 +91,7 @@ private fun TestScreen(
 @Composable
 private fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
     SDSTopBar(
+        modifier = modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
         title = "Vision Tests",
         iconRight = Res.drawable.guide_book,
         iconRightVisible = true,
@@ -99,7 +99,7 @@ private fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, n
 
     LazyColumn(
         modifier = Modifier
-            .padding(vertical = SightUPTheme.spacing.spacing_xs),
+            .padding(vertical = SightUPTheme.spacing.spacing_xs, horizontal = SightUPTheme.spacing.spacing_side_margin),
 
         ) {
         items(tests) { test ->
