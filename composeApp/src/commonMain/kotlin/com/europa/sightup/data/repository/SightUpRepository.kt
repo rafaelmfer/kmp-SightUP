@@ -12,6 +12,7 @@ import com.europa.sightup.data.remote.request.prescription.AddPrescriptionReques
 import com.europa.sightup.data.remote.request.visionHistory.ResultRequest
 import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
 import com.europa.sightup.data.remote.response.AddPrescriptionResponse
+import com.europa.sightup.data.remote.response.DailyCheckInResponse
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
@@ -49,6 +50,17 @@ class SightUpRepository(
     fun checkEmail(email: String): Flow<LoginEmailResponse> {
         return flow {
             val response = api.loginCheckEmail(email)
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getAllDay(): Flow<List<DailyCheckInResponse>> {
+        val userInfo = getUserInfo()
+
+        return flow {
+            val request = DailyCheckRequest("",email = userInfo?.email ?: "")
+            val response = api.getAllDay(request)
+
             emit(response)
         }.flowOn(Dispatchers.IO)
     }

@@ -7,6 +7,8 @@ import com.europa.sightup.data.remote.request.auth.LoginWithProviderRequest
 import com.europa.sightup.data.remote.request.prescription.AddPrescriptionRequest
 import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
 import com.europa.sightup.data.remote.response.AddPrescriptionResponse
+import com.europa.sightup.data.remote.response.DailyCheckInResponse
+import com.europa.sightup.data.remote.response.DailyExerciseInfo
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
@@ -78,4 +80,9 @@ interface SightUpApiService {
     suspend fun saveDailyCheck(
         @Body request: DailyCheckRequest,
     ): DailyCheckResponse
+
+    @POST("api/user/dailyCheckInfo")
+    suspend fun getAllDay(
+        @Body request: DailyCheckRequest
+    ): List<DailyCheckInResponse>
 }
