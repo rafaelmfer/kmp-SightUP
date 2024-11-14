@@ -85,6 +85,10 @@
     <!-- Test Screens -->
     <string name="test_mode_title">Select Mode</string>
     <string name="test_mode_subtitle">Choose the mode that suits you. Mode options will appear during the test and can be changed at any time.</string>
+    <string name="test_distance_instruction">Place yourself and your phone parallel and set the distance to 30 cm.</string>
+
+    <string name="test_right_eye">Let's start with right eye. Please cover your left eye. Take off your glasses if you are wearing.</string>
+    <string name="test_left_eye">Next is left eye. Please cover your right eye. Take off your glasses if you are wearing.</string>
 
     <!-- Account -->
     <string name="account">Account</string>

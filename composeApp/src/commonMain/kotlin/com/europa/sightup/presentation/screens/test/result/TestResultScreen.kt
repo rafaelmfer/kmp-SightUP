@@ -49,7 +49,6 @@ import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSCardTest
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
-import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.screens.test.active.EChart
@@ -103,7 +102,7 @@ fun TestResultScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.getTests()
-        delay(20000L)
+        delay(10000L)
         showLoadingAnimation = false
     }
 
@@ -111,7 +110,6 @@ fun TestResultScreen(
     LaunchedEffect(testListState) {
         if (testListState is UIState.Success) {
             val tests = (testListState as UIState.Success<List<TestResponse>>).data
-            println("Tests: $tests")
             visualAcuityTestContent = tests.find { it.title == VisionTestTypes.VisionAcuity.title }
             astigmatismTestContent = tests.find { it.title == VisionTestTypes.Astigmatism.title }
         }
@@ -153,9 +151,10 @@ fun TestResultScreen(
                 iconRightVisible = true,
                 onRightButtonClick = {
                     showToast("TODO: Warning message")
-                    navController.navigate(Home)
+                    navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
                 },
                 modifier = Modifier.background(SightUPTheme.sightUPColors.background_light)
+                    .padding(horizontal = SightUPTheme.spacing.spacing_xs)
             )
         },
         bottomBar = {
@@ -187,7 +186,7 @@ fun TestResultScreen(
                         .background(color = SightUPTheme.sightUPColors.background_light)
                         .padding(
                             horizontal = SightUPTheme.spacing.spacing_side_margin,
-                            vertical = SightUPTheme.spacing.spacing_md
+                            // vertical = SightUPTheme.spacing.spacing_md
                         )
                         .verticalScroll(scrollState)
                 ) {
@@ -225,8 +224,10 @@ fun TestResultScreen(
                                     test = it,
                                     navigateToTest = {
                                         navigateToAstigmatismTest()
-                                    }
+                                    },
+                                    modifier = Modifier.padding(bottom = SightUPTheme.spacing.spacing_md)
                                 )
+                                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
                             }
                         }
 
@@ -236,8 +237,9 @@ fun TestResultScreen(
                                     test = it,
                                     navigateToTest = {
                                         navigateToVisualAcuityTest()
-                                    }
+                                    },
                                 )
+                                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
                             }
                         }
                     }
@@ -257,6 +259,7 @@ private fun AstigmatismCardResults(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = SightUPTheme.spacing.spacing_md)
             .clip(SightUPTheme.shapes.large)
             .background(SightUPTheme.sightUPColors.background_default)
             .border(
@@ -386,6 +389,7 @@ private fun VisualAcuityCardResults(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = SightUPTheme.spacing.spacing_md)
             .clip(SightUPTheme.shapes.large)
             .background(SightUPTheme.sightUPColors.background_default)
             .border(
@@ -661,5 +665,5 @@ fun formatDate(date: LocalDate): String {
     val month = date.month.name.take(3)
     val day = date.dayOfMonth.toString().padStart(2, '0')
     val year = date.year.toString()
-    return "${month.toString().toLowerCase().capitalize()} $day, $year"
+    return "${month.lowercase().capitalize()} $day, $year"
 }

@@ -9,3 +9,16 @@ data class TestModeResponse(
     @SerialName("voice") val voice: String,
     @SerialName("smartwatch") val smartwatch: String
 )
+
+@Serializable
+data class VideoModeResponse(
+    @SerialName("touch") val touch: String,
+    @SerialName("voice") val voice: String,
+    @SerialName("smartwatch") val smartwatch: String
+)
+
+@Serializable
+data class VideoEyes(
+    @SerialName("left") val left: String,
+    @SerialName("right") val right: String
+)

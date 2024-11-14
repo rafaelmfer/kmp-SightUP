@@ -89,29 +89,21 @@ enum class TestModeEnum(
     val displayName: String,
     val description: String,
     val iconResource: DrawableResource,
-    val astigmatismAnimation: String,
-    val visualAcuityAnimation: String,
 ) {
     Touch(
         "Touch mode",
         "Use mobile screen",
         Res.drawable.touch_mode,
-        "files/touch_mode_astigmatism.json",
-        "files/touch_mode_visual_acuity.json"
     ),
     Voice(
         "Voice mode",
         "Use voice commands",
         Res.drawable.voice_mode,
-        "files/voice_mode_astigmatism.json",
-        "files/voice_mode_visual_acuity.json"
     ),
     SmartWatch(
         "Smartwatch mode",
         "Use smartwatch screen by connecting via Bluetooth. You need a pairing process.",
         Res.drawable.smartwatch_mode,
-        "files/smartwatch_mode_astigmatism.json",
-        "files/smartwatch_mode_visual_acuity.json"
     )
 }
 

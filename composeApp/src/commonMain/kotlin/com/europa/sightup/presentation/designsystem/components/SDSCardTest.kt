@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
@@ -119,12 +118,13 @@ fun SDSCardTest(
             style = SightUPTheme.textStyles.body2,
             lineHeight = SightUPTheme.lineHeight.lineHeight_2xs,
             fontWeight = SightUPTheme.fontWeight.fontWeight_bold,
-            color = SightUPTheme.sightUPColors.primary_500,
+            color = SightUPTheme.sightUPColors.primary_700,
         )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
 
         test.checkList.forEach { item ->
             Row(
+                modifier = Modifier.padding(bottom = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -137,7 +137,7 @@ fun SDSCardTest(
                 Text(
                     text = item,
                     style = SightUPTheme.textStyles.caption,
-                    lineHeight = 20.sp
+                    lineHeight = SightUPTheme.lineHeight.lineHeight_3xl,
                 )
             }
         }
