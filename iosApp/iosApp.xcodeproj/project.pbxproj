@@ -13,6 +13,10 @@
 		043826782CE3FD3100AAE7DB /* color_game_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 043826712CE3FBF900AAE7DB /* color_game_music.mp3 */; };
 		043826792CE3FD3100AAE7DB /* stretching_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 043826722CE3FBF900AAE7DB /* stretching_music.mp3 */; };
 		0438267B2CE465CE00AAE7DB /* logo_animation.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */; };
+		043826802CE5B2BB00AAE7DB /* select_test_mode.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0438267C2CE5B2BA00AAE7DB /* select_test_mode.m4a */; };
+		043826812CE5B2BB00AAE7DB /* astigmatism_start_screen.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0438267D2CE5B2BA00AAE7DB /* astigmatism_start_screen.m4a */; };
+		043826822CE5B2BB00AAE7DB /* visual_acuity_start_screen.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0438267E2CE5B2BA00AAE7DB /* visual_acuity_start_screen.m4a */; };
+		043826832CE5B2BB00AAE7DB /* test_distance.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0438267F2CE5B2BB00AAE7DB /* test_distance.m4a */; };
 		047C49C92CB3788A0020D659 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047C49C82CB3788A0020D659 /* GoogleService-Info.plist */; };
 		047C49CD2CB381960020D659 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 047C49CC2CB381960020D659 /* Launch Screen.storyboard */; };
 		04AB1B9F2CC1932D00206492 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 04AB1B9E2CC1932D00206492 /* GoogleSignIn */; };
@@ -33,6 +37,10 @@
 		043826712CE3FBF900AAE7DB /* color_game_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = color_game_music.mp3; sourceTree = "<group>"; };
 		043826722CE3FBF900AAE7DB /* stretching_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = stretching_music.mp3; sourceTree = "<group>"; };
 		0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo_animation.mp4; sourceTree = "<group>"; };
+		0438267C2CE5B2BA00AAE7DB /* select_test_mode.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = select_test_mode.m4a; sourceTree = "<group>"; };
+		0438267D2CE5B2BA00AAE7DB /* astigmatism_start_screen.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = astigmatism_start_screen.m4a; sourceTree = "<group>"; };
+		0438267E2CE5B2BA00AAE7DB /* visual_acuity_start_screen.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = visual_acuity_start_screen.m4a; sourceTree = "<group>"; };
+		0438267F2CE5B2BB00AAE7DB /* test_distance.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_distance.m4a; sourceTree = "<group>"; };
 		047C49C82CB3788A0020D659 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		047C49CC2CB381960020D659 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -71,6 +79,10 @@
 		043826732CE3FBF900AAE7DB /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				0438267D2CE5B2BA00AAE7DB /* astigmatism_start_screen.m4a */,
+				0438267C2CE5B2BA00AAE7DB /* select_test_mode.m4a */,
+				0438267F2CE5B2BB00AAE7DB /* test_distance.m4a */,
+				0438267E2CE5B2BA00AAE7DB /* visual_acuity_start_screen.m4a */,
 				0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */,
 				0438266F2CE3FBF900AAE7DB /* blink_relaxation_music.mp3 */,
 				043826702CE3FBF900AAE7DB /* circular_motion_music.mp3 */,
@@ -208,6 +220,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				043826802CE5B2BB00AAE7DB /* select_test_mode.m4a in Resources */,
+				043826812CE5B2BB00AAE7DB /* astigmatism_start_screen.m4a in Resources */,
+				043826822CE5B2BB00AAE7DB /* visual_acuity_start_screen.m4a in Resources */,
+				043826832CE5B2BB00AAE7DB /* test_distance.m4a in Resources */,
 				0438267B2CE465CE00AAE7DB /* logo_animation.mp4 in Resources */,
 				043826762CE3FD3100AAE7DB /* blink_relaxation_music.mp3 in Resources */,
 				043826772CE3FD3100AAE7DB /* circular_motion_music.mp3 in Resources */,
