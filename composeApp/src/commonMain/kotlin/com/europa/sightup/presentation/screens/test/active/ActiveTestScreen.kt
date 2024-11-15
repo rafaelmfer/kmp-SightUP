@@ -310,7 +310,7 @@ private fun VisualAcuityChart(currentEFormat: EChartIcon) {
             targetState = currentEFormat,
             transitionSpec = {
                 fadeIn(animationSpec = tween(durationMillis = 900, delayMillis = 100)) togetherWith
-                        fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
+                    fadeOut(animationSpec = tween(durationMillis = 850, delayMillis = 0))
             }
         ) { icon ->
             Icon(
@@ -523,6 +523,7 @@ private fun TestTypeContent(
                 rightButtonOnClickResult = { onClickChangeUI(EChart.RIGHT) },
                 downButtonOnClickResult = { onClickChangeUI(EChart.DOWN) },
                 modifier = Modifier.fillMaxWidth()
+                    .padding(8.dp)
             )
         }
 

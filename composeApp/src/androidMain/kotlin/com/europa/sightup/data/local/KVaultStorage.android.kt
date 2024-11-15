@@ -8,5 +8,5 @@ actual fun getKVaultStorage(context: Any?): KVaultStorage {
 }
 
 class SharedPreferencesKVault(private val context: Context) : KVaultStorage {
-    override val kVault: KVault get() = KVault(context = context, "SightUPEncrypt")
+    override val kVault: KVault get() = KVault(context = context, "SightUPEncrypted00")
 }
