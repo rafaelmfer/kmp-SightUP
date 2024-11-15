@@ -86,7 +86,7 @@ fun AfterSplashScreen(navController: NavHostController) {
     val fadeOutDuration = 500
 
     LaunchedEffect(Unit) {
-        delay(7900)
+        delay(7800)
         isVisible = true
 
         delay(fadeOutDuration.toLong())

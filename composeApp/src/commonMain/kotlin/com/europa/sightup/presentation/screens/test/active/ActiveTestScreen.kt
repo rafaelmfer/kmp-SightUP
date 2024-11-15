@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -74,6 +72,8 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.close
 
 @Composable
 fun ActiveTestScreen(
@@ -136,7 +136,7 @@ fun ActiveTestScreen(
         topBar = {
             SDSTopBar(
                 title = "",
-                iconRight = Icons.Default.Close,
+                iconRight = painterResource(Res.drawable.close),
                 iconRightVisible = true,
                 onRightButtonClick = {
                     voiceRecognition?.stopListening()

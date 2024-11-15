@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInParent
@@ -89,6 +91,7 @@ fun SDSControlE(
     rightButtonOnClickResult: () -> Unit = {},
     downButtonOnClickResult: () -> Unit = {},
     modifier: Modifier = Modifier,
+    enable: Boolean = false,
 ) {
     val isClickedList = remember { mutableStateListOf(false, false, false, false) }
 
@@ -179,11 +182,10 @@ fun SDSControlE(
                         y = boxBounds.top + boxBounds.height / 2
                     )
                 }
-            // Rotate the image with the gesture as well
-//                .graphicsLayer(
-//                    rotationZ = rotationState,
-//                    transformOrigin = TransformOrigin(0.5f, 0.5f)
-//                )
+                .graphicsLayer(
+                    rotationZ = rotationState,
+                    transformOrigin = TransformOrigin(0.5f, 0.5f)
+                )
         )
 
         // Rotating circle

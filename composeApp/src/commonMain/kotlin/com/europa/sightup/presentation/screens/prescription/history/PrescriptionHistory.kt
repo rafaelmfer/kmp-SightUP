@@ -80,7 +80,6 @@ fun PrescriptionHistory(
             .fillMaxSize()
             .background(SightUPTheme.sightUPColors.background_light)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         SDSTopBar(
             title = "Vision History",
@@ -90,6 +89,7 @@ fun PrescriptionHistory(
             },
             iconRightVisible = false,
             modifier = Modifier
+                .padding(horizontal = SightUPTheme.spacing.spacing_xs)
         )
 
         FilterChips(
@@ -161,6 +161,7 @@ private fun HistoryList(history: List<HistoryTestResponse>) {
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         history.forEachIndexed { index, test ->
             ExpandableHistoryItem(

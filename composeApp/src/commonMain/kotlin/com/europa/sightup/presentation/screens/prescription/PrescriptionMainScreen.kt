@@ -42,6 +42,7 @@ import com.europa.sightup.presentation.designsystem.components.data.BottomSheetE
 import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens
+import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -94,7 +95,12 @@ fun PrescriptionScreen(
         )
 
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
-        NextVisionTest()
+        NextVisionTest(
+            onClickOutlinedButton = {},
+            onClickPrimaryButton = {
+                navController?.navigate(TestScreens.TestInit)
+            },
+        )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
 
         VisionPrescription(
