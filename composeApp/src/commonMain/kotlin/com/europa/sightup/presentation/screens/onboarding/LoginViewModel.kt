@@ -22,6 +22,7 @@ sealed interface LoginUIState {
     data object LoginSuccess : LoginUIState
 
     data class Error(val errorMessage: String) : LoginUIState
+    data class PasswordError(val errorMessage: String) : LoginUIState
 }
 
 class LoginViewModel(private val repository: SightUpRepository) : ViewModel() {
@@ -57,10 +58,14 @@ class LoginViewModel(private val repository: SightUpRepository) : ViewModel() {
                 _state.update { LoginUIState.Loading }
             }
             .onEach { response: LoginResponse ->
-                _state.update { LoginUIState.LoginSuccess }
+                if (response.message.isNullOrBlank()) {
+                    _state.update { LoginUIState.LoginSuccess }
+                } else {
+                    _state.update { LoginUIState.PasswordError(response.message) }
+                }
             }
             .catch { error ->
-                _state.update { LoginUIState.Error(error.message ?: UNKNOWN_ERROR) }
+                _state.update { LoginUIState.PasswordError(error.message ?: UNKNOWN_ERROR) }
             }
             .launchIn(viewModelScope)
     }

@@ -70,9 +70,9 @@ class SightUpRepository(
 
         return flow {
             val response = api.doLogin(request)
-            kVaultStorage.set(JWT_TOKEN, response.accessToken)
+            response.accessToken?.let { kVaultStorage.set(JWT_TOKEN, it) }
 
-            saveUserInfo(response.user)
+            response.user?.let { saveUserInfo(it) }
 
             emit(response)
         }.flowOn(Dispatchers.IO)
@@ -83,9 +83,9 @@ class SightUpRepository(
 
         return flow {
             val response = api.doLoginWithProvider(request)
-            kVaultStorage.set(JWT_TOKEN, response.accessToken)
+            response.accessToken?.let { kVaultStorage.set(JWT_TOKEN, it) }
 
-            saveUserInfo(response.user)
+            response.user?.let { saveUserInfo(it) }
 
             emit(response)
         }.flowOn(Dispatchers.IO)

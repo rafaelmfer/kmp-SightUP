@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginResponse(
-    @SerialName("accessToken") val accessToken: String,
-    @SerialName("user") val user: UserResponse,
-    @SerialName("createProfile") val createProfile: Boolean,
+    @SerialName("message") val message: String? = null,
+    @SerialName("accessToken") val accessToken: String? = null,
+    @SerialName("user") val user: UserResponse? = null,
+    @SerialName("createProfile") val createProfile: Boolean = false,
 )
