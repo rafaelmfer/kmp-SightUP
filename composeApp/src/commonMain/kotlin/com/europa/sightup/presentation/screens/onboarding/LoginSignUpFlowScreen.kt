@@ -20,7 +20,6 @@ import com.europa.sightup.presentation.designsystem.components.data.BottomSheetE
 import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
-import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -63,6 +62,15 @@ fun LoginSignUpScreen(
         fullHeight = true,
         title = bottomSheetTitle,
         iconRightVisible = true,
+        onIconRightClick = {
+            scope.hideBottomSheetWithAnimation(
+                sheetState = sheetState,
+                onBottomSheetVisibilityChange = onBottomSheetVisibilityChange,
+                onFinish = {
+                    viewModel.resetLoginState()
+                }
+            )
+        },
         sheetContent = {
             Column(
                 modifier = Modifier
@@ -71,6 +79,7 @@ fun LoginSignUpScreen(
             ) {
                 when (state) {
                     is LoginUIState.InitialState -> {
+                        error = ""
                         LoginEmailSheetContent(
                             navController = navController,
                             onContinueClicked = {
@@ -79,7 +88,8 @@ fun LoginSignUpScreen(
                             },
                             onGoogleClicked = {
                                 viewModel.doLoginWithProvider(it)
-                            }
+                            },
+                            errorMessage = error
                         )
                     }
 
@@ -88,12 +98,25 @@ fun LoginSignUpScreen(
                     }
 
                     is LoginUIState.UserFound -> {
+                        error = ""
                         bottomSheetTitle = stringResource(Res.string.sign_up_title)
                         LoginPasswordSheetContent(
                             navController = navController,
                             onContinueClicked = {
                                 viewModel.doLogin(email, it)
-                            }
+                            },
+                            errorMessage = error
+                        )
+                    }
+
+                    is LoginUIState.PasswordError -> {
+                        error = (state as LoginUIState.PasswordError).errorMessage
+                        LoginPasswordSheetContent(
+                            navController = navController,
+                            onContinueClicked = {
+                                viewModel.doLogin(email, it)
+                            },
+                            errorMessage = error
                         )
                     }
 
@@ -108,12 +131,18 @@ fun LoginSignUpScreen(
                     }
 
                     is LoginUIState.Error -> {
-                        showToast(
-                            "Login Error",
-                            bottomPadding = 40
-                        )
                         error = (state as LoginUIState.Error).errorMessage
-                        print(error)
+                        LoginEmailSheetContent(
+                            navController = navController,
+                            onContinueClicked = {
+                                email = it
+                                viewModel.checkEmail(it)
+                            },
+                            onGoogleClicked = {
+                                viewModel.doLoginWithProvider(it)
+                            },
+                            errorMessage = error
+                        )
                     }
                 }
             }
