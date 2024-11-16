@@ -51,7 +51,7 @@ fun DailyCheckInFlowBottomSheet(
         Spacer(Modifier.height(SightUPTheme.sizes.size_12))
         SDSTopBar(
             modifier = Modifier
-                .padding(horizontal = SightUPTheme.spacing.spacing_sm),
+                .padding(horizontal = SightUPTheme.spacing.spacing_xs),
             title = "Daily Check-In",
             iconLeftVisible = iconLeftVisible,
             onLeftButtonClick = {

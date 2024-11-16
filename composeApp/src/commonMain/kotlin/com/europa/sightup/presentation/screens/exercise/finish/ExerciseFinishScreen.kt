@@ -202,7 +202,7 @@ private fun Header() {
         iconRightVisible = false,
         modifier = Modifier
             .padding(
-                horizontal = SightUPTheme.spacing.spacing_sm,
+                horizontal = SightUPTheme.spacing.spacing_xs,
             )
     )
 }

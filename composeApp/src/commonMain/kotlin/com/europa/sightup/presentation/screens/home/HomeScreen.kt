@@ -1,5 +1,6 @@
 package com.europa.sightup.presentation.screens.home
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -169,11 +171,22 @@ fun HomeScreen(
     var dailyCheckIsDone by remember { mutableStateOf(false) }
     var dailyCheckTime by remember { mutableStateOf("") }
 
+    var showHome by remember { mutableStateOf(false) }
+
+    val screenAlpha by animateFloatAsState(
+        targetValue = if (showHome) 1f else 0f,
+    )
+
+    LaunchedEffect(Unit) {
+        showHome = true
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(SightUPTheme.sightUPColors.background_light),
+            .background(SightUPTheme.sightUPColors.background_light)
+            .graphicsLayer(alpha = screenAlpha),
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
     ) {
         GreetingWithIcons(name)

@@ -122,7 +122,7 @@ fun ExerciseEvaluationResult(
         SDSTopBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = SightUPTheme.spacing.spacing_sm),
+                .padding(horizontal = SightUPTheme.spacing.spacing_xs),
             title = "",
             iconLeftVisible = false,
             iconRightVisible = true,

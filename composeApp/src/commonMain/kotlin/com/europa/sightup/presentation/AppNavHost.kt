@@ -1,11 +1,22 @@
 package com.europa.sightup.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -51,9 +62,28 @@ fun AppNavHost() {
         currentBackStackEntry?.destination?.route == screen::class.qualifiedName
     }
 
+    var showScaffold by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+//        delay(500)
+        showScaffold = true
+    }
+
     Scaffold(
         bottomBar = {
-            if (showBottomBar) {
+            AnimatedVisibility(
+                visible = showBottomBar,
+                enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
+                    expandVertically(
+                        expandFrom = Alignment.Bottom,
+                        animationSpec = tween(durationMillis = 500, delayMillis = 500)
+                    ),
+                exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
+                    shrinkVertically(
+                        shrinkTowards = Alignment.Bottom,
+                        animationSpec = tween(durationMillis = 500, delayMillis = 500)
+                    ),
+            ) {
                 currentBackStackEntry?.destination?.route?.let {
                     BottomNavBar(
                         navController = navController,

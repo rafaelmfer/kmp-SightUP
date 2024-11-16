@@ -84,7 +84,7 @@ fun ExerciseDetailsScreen(
             },
             modifier = Modifier
                 .padding(
-                    horizontal = SightUPTheme.spacing.spacing_sm,
+                    horizontal = SightUPTheme.spacing.spacing_xs,
                 )
         )
         Spacer(Modifier.weight(ONE_FLOAT))

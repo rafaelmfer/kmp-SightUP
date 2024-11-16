@@ -112,7 +112,7 @@ fun ExerciseRunningScreen(
 
         SDSTopBar(
             modifier = Modifier
-                .padding(horizontal = SightUPTheme.spacing.spacing_sm)
+                .padding(horizontal = SightUPTheme.spacing.spacing_xs)
                 .align(Alignment.TopCenter)
                 .zIndex(1f),
             title = "",

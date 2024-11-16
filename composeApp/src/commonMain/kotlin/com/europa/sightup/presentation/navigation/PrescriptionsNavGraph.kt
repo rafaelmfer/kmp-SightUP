@@ -8,16 +8,30 @@ import com.europa.sightup.presentation.navigation.PrescriptionsScreens.Prescript
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens.PrescriptionsRoot
 import com.europa.sightup.presentation.screens.prescription.PrescriptionScreen
 import com.europa.sightup.presentation.screens.prescription.history.PrescriptionHistory
+import com.europa.sightup.utils.slideInFromLeft
+import com.europa.sightup.utils.slideInFromRight
+import com.europa.sightup.utils.slideOutToLeft
+import com.europa.sightup.utils.slideOutToRight
 
 fun NavGraphBuilder.prescriptionsNavGraph(navController: NavHostController) {
     navigation<PrescriptionsInit>(
         startDestination = PrescriptionsRoot,
     ) {
-        composable<PrescriptionsRoot> {
+        composable<PrescriptionsRoot>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             PrescriptionScreen(navController = navController)
         }
 
-        composable<PrescriptionsScreens.PrescriptionsHistory> {
+        composable<PrescriptionsScreens.PrescriptionsHistory>(
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) {
             PrescriptionHistory(navController = navController)
         }
     }
