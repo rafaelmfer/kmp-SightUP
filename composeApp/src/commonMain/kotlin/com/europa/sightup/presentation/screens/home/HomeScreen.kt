@@ -57,6 +57,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
+import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
 import com.europa.sightup.data.remote.response.assessment.DailyCheckInfoResponse
 import com.europa.sightup.presentation.designsystem.components.ExpandableItem
 import com.europa.sightup.presentation.designsystem.components.ExpandableListItem
@@ -66,6 +67,7 @@ import com.europa.sightup.presentation.designsystem.components.SDSCardAssessment
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
+import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
 import com.europa.sightup.presentation.screens.home.checkinbottomsheet.DailyCheckInFlowBottomSheet
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
@@ -115,7 +117,6 @@ private fun IconSort(myIcon: String): Painter {
         Moods.MODERATE.value -> painterResource(Moods.MODERATE.icon)
         Moods.GOOD.value -> painterResource(Moods.GOOD.icon)
         Moods.VERY_GOOD.value -> painterResource(Moods.VERY_GOOD.icon)
-        Moods.ADD.value -> painterResource(Moods.ADD.icon)
         else -> painterResource(Res.drawable.gray_nothing)
     }
 }
@@ -149,12 +150,16 @@ fun HomeScreen(
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
     val state by viewModel.dailyCheckGet.collectAsStateWithLifecycle()
+    val dailyExerciseState by viewModel.dailyExerciseList.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        viewModel.getUser()
         viewModel.getAllDay()
+        viewModel.getDailyExerciseList()
     }
 
-    val name = "Linda"
+    val user = viewModel.user.value as? UIState.Success
+    val name = user?.data?.userName ?: "Guest"
 
     val scope = rememberCoroutineScope()
     var dailyCheckBottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
@@ -179,6 +184,14 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         showHome = true
+    }
+
+
+    val exerciseList = when (val state = dailyExerciseState) {
+        is UIState.Success -> { state.data }
+        is UIState.Loading -> { listOf() }
+        is UIState.Error -> { listOf() }
+        is UIState.InitialState -> { listOf() }
     }
 
     Column(
@@ -217,7 +230,8 @@ fun HomeScreen(
                 dailyCheckBottomSheetVisibility = BottomSheetEnum.SHOW
             },
             dailyCheckIsDone = dailyCheckIsDone,
-            dailyCheckTime = if (dailyCheckTime.isNotBlank()) dailyCheckTime.formatTime() else ""
+            dailyCheckTime = if (dailyCheckTime.isNotBlank()) dailyCheckTime.formatTime() else "",
+            exerciseList = exerciseList
         )
 
         EyeWellnessTips()
@@ -474,7 +488,7 @@ fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
                 Icon(
                     painter = painterResource(Res.drawable.good),
                     tint = Color.Transparent,
-                    contentDescription = "teste",
+                    contentDescription = "test",
                     modifier = Modifier
                         .padding(horizontal = 4.dp)
                         .size(SightUPTheme.sizes.size_32)
@@ -659,8 +673,8 @@ private fun AssessmentList(
     onDailyCheckClick: () -> Unit = {},
     dailyCheckIsDone: Boolean = false,
     dailyCheckTime: String = "",
+    exerciseList: List<DailyExerciseMessageResponse.DailyExerciseResponse> = listOf(),
 ) {
-
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -677,19 +691,29 @@ private fun AssessmentList(
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
         )
 
-        repeat(2) { index ->
+
+        exerciseList.forEachIndexed { index, exercise ->
             SDSCardAssessment(
-                title = "Vision Acuity Test",
-                time = "10:00 AM",
-                isDone = false,
-                exerciseDuration = 2,
+                title = "${exercise.title} (${index + 1}/${exerciseList.size})",
+                time = exercise.timeSchedule,
+                isDone = exercise.done,
+                exerciseDuration = exercise.duration,
+                eyeConditions = exercise.eyeCondition,
                 lineUp = true,
-                lineDown = index != 1,
-                eyeConditions = listOf("Eye Strain", "Red Eyes"),
+                lineDown = index != exerciseList.lastIndex,
                 onClickCard = {
-                    showToast(
-                        message = "Vision Acuity Test $index",
-                        bottomPadding = 40
+                    navController?.navigate(
+                        ExerciseDetails(
+                            exerciseId = exercise.id,
+                            exerciseName = exercise.title,
+                            category = exercise.category,
+                            motivation = exercise.motivation,
+                            duration = exercise.duration,
+                            imageInstruction = exercise.imageInstruction,
+                            video = exercise.video,
+                            finishTitle = exercise.finishTitle,
+                            advice = exercise.advice
+                        )
                     )
                 },
                 modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)

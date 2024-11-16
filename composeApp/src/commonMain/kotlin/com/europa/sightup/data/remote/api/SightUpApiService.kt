@@ -8,10 +8,12 @@ import com.europa.sightup.data.remote.request.prescription.AddPrescriptionReques
 import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
 import com.europa.sightup.data.remote.response.AddPrescriptionResponse
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
+import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.data.remote.response.UpdateDailyExerciseResponse
 import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.data.remote.response.assessment.DailyCheckResponse
 import com.europa.sightup.data.remote.response.auth.LoginEmailResponse
@@ -21,6 +23,7 @@ import com.europa.sightup.data.remote.response.visionHistory.VisionHistoryRespon
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 
@@ -84,4 +87,16 @@ interface SightUpApiService {
     suspend fun getAllDay(
         @Body request: DailyCheckRequest
     ): List<DailyCheckInResponse>
+
+    @GET("api/user/dailyExercises/{userIdentifier}")
+    suspend fun getDailyExercise(
+        @Path("userIdentifier") userIdentifier: String
+    ): DailyExerciseMessageResponse
+
+    @PUT("api/user/dailyExercises/{userIdentifier}/{exerciseId}/{exerciseTime}")
+    suspend fun saveDailyExercise(
+        @Path("userIdentifier") userIdentifier: String,
+        @Path("exerciseId") exerciseId: String,
+    ):UpdateDailyExerciseResponse
+
 }

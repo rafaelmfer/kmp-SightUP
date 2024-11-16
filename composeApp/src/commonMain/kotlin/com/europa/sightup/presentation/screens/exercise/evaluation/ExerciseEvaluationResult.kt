@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
+import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -42,10 +46,12 @@ import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.Moods
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.goBackToExerciseHome
+import com.europa.sightup.utils.isUserLoggedIn
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
-import sightupkmpapp.composeapp.generated.resources.add
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.evaluate_exercise_good
 import sightupkmpapp.composeapp.generated.resources.evaluate_exercise_neutral
@@ -61,10 +67,22 @@ fun ExerciseEvaluationResult(
     navController: NavController? = null,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Get if the user is in a program
-    val inUserProgram = true
-    // TODO: Get if the user has a schedule for this exercise today`
-    val hasScheduleForThisToday = true
+    val viewModel = koinViewModel<ExerciseEvaluationResultViewModel>()
+
+    LaunchedEffect(Unit) {
+        viewModel.getDailyExerciseList()
+    }
+    val dailyExerciseState by viewModel.dailyExerciseList.collectAsStateWithLifecycle()
+
+    val inUserProgram = isUserLoggedIn
+
+    val hasScheduleForThisToday = when (dailyExerciseState) {
+        is UIState.Success -> {
+            val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseMessageResponse.DailyExerciseResponse>>).data
+            exerciseList.any { it.title.contains(exerciseName, ignoreCase = true) }
+        }
+        else -> false
+    }
 
     var scheduleSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var bottomSheetTitle by remember { mutableStateOf("") }
@@ -78,8 +96,6 @@ fun ExerciseEvaluationResult(
 
         Moods.MODERATE -> Res.drawable.evaluate_exercise_neutral
 
-        Moods.ADD -> Res.drawable.add
-
         Moods.POOR,
         Moods.VERY_POOR,
             -> Res.drawable.evaluate_exercise_tired
@@ -90,8 +106,6 @@ fun ExerciseEvaluationResult(
             -> "It's great to know you're feeling better now!"
 
         Moods.MODERATE -> "Keep up the great work!"
-
-        Moods.ADD -> "Add new Icon"
 
         Moods.POOR,
         Moods.VERY_POOR,
@@ -104,8 +118,6 @@ fun ExerciseEvaluationResult(
             -> "We'll add this to your routine, but feel free to adjust it as you prefer."
 
         Moods.MODERATE -> "We believe that after a few more exercises, you'll really notice the difference, and your eyes will feel much better!"
-
-        Moods.ADD -> "Adding new Icon"
 
         Moods.POOR,
         Moods.VERY_POOR,
@@ -183,6 +195,7 @@ fun ExerciseEvaluationResult(
                     )
             )
             Spacer(Modifier.height(SightUPTheme.sizes.size_12))
+            // TODO change this based on the user list
             Text(
                 text = "2:00 pm",
                 style = SightUPTheme.textStyles.h5,

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
@@ -29,6 +31,7 @@ import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseEvalua
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.screens.JoinInBottomSheet
 import com.europa.sightup.presentation.screens.exercise.evaluation.EvaluateExercise
+import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResultViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginSignUpScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
@@ -42,6 +45,7 @@ import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,8 +59,15 @@ fun ExerciseFinishScreen(
     buttonText: String = "",
     navController: NavController? = null,
 ) {
-
+    val viewModel = koinViewModel<ExerciseFinishScreenViewModel>()
     val userIsLogged = isUserLoggedIn
+    // Collect the save exercise state
+    val saveExerciseState by viewModel.saveExerciseState.collectAsStateWithLifecycle()
+
+    // Trigger save operation when the screen is loaded
+    LaunchedEffect(Unit) {
+        viewModel.saveDailyExercise("", idExercise)
+    }
 
     var evaluateSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var joinInSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
@@ -153,7 +164,6 @@ fun ExerciseFinishScreen(
         },
         navController = navController
     )
-
 
     SDSBottomSheet(
         title = "",

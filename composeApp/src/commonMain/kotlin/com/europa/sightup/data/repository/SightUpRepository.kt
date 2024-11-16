@@ -13,10 +13,12 @@ import com.europa.sightup.data.remote.request.visionHistory.ResultRequest
 import com.europa.sightup.data.remote.request.visionHistory.VisionHistoryRequest
 import com.europa.sightup.data.remote.response.AddPrescriptionResponse
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
+import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
 import com.europa.sightup.data.remote.response.ExerciseResponse
 import com.europa.sightup.data.remote.response.ProfileResponse
 import com.europa.sightup.data.remote.response.TaskResponse
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.data.remote.response.UpdateDailyExerciseResponse
 import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.data.remote.response.assessment.DailyCheckResponse
 import com.europa.sightup.data.remote.response.auth.LoginEmailResponse
@@ -203,6 +205,28 @@ class SightUpRepository(
 
         return flow {
             val response = api.saveDailyCheck(request)
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getDailyExercise(): Flow<List<DailyExerciseMessageResponse.DailyExerciseResponse>> {
+        val userInfo = getUserInfo()
+        return flow {
+            val userIdentifier = userInfo?.email ?: userInfo?.id ?: ""
+            val response = api.getDailyExercise(userIdentifier)
+            emit(response.exercises)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun saveDailyExercise(
+        userIdentifier: String,
+        exerciseId: String,
+    ): Flow<UpdateDailyExerciseResponse> {
+        return flow {
+            val response = api.saveDailyExercise(
+                userIdentifier = userIdentifier,
+                exerciseId = exerciseId
+            )
             emit(response)
         }.flowOn(Dispatchers.IO)
     }
