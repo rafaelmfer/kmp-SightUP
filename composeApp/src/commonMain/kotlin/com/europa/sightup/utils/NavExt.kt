@@ -51,9 +51,11 @@ fun NavHostController.navigateToRootScreen(rootScreen: Any) {
 }
 
 fun NavController?.goBackToExerciseHome() {
-    this?.popBackStack<ExerciseRoot>(inclusive = false)
+    if (this?.popBackStack<ExerciseRoot>(inclusive = false) == true) {
+    } else {
+        this?.navigate(ExerciseRoot)
+    }
 }
-
 
 
 // Transitions

@@ -48,7 +48,6 @@ fun ScreenOneVisionStatus(
         Moods.POOR,
         Moods.MODERATE,
         Moods.GOOD,
-        Moods.ADD,
         Moods.VERY_GOOD
     )
 
@@ -60,7 +59,6 @@ fun ScreenOneVisionStatus(
         Moods.POOR -> Moods.POOR.icon
         Moods.MODERATE -> Moods.MODERATE.icon
         Moods.GOOD -> Moods.GOOD.icon
-        Moods.ADD -> Moods.ADD.icon
         Moods.VERY_GOOD -> Moods.VERY_GOOD.icon
     }
 
