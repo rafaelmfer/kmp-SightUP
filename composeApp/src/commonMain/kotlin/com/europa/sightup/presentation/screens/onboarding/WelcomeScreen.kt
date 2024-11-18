@@ -1,5 +1,7 @@
 package com.europa.sightup.presentation.screens.onboarding
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,8 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
@@ -32,6 +38,7 @@ import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -103,9 +110,29 @@ fun ShowProfileSetup(
 
 @Composable
 fun MainWelcomeScreen(navController: NavController? = null) {
+    var navigateTo by remember { mutableStateOf<Any?>(null) }
+    val fadeOutDuration by remember { mutableStateOf(500) }
+    val screenAlpha by animateFloatAsState(
+        targetValue = if (navigateTo == null) 1f else 0f,
+        animationSpec = tween(durationMillis = fadeOutDuration)
+    )
+
+    LaunchedEffect(navigateTo) {
+        if (navigateTo != null) {
+            delay((fadeOutDuration / 1.25).toLong())
+            navigateTo?.let { destination ->
+                navController?.navigate(destination) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .graphicsLayer(alpha = screenAlpha)
     ) {
         Spacer(modifier = Modifier.weight(ONE_FLOAT))
         Image(
@@ -145,13 +172,7 @@ fun MainWelcomeScreen(navController: NavController? = null) {
                 SDSButton(
                     text = stringResource(Res.string.welcome_later_button),
                     onClick = {
-                        navController?.navigate(Home) {
-                            // Navigate to Home and remove all previous screens from the backstack
-                            popUpTo(0) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+                        navigateTo = Home
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = ButtonStyle.OUTLINED
@@ -160,13 +181,7 @@ fun MainWelcomeScreen(navController: NavController? = null) {
                 SDSButton(
                     text = stringResource(Res.string.welcome_take_test_button),
                     onClick = {
-                        navController?.navigate(TestScreens.TestRoot) {
-                            // Navigate to TestRoot and remove all previous screens from the backstack
-                            popUpTo(0) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+                        navigateTo = TestScreens.TestRoot
                     },
                     modifier = Modifier.weight(ONE_FLOAT),
                     buttonStyle = ButtonStyle.PRIMARY

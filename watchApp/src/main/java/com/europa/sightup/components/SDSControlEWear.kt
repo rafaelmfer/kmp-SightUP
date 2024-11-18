@@ -47,7 +47,7 @@ fun SDSControlEWear(
     isClickedList.forEachIndexed { index, isClicked ->
         LaunchedEffect(isClicked) {
             if (isClicked) {
-                delay(1000)
+                delay(500)
                 isClickedList[index] = false
             }
         }

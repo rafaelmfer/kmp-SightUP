@@ -6,8 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
@@ -37,8 +41,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.color.SightUPContextColor
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import kotlinx.coroutines.delay
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.e_right
@@ -91,7 +97,6 @@ fun SDSControlE(
     rightButtonOnClickResult: () -> Unit = {},
     downButtonOnClickResult: () -> Unit = {},
     modifier: Modifier = Modifier,
-    enable: Boolean = false,
 ) {
     val isClickedList = remember { mutableStateListOf(false, false, false, false) }
 
@@ -198,6 +203,10 @@ fun SDSControlE(
                         y = (radius * sin(radians)).toInt()
                     )
                 }
+                .graphicsLayer(
+                    rotationZ = rotationState,
+                    transformOrigin = TransformOrigin(0.5f, 0.5f)
+                )
                 .size(circleSize)
                 .border(
                     width = circleBorderSize,
@@ -205,6 +214,18 @@ fun SDSControlE(
                     shape = CircleShape
                 )
                 .background(Color.Transparent, CircleShape)
+                .drawBehind {
+                    // Add 1.dp at both lines because of round border of circles to avoid clipping
+                    val lineStart = (spaceBetweenImageAndCircle + 1.dp).toPx()
+                    val lineEnd = 1.dp.toPx()
+                    drawLine(
+                        color = SightUPContextColor.background_default,
+                        start = Offset(-lineStart, size.height / 2),
+                        end = Offset(lineEnd, size.height / 2),
+                        strokeWidth = 12.dp.toPx()
+                    )
+                }
+
         )
 
         // Directional buttons
@@ -245,6 +266,45 @@ fun SDSControlE(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun SDSControlEPreview() {
+    SightUPTheme {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.background(SightUPTheme.sightUPColors.background_activate)
+                .fillMaxSize()
+        ) {
+            SDSControlE(
+                upButtonOnClickResult = {
+                    showToast(
+                        "Up button clicked",
+                        bottomPadding = 40
+                    )
+                },
+                leftButtonOnClickResult = {
+                    showToast(
+                        "Left button clicked",
+                        bottomPadding = 40
+                    )
+                },
+                rightButtonOnClickResult = {
+                    showToast(
+                        "Right button clicked",
+                        bottomPadding = 40
+                    )
+                },
+                downButtonOnClickResult = {
+                    showToast(
+                        "Down button clicked",
+                        bottomPadding = 40
+                    )
+                }
+            )
         }
     }
 }

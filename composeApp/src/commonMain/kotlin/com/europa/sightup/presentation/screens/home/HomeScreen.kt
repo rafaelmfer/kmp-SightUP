@@ -806,7 +806,7 @@ private fun EyeWellnessTips() {
     Column(
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
         modifier = Modifier.fillMaxWidth()
-            .padding(top = SightUPTheme.spacing.spacing_md)
+            .padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_base)
             .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         EyeWellnessTipsTitle()

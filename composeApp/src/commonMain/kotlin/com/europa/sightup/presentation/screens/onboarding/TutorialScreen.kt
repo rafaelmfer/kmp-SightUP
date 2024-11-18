@@ -109,11 +109,10 @@ fun TutorialScreen(navController: NavController? = null) {
             delay((fadeOutDuration / 1.25).toLong())
             navigateTo?.let { destination ->
                 //TODO: verify if the user has profile to send that info to WelcomeScreen to open BottomSheets
-                navController?.navigate(destination)
-//                {
-//                    popUpTo(0) { inclusive = true }
-//                    launchSingleTop = true
-//                }
+                navController?.navigate(destination) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
             }
         }
     }

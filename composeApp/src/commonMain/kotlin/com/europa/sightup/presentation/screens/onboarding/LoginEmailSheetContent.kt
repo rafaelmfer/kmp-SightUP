@@ -1,14 +1,19 @@
 package com.europa.sightup.presentation.screens.onboarding
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,29 +24,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSDivider
 import com.europa.sightup.presentation.designsystem.components.SDSInput
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.mmk.kmpauth.firebase.apple.AppleButtonUiContainer
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.apple.AppleSignInButton
-import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import kotlinx.coroutines.launch
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.apple
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.continue_string
 import sightupkmpapp.composeapp.generated.resources.email
+import sightupkmpapp.composeapp.generated.resources.google
 
 @Composable
 fun LoginEmailSheetContent(
-    navController: NavController? = null,
     onContinueClicked: (String) -> Unit = {},
     onGoogleClicked: (String) -> Unit = {},
     onAppleClicked: (String) -> Unit = {},
@@ -112,12 +117,34 @@ fun LoginEmailSheetContent(
             },
             linkAccount = false
         ) {
-            GoogleSignInButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
+            OutlinedButton(
                 onClick = { this.onClick() },
-                text = "Continue with Google"
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(
+                        minHeight = SightUPTheme.sizes.size_48
+                    ),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = SightUPTheme.sightUPColors.background_default,
+                ),
+                border = BorderStroke(
+                    width = SightUPBorder.Width.sm,
+                    color = SightUPTheme.sightUPColors.background_button
+                ),
+                shape = SightUPTheme.shapes.small,
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.google),
+                    contentDescription = "Google",
+                    modifier = Modifier.size(24.dp),
+                )
+                Spacer(Modifier.width(SightUPTheme.sizes.size_12))
+                Text(
+                    text = "Continue with Google",
+                    style = SightUPTheme.textStyles.button,
+                    color = SightUPTheme.sightUPColors.primary_700
+                )
+            }
         }
         Spacer(Modifier.height(SightUPTheme.sizes.size_32))
         AppleButtonUiContainer(
@@ -139,6 +166,34 @@ fun LoginEmailSheetContent(
                 onClick = { this.onClick() },
                 text = "Continue with Apple"
             )
+            OutlinedButton(
+                onClick = { this.onClick() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(
+                        minHeight = SightUPTheme.sizes.size_48
+                    ),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = SightUPTheme.sightUPColors.background_default,
+                ),
+                border = BorderStroke(
+                    width = SightUPBorder.Width.sm,
+                    color = SightUPTheme.sightUPColors.background_button
+                ),
+                shape = SightUPTheme.shapes.small,
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.apple),
+                    contentDescription = "Apple",
+                    modifier = Modifier.size(24.dp),
+                )
+                Spacer(Modifier.width(SightUPTheme.sizes.size_12))
+                Text(
+                    text = "Continue with Apple",
+                    style = SightUPTheme.textStyles.button,
+                    color = SightUPTheme.sightUPColors.primary_700
+                )
+            }
         }
     }
 }

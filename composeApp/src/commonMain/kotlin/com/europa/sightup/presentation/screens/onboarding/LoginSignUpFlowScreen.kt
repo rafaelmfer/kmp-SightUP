@@ -1,6 +1,8 @@
 package com.europa.sightup.presentation.screens.onboarding
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -12,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -81,7 +84,6 @@ fun LoginSignUpScreen(
                     is LoginUIState.InitialState -> {
                         error = ""
                         LoginEmailSheetContent(
-                            navController = navController,
                             onContinueClicked = {
                                 email = it
                                 viewModel.checkEmail(it)
@@ -94,7 +96,12 @@ fun LoginSignUpScreen(
                     }
 
                     is LoginUIState.Loading -> {
-                        CircularProgressIndicator()
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
 
                     is LoginUIState.UserFound -> {
@@ -133,7 +140,6 @@ fun LoginSignUpScreen(
                     is LoginUIState.Error -> {
                         error = (state as LoginUIState.Error).errorMessage
                         LoginEmailSheetContent(
-                            navController = navController,
                             onContinueClicked = {
                                 email = it
                                 viewModel.checkEmail(it)
