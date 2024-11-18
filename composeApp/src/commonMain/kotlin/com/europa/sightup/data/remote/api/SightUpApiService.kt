@@ -2,6 +2,7 @@ package com.europa.sightup.data.remote.api
 
 import com.europa.sightup.data.remote.request.ProfileRequest
 import com.europa.sightup.data.remote.request.assessment.DailyCheckRequest
+import com.europa.sightup.data.remote.request.assessment.FeelingRequest
 import com.europa.sightup.data.remote.request.auth.LoginRequest
 import com.europa.sightup.data.remote.request.auth.LoginWithProviderRequest
 import com.europa.sightup.data.remote.request.prescription.AddPrescriptionRequest
@@ -46,7 +47,7 @@ interface SightUpApiService {
 
     @GET("api/user/info/{user}")
     suspend fun getUser(
-        @Path("user") user: String
+        @Path("user") user: String,
     ): UserResponse
 
     @POST("api/user/setupProfile")
@@ -85,18 +86,18 @@ interface SightUpApiService {
 
     @POST("api/user/dailyCheckInfo")
     suspend fun getAllDay(
-        @Body request: DailyCheckRequest
+        @Body request: DailyCheckRequest,
     ): List<DailyCheckInResponse>
 
     @GET("api/user/dailyExercises/{userIdentifier}")
     suspend fun getDailyExercise(
-        @Path("userIdentifier") userIdentifier: String
+        @Path("userIdentifier") userIdentifier: String,
     ): DailyExerciseMessageResponse
 
-    @PUT("api/user/dailyExercises/{userIdentifier}/{exerciseId}/{exerciseTime}")
+    @PUT("api/user/dailyExercises/{userIdentifier}/{exerciseId}")
     suspend fun saveDailyExercise(
         @Path("userIdentifier") userIdentifier: String,
         @Path("exerciseId") exerciseId: String,
-    ):UpdateDailyExerciseResponse
-
+        @Body feeling: FeelingRequest,
+    ): UpdateDailyExerciseResponse
 }

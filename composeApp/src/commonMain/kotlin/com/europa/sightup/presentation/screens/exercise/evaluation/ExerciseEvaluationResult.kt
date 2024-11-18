@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
-import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -81,6 +80,7 @@ fun ExerciseEvaluationResult(
             val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseMessageResponse.DailyExerciseResponse>>).data
             exerciseList.any { it.title.contains(exerciseName, ignoreCase = true) }
         }
+
         else -> false
     }
 
@@ -99,6 +99,8 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> Res.drawable.evaluate_exercise_tired
+
+        else -> Res.drawable.evaluate_exercise_neutral
     }
     val title = when (mood) {
         Moods.VERY_GOOD,
@@ -110,6 +112,8 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> "We’re sorry to know your eyes are still tired."
+
+        else -> ""
     }
 
     val subtitle = when (mood) {
@@ -122,6 +126,8 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> "We’ll recommend new exercises to boost your eyesight and help you to feel better."
+
+        else -> ""
     }
     val scrollState = rememberScrollState()
     Column(

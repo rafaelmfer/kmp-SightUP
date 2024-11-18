@@ -6,6 +6,7 @@ import com.europa.sightup.data.network.NetworkClient.JWT_TOKEN
 import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.request.ProfileRequest
 import com.europa.sightup.data.remote.request.assessment.DailyCheckRequest
+import com.europa.sightup.data.remote.request.assessment.FeelingRequest
 import com.europa.sightup.data.remote.request.auth.LoginRequest
 import com.europa.sightup.data.remote.request.auth.LoginWithProviderRequest
 import com.europa.sightup.data.remote.request.prescription.AddPrescriptionRequest
@@ -60,7 +61,7 @@ class SightUpRepository(
         val userInfo = getUserInfo()
 
         return flow {
-            val request = DailyCheckRequest("",email = userInfo?.email ?: "")
+            val request = DailyCheckRequest("", email = userInfo?.email ?: "")
             val response = api.getAllDay(request)
 
             emit(response)
@@ -184,10 +185,6 @@ class SightUpRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getTasks(): List<TaskResponse> {
-        return api.getTasks()
-    }
-
     fun getTests(): Flow<List<TestResponse>> {
         return flow {
             val response = api.getTests()
@@ -219,13 +216,15 @@ class SightUpRepository(
     }
 
     fun saveDailyExercise(
-        userIdentifier: String,
         exerciseId: String,
+        feeling: String,
     ): Flow<UpdateDailyExerciseResponse> {
+        val userInfo = getUserInfo()
         return flow {
             val response = api.saveDailyExercise(
-                userIdentifier = userIdentifier,
-                exerciseId = exerciseId
+                userIdentifier = userInfo?.email ?: "",
+                exerciseId = exerciseId,
+                feeling = FeelingRequest(feeling)
             )
             emit(response)
         }.flowOn(Dispatchers.IO)
