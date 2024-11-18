@@ -1,10 +1,22 @@
 package com.europa.sightup.presentation.navigation
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseCountdown
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseEvaluationResult
@@ -18,6 +30,9 @@ import com.europa.sightup.presentation.screens.exercise.details.ExerciseDetailsS
 import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResult
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreen
 import com.europa.sightup.presentation.screens.exercise.running.ExerciseRunningScreen
+import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.goBackToExerciseHome
 import com.europa.sightup.utils.slideInFromLeft
 import com.europa.sightup.utils.slideInFromRight
@@ -66,8 +81,9 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
             exitTransition = { slideOutToLeft() },
             popEnterTransition = { slideInFromLeft() },
             popExitTransition = { slideOutToRight() }
-        ) {
-            val arguments = it.toRoute<ExerciseCountdown>()
+        ) { navBackStackEntry ->
+            var showDialog by remember { mutableStateOf(false) }
+            val arguments = navBackStackEntry.toRoute<ExerciseCountdown>()
 
             CountdownScreen(
                 animationPath = "files/countdown_animation.json",
@@ -76,8 +92,7 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                     navController.popBackStack()
                 },
                 onRightButtonHeaderClick = {
-                    // TODO: open Dialog to confirm exit and if confirmed, navigate to ExerciseRoot
-                    navController?.goBackToExerciseHome()
+                    showDialog = true
                 },
                 onFinish = {
                     navController.navigate(
@@ -93,6 +108,35 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                         )
                     )
                 }
+            )
+
+            SDSDialog(
+                showDialog = showDialog,
+                onDismiss = { showDialog = it },
+                title = "Exit exercise?",
+                onClose = null,
+                content = { _ ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = SightUPTheme.spacing.spacing_md)
+                    ) {
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                        Text(
+                            text = " If you exit, you’ll need to restart the exercise.",
+                            style = SightUPTheme.textStyles.body,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+                    }
+                },
+                onPrimaryClick = {},
+                buttonPrimaryText = "Continue",
+                onSecondaryClick = {
+                    navController.goBackToExerciseHome()
+                },
+                buttonSecondaryText = "Exit",
             )
         }
 

@@ -20,6 +20,7 @@ import com.europa.sightup.presentation.screens.onboarding.WelcomeViewModel
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.ONE_FLOAT
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -32,14 +33,14 @@ import sightupkmpapp.composeapp.generated.resources.welcome_later_button
 
 sealed class ProfileStep(
     val title: String,
-    val content: @Composable (WelcomeViewModel) -> Unit,
+    val content: @Composable (WelcomeViewModel, (Boolean) -> Unit) -> Unit,
     val iconLeft: DrawableResource?,
     val iconRight: DrawableResource?,
     val iconRightVisible: Boolean = false,
 ) {
     data object Step1 : ProfileStep(
         title = "Create Account",
-        content = { UserNameScreen(it) },
+        content = { viewModel, _ -> UserNameScreen(viewModel) },
         iconLeft = null,
         iconRight = null,
         iconRightVisible = false
@@ -47,7 +48,12 @@ sealed class ProfileStep(
 
     data object Step2 : ProfileStep(
         title = "Setup Profile",
-        content = { ProfileBodyOne(it) },
+        content = { viewModel, onDialogVisibilityChange ->
+            ProfileBodyOne(
+                viewModel,
+                onDialogVisibilityChange
+            )
+        },
         iconLeft = null,
         iconRight = null,
         iconRightVisible = false
@@ -55,7 +61,7 @@ sealed class ProfileStep(
 
     data object Step3 : ProfileStep(
         title = "Setup Profile",
-        content = { ProfileBodyTwo(it) },
+        content = { viewModel, _ -> ProfileBodyTwo(viewModel) },
         iconLeft = Res.drawable.arrow_back,
         iconRight = Res.drawable.close,
         iconRightVisible = true
@@ -65,6 +71,7 @@ sealed class ProfileStep(
 @Composable
 fun ProfileBodyOne(
     viewModel: WelcomeViewModel,
+    onDialogVisibilityChange: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -89,8 +96,10 @@ fun ProfileBodyOne(
         ) {
             SDSButton(
                 text = stringResource(Res.string.welcome_later_button),
-                onClick = { viewModel.hideBottomSheet() },
-                modifier = Modifier.weight(1f),
+                onClick = {
+                    onDialogVisibilityChange(true)
+                },
+                modifier = Modifier.weight(ONE_FLOAT),
                 buttonStyle = ButtonStyle.OUTLINED,
             )
 
@@ -99,7 +108,7 @@ fun ProfileBodyOne(
             SDSButton(
                 text = stringResource(Res.string.profile_setup_button),
                 onClick = { viewModel.outerStep++ },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(ONE_FLOAT),
                 buttonStyle = ButtonStyle.PRIMARY
             )
         }

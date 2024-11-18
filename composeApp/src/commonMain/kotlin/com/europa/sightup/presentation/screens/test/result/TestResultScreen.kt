@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -48,6 +46,7 @@ import com.europa.sightup.data.remote.response.VisionTestTypes
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSCardTest
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.test.active.ActiveTest
@@ -67,6 +66,7 @@ import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.information
 
 @Composable
@@ -78,6 +78,8 @@ fun TestResultScreen(
     right: String = "",
     navController: NavController,
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     val today: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val formattedDate = formatDate(today)
 
@@ -147,11 +149,10 @@ fun TestResultScreen(
         topBar = {
             SDSTopBar(
                 title = "$testTitle Result",
-                iconRight = Icons.Default.Close,
+                iconRight = Res.drawable.close,
                 iconRightVisible = true,
                 onRightButtonClick = {
-                    showToast("TODO: Warning message")
-                    navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+                    showDialog = true
                 },
                 modifier = Modifier.background(SightUPTheme.sightUPColors.background_light)
                     .padding(horizontal = SightUPTheme.spacing.spacing_xs)
@@ -246,6 +247,49 @@ fun TestResultScreen(
                 }
             }
         }
+    )
+
+    SDSDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = it },
+        title = "Discard results?",
+        onClose = {},
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "Your test result will delete. Or you can skip saving the result if",
+                    style = SightUPTheme.textStyles.body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "• Someone else took the test on your device",
+                    style = SightUPTheme.textStyles.caption,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "• You need the result for this single test",
+                    style = SightUPTheme.textStyles.caption,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = {
+            navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+        },
+        buttonPrimaryText = "Discard",
+        onSecondaryClick = {},
+        buttonSecondaryText = "No",
     )
 }
 

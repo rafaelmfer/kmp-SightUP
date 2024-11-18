@@ -41,6 +41,7 @@ import sightupkmpapp.composeapp.generated.resources.information
 fun SDSCardTest(
     test: TestResponse,
     navigateToTest: () -> Unit,
+    clickInfoIcon: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -95,7 +96,9 @@ fun SDSCardTest(
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_base))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickableWithRipple { clickInfoIcon() },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(

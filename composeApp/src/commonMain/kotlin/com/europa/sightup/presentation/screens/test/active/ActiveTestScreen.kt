@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +47,7 @@ import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.DistanceMessageCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSControlE
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSEyeClock
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
@@ -83,6 +85,8 @@ fun ActiveTestScreen(
     eyeTested: String,
     voiceController: VoiceRecognition = koinInject<VoiceRecognition>(),
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     val viewModel = koinViewModel<ActiveTestViewModel>()
 
     LaunchedEffect(eyeTested) {
@@ -105,15 +109,16 @@ fun ActiveTestScreen(
     // Move when the test has been completed move to the result screen
     val testState by viewModel.testState.collectAsStateWithLifecycle()
 
+
     LaunchedEffect(testState) {
         if (testState is ActiveTestViewModel.TestState.Completed) {
             val leftEyeResult = EyeTestRepository.leftEyeResult ?: ""
             val rightEyeResult = EyeTestRepository.rightEyeResult ?: ""
 
+            currentMode = TestModeEnum.Touch.displayName
             voiceRecognition?.stopListening()
             voiceRecognition = null
-            currentMode = TestModeEnum.Touch.displayName
-            delay(3000L)
+            delay(1000L)
             navController.navigate(
                 TestScreens.TestResult(
                     appTest = true,
@@ -136,11 +141,10 @@ fun ActiveTestScreen(
         topBar = {
             SDSTopBar(
                 title = "",
-                iconRight = painterResource(Res.drawable.close),
+                iconRight = Res.drawable.close,
                 iconRightVisible = true,
                 onRightButtonClick = {
-                    voiceRecognition?.stopListening()
-                    navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+                    showDialog = true
                 },
                 modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs)
             )
@@ -191,6 +195,35 @@ fun ActiveTestScreen(
                 }
             }
         }
+    )
+
+    SDSDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = it },
+        title = "Are you sure you want to exit?",
+        onClose = null,
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "If you cancel, you’ll need to restart the test.",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = {},
+        buttonPrimaryText = "Continue",
+        onSecondaryClick = {
+            voiceRecognition?.stopListening()
+            navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+        },
+        buttonSecondaryText = "End",
     )
 }
 

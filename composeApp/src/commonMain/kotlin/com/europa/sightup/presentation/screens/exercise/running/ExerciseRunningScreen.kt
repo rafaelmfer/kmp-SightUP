@@ -25,6 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import chaintech.videoplayer.ui.video.VideoPlayerView
 import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
 import com.europa.sightup.platformspecific.getLocalFilePathFor
 import com.europa.sightup.presentation.designsystem.components.SDSBadgeTime
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSTimer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.ExerciseScreens
@@ -64,6 +66,7 @@ import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -84,12 +87,21 @@ fun ExerciseRunningScreen(
     musicAudioGuidanceEnabled: Boolean = true,
     navController: NavController? = null,
 ) {
+    var navigateTo by remember { mutableStateOf(false) }
+
+    LaunchedEffect(navigateTo) {
+        if (navigateTo) {
+            delay(250L)
+            navController?.goBackToExerciseHome()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(SightUPTheme.sightUPColors.background_default),
     ) {
-
+        var showDialog by remember { mutableStateOf(false) }
         var isPauseEverything by remember { mutableStateOf(true) }
 
         var isVoiceVideoMute by remember { mutableStateOf(!musicAudioGuidanceEnabled) }
@@ -123,8 +135,7 @@ fun ExerciseRunningScreen(
             iconRightVisible = true,
             iconRight = Res.drawable.close,
             onRightButtonClick = {
-                // TODO: open Dialog to confirm exit and if confirmed, navigate to ExerciseRoot
-                navController?.goBackToExerciseHome()
+                showDialog = true
             },
         )
 
@@ -393,5 +404,34 @@ fun ExerciseRunningScreen(
                 didEndAudio = { }
             )
         }
+
+        SDSDialog(
+            showDialog = showDialog,
+            onDismiss = { showDialog = it },
+            title = "Exit exercise?",
+            onClose = null,
+            content = { _ ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = SightUPTheme.spacing.spacing_md)
+                ) {
+                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                    Text(
+                        text = " If you exit, you’ll need to restart the exercise.",
+                        style = SightUPTheme.textStyles.body,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+                }
+            },
+            onPrimaryClick = {},
+            buttonPrimaryText = "Continue",
+            onSecondaryClick = {
+                navigateTo = true
+            },
+            buttonSecondaryText = "Exit",
+        )
     }
 }
