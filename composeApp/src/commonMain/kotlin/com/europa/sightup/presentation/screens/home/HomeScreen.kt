@@ -80,6 +80,7 @@ import com.europa.sightup.utils.Moods
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.formatTime
+import com.europa.sightup.utils.isUserLoggedIn
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
@@ -117,29 +118,36 @@ private fun IconSort(myIcon: String): Painter {
         Moods.MODERATE.value -> painterResource(Moods.MODERATE.icon)
         Moods.GOOD.value -> painterResource(Moods.GOOD.icon)
         Moods.VERY_GOOD.value -> painterResource(Moods.VERY_GOOD.icon)
+        Moods.ADD.value -> painterResource(Moods.ADD.icon)
         else -> painterResource(Res.drawable.gray_nothing)
     }
 }
 
 private fun getIconDate(daysBefore: LocalDate, state: UIState<List<DailyCheckInResponse>>): String {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
-
+    println("State content: $state")
     return when (state) {
         is UIState.Success -> {
             val list = state.data
+            println("Daily Check List: $list")
 
             val matchedItem = list.firstOrNull { item ->
                 daysBefore.toString() == item.dailyCheckDate
             }
 
             if (today == daysBefore) {
+                println("Matched Item: $matchedItem")
                 matchedItem?.dailyCheckInfo?.visionStatus ?: "Add"
             } else {
+                println("Date: $daysBefore, Vision Status: ${matchedItem?.dailyCheckInfo?.visionStatus}")
                 matchedItem?.dailyCheckInfo?.visionStatus ?: "Any"
             }
         }
 
-        else -> "Any"
+        else -> {
+            println("State is not success: $state")
+            "Any"
+        }
     }
 }
 
@@ -186,12 +194,22 @@ fun HomeScreen(
         showHome = true
     }
 
-
     val exerciseList = when (val state = dailyExerciseState) {
-        is UIState.Success -> { state.data }
-        is UIState.Loading -> { listOf() }
-        is UIState.Error -> { listOf() }
-        is UIState.InitialState -> { listOf() }
+        is UIState.Success -> {
+            state.data
+        }
+
+        is UIState.Loading -> {
+            listOf()
+        }
+
+        is UIState.Error -> {
+            listOf()
+        }
+
+        is UIState.InitialState -> {
+            listOf()
+        }
     }
 
     Column(
@@ -675,6 +693,8 @@ private fun AssessmentList(
     dailyCheckTime: String = "",
     exerciseList: List<DailyExerciseMessageResponse.DailyExerciseResponse> = listOf(),
 ) {
+    val userIsLogged = isUserLoggedIn
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -685,7 +705,7 @@ private fun AssessmentList(
             exerciseDuration = 0,
             subtitle = "Log your eye condition",
             lineUp = false,
-            lineDown = true,
+            lineDown = userIsLogged,
             eyeConditions = listOf(),
             onClickCard = onDailyCheckClick,
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
@@ -30,14 +31,13 @@ import com.europa.sightup.presentation.designsystem.components.data.BottomSheetE
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseEvaluationResult
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.screens.JoinInBottomSheet
-import com.europa.sightup.presentation.screens.exercise.evaluation.EvaluateExercise
-import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResultViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginSignUpScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.isUserLoggedIn
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -61,12 +61,23 @@ fun ExerciseFinishScreen(
 ) {
     val viewModel = koinViewModel<ExerciseFinishScreenViewModel>()
     val userIsLogged = isUserLoggedIn
-    // Collect the save exercise state
-    val saveExerciseState by viewModel.saveExerciseState.collectAsStateWithLifecycle()
 
-    // Trigger save operation when the screen is loaded
     LaunchedEffect(Unit) {
-        viewModel.saveDailyExercise("", idExercise)
+        if (userIsLogged) {
+            viewModel.getDailyExerciseList()
+        }
+    }
+    val dailyExerciseState by viewModel.dailyExerciseList.collectAsStateWithLifecycle()
+    var exId = ""
+
+    val isExerciseInDailyList = when (dailyExerciseState) {
+        is UIState.Success -> {
+            val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseMessageResponse.DailyExerciseResponse>>).data
+            exId = exerciseList.firstOrNull { it.title.contains(exerciseName, ignoreCase = true) }?.taskId ?: ""
+            exerciseList.any { it.title.contains(exerciseName, ignoreCase = true) }
+        }
+
+        else -> false
     }
 
     var evaluateSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
@@ -183,6 +194,10 @@ fun ExerciseFinishScreen(
         sheetContent = {
             EvaluateExercise(
                 onSaveClicked = { answer ->
+                    if (isExerciseInDailyList) {
+                        viewModel.saveDailyExercise(exerciseId = exId, feeling = answer)
+                    }
+
                     navController?.navigate(
                         ExerciseEvaluationResult(
                             exerciseId = idExercise,

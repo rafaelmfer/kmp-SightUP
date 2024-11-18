@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 
-
 class HomeViewModel(private val repository: SightUpRepository) : ViewModel() {
     private val _user = MutableStateFlow<UIState<UserResponse>>(UIState.InitialState())
     val user: StateFlow<UIState<UserResponse>> = _user.asStateFlow()
@@ -91,14 +90,13 @@ class HomeViewModel(private val repository: SightUpRepository) : ViewModel() {
                 _dailyExerciseList.update { UIState.Loading() }
             }
             .onEach { list: List<DailyExerciseMessageResponse.DailyExerciseResponse> ->
-                println("Received daily exercises: $list")
                 _dailyExerciseList.update { UIState.Success(list) }
             }
             .catch { error ->
                 _dailyExerciseList.update { UIState.Error(error.message ?: "Unknown error") }
                 println("Error fetching daily exercises: ${error.message}")
             }
-            .onCompletion {  println("Completed fetching daily exercises.") }
+            .onCompletion { println("Completed fetching daily exercises.") }
             .launchIn(viewModelScope)
     }
 }

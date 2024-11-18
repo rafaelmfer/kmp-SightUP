@@ -60,6 +60,7 @@ fun ScreenOneVisionStatus(
         Moods.MODERATE -> Moods.MODERATE.icon
         Moods.GOOD -> Moods.GOOD.icon
         Moods.VERY_GOOD -> Moods.VERY_GOOD.icon
+        else -> Moods.MODERATE.icon
     }
 
     val screenSizeInInches = getScreenSizeInInches()

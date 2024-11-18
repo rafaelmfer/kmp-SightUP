@@ -14,7 +14,8 @@ enum class Moods(val value: String, val icon: DrawableResource) {
     GOOD(value = "Good", icon = Res.drawable.good),
     MODERATE(value = "Moderate", icon = Res.drawable.moderate),
     POOR(value = "Poor", icon = Res.drawable.poor),
-    VERY_POOR(value = "Very Poor", icon = Res.drawable.very_poor);
+    VERY_POOR(value = "Very Poor", icon = Res.drawable.very_poor),
+    ADD(value = "Add", icon = Res.drawable.add);
 
 
     companion object {

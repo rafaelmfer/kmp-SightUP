@@ -1,4 +1,4 @@
-package com.europa.sightup.presentation.screens.exercise.evaluation
+package com.europa.sightup.presentation.screens.exercise.finish
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

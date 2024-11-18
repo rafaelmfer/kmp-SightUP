@@ -50,7 +50,6 @@ import com.europa.sightup.presentation.designsystem.components.SDSTimer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.ExerciseScreens
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
-import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.sizes
@@ -58,6 +57,7 @@ import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.clickableWithRipple
+import com.europa.sightup.utils.goBackToExerciseHome
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionResult
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -124,7 +124,7 @@ fun ExerciseRunningScreen(
             iconRight = Res.drawable.close,
             onRightButtonClick = {
                 // TODO: open Dialog to confirm exit and if confirmed, navigate to ExerciseRoot
-                navController?.popBackStack<ExerciseRoot>(inclusive = false)
+                navController?.goBackToExerciseHome()
             },
         )
 

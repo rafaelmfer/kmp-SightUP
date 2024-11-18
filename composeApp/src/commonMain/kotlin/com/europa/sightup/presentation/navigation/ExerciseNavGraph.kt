@@ -18,6 +18,7 @@ import com.europa.sightup.presentation.screens.exercise.details.ExerciseDetailsS
 import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResult
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreen
 import com.europa.sightup.presentation.screens.exercise.running.ExerciseRunningScreen
+import com.europa.sightup.utils.goBackToExerciseHome
 import com.europa.sightup.utils.slideInFromLeft
 import com.europa.sightup.utils.slideInFromRight
 import com.europa.sightup.utils.slideOutToLeft
@@ -76,7 +77,7 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                 },
                 onRightButtonHeaderClick = {
                     // TODO: open Dialog to confirm exit and if confirmed, navigate to ExerciseRoot
-                    navController.popBackStack<ExerciseRoot>(inclusive = false)
+                    navController?.goBackToExerciseHome()
                 },
                 onFinish = {
                     navController.navigate(
