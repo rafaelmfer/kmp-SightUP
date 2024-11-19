@@ -96,6 +96,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.add
 import sightupkmpapp.composeapp.generated.resources.arrow_right
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.edit
@@ -118,7 +119,7 @@ private fun IconSort(myIcon: String): Painter {
         Moods.MODERATE.value -> painterResource(Moods.MODERATE.icon)
         Moods.GOOD.value -> painterResource(Moods.GOOD.icon)
         Moods.VERY_GOOD.value -> painterResource(Moods.VERY_GOOD.icon)
-        Moods.ADD.value -> painterResource(Moods.ADD.icon)
+        "Add" -> painterResource(Res.drawable.add)
         else -> painterResource(Res.drawable.gray_nothing)
     }
 }
@@ -194,20 +195,12 @@ fun HomeScreen(
         showHome = true
     }
 
-    val exerciseList = when (val state = dailyExerciseState) {
+    val exerciseList = when (val exerciseState = dailyExerciseState) {
         is UIState.Success -> {
-            state.data
+            exerciseState.data
         }
 
-        is UIState.Loading -> {
-            listOf()
-        }
-
-        is UIState.Error -> {
-            listOf()
-        }
-
-        is UIState.InitialState -> {
+        else -> {
             listOf()
         }
     }

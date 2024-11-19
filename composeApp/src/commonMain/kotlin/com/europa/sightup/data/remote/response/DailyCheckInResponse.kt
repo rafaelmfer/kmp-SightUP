@@ -1,4 +1,5 @@
 package com.europa.sightup.data.remote.response
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -7,9 +8,9 @@ data class DailyCheckInResponse(
     @SerialName("exerciseFelling") val exerciseFelling: String? = null,
     @SerialName("dailyCheckDate") val dailyCheckDate: String,
     @SerialName("email") val email: String,
-    @SerialName("dailyCheckInfo") val dailyCheckInfo: DailyCheckInfo,
+    @SerialName("dailyCheckInfo") val dailyCheckInfo: DailyCheckInfo? = null,
     @SerialName("dailyExerciseInfo") val dailyExerciseInfo: List<DailyExerciseInfo>,
-    @SerialName("assessmentId") val assessmentId: String,
+    @SerialName("assessmentId") val assessmentId: String? = null,
 )
 
 @Serializable
@@ -23,10 +24,10 @@ data class DailyCheckInfo(
 
 @Serializable
 data class DailyExerciseInfo(
-    @SerialName("eyesNow") val eyesNow: String,
-    @SerialName("category") val category: String,
-    @SerialName("exerciseName") val exerciseName: String,
-    @SerialName("exerciseTime") val exerciseTime: String,
+    @SerialName("eyesNow") val eyesNow: String? = null,
+    @SerialName("category") val category: String? = null,
+    @SerialName("exerciseName") val exerciseName: String? = null,
+    @SerialName("exerciseTime") val exerciseTime: String? = null,
     @SerialName("done") val done: Boolean? = null,
 )
 
