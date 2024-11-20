@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -22,11 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSDivider
 import com.europa.sightup.presentation.designsystem.components.SDSInput
@@ -39,19 +41,22 @@ import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.app_name
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.continue_string
+import sightupkmpapp.composeapp.generated.resources.eye_hide
+import sightupkmpapp.composeapp.generated.resources.eye_show
 import sightupkmpapp.composeapp.generated.resources.forgot_password
 import sightupkmpapp.composeapp.generated.resources.password
 import sightupkmpapp.composeapp.generated.resources.sign_up_welcome
 
 @Composable
 fun LoginPasswordSheetContent(
-    navController: NavController? = null,
     onContinueClicked: (String) -> Unit = {},
     errorMessage: String = "",
 ) {
     var password: String by remember { mutableStateOf("") }
     val isButtonEnabled = password.isNotEmpty()
     val isError = errorMessage.isNotEmpty()
+
+    var showPassword by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -77,11 +82,36 @@ fun LoginPasswordSheetContent(
             label = stringResource(Res.string.password),
             hint = stringResource(Res.string.password),
             fullWidth = true,
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (showPassword) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
             ),
-            isError = isError
+            isError = isError,
+            endIcon = {
+                val iconColor = SightUPTheme.sightUPColors.text_primary
+                if (showPassword) {
+                    IconButton(onClick = { showPassword = false }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.eye_hide),
+                            contentDescription = "Hide password",
+                            tint = iconColor
+                        )
+                    }
+                } else {
+                    IconButton(onClick = { showPassword = true }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.eye_show),
+                            contentDescription = "Show password",
+                            tint = iconColor
+                        )
+                    }
+                }
+            }
         )
         if (isError) {
             Row(

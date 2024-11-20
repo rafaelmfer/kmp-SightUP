@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.update
 class TestResultViewModel(private val repository: SightUpRepository) : ViewModel() {
 
     private var activeTest: ActiveTest = ActiveTest.VisualAcuity
-        private set
 
     private val _newTestResult = MutableStateFlow<UIState<VisionHistoryResponse>>(UIState.InitialState())
     val newTestResult: StateFlow<UIState<VisionHistoryResponse>> = _newTestResult.asStateFlow()

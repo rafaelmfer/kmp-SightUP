@@ -11,7 +11,7 @@ data class DailyCheckResponse(
 
 @Serializable
 data class UpdatedDailyResponse(
-    @SerialName("assessmentId") val assessmentId: String,
+    @SerialName("assessmentId") val assessmentId: String? = null,
     @SerialName("email") val email: String,
     @SerialName("dailyCheckDate") val dailyCheckDate: String,
     @SerialName("dailyCheckInfo") val dailyCheckInfo: DailyCheckInfoResponse,
@@ -24,14 +24,14 @@ data class DailyCheckInfoResponse(
     @SerialName("condition") val condition: List<String>,
     @SerialName("causes") val causes: List<String>,
     @SerialName("infoTime") val infoTime: String,
-    @SerialName("done") val done: Boolean,
+    @SerialName("done") val done: Boolean = false,
 )
 
 @Serializable
 data class DailyExerciseInfoResponse(
-    @SerialName("eyesNow") val eyesNow: String,
+    @SerialName("eyesNow") val eyesNow: String? = null,
     @SerialName("category") val category: String,
-    @SerialName("exerciseName") val exerciseName: String,
-    @SerialName("exerciseTime") val exerciseTime: String,
-    @SerialName("done") val done: Boolean,
+    @SerialName("exerciseName") val exerciseName: String? = null,
+    @SerialName("exerciseTime") val exerciseTime: String? = null,
+    @SerialName("done") val done: Boolean = false,
 )

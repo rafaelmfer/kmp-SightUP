@@ -217,7 +217,7 @@ fun ActiveTestScreen(
                 Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
             }
         },
-        onPrimaryClick = { showDialog = false},
+        onPrimaryClick = { showDialog = false },
         buttonPrimaryText = "Continue",
         onSecondaryClick = {
             voiceRecognition?.stopListening()
@@ -277,7 +277,7 @@ private fun TestContent(
         ) {
             // Only to display the E-chart
             if (test.title.contains(VisionTestTypes.VisionAcuity.title)) {
-                viewModel.currentEFormat?.let { VisualAcuityChart(it) }
+                viewModel.currentEFormat?.let { VisualAcuityChart(it, Modifier.weight(0.3f)) }
             }
 
             // Controllers of the tests
@@ -332,14 +332,15 @@ private fun TestContent(
 }
 
 @Composable
-private fun VisualAcuityChart(currentEFormat: EChartIcon) {
+private fun VisualAcuityChart(currentEFormat: EChartIcon, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp),
+            .then(modifier),
         contentAlignment = Alignment.Center
     ) {
         AnimatedContent(
+            modifier = Modifier,
             targetState = currentEFormat,
             transitionSpec = {
                 fadeIn(animationSpec = tween(durationMillis = 900, delayMillis = 100)) togetherWith

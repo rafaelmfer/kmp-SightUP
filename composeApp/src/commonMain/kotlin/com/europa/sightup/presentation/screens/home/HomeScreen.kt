@@ -42,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -57,7 +58,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
-import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
+import com.europa.sightup.data.remote.response.DailyExerciseResponse
 import com.europa.sightup.data.remote.response.assessment.DailyCheckInfoResponse
 import com.europa.sightup.presentation.designsystem.components.ExpandableItem
 import com.europa.sightup.presentation.designsystem.components.ExpandableListItem
@@ -108,6 +109,7 @@ import sightupkmpapp.composeapp.generated.resources.today
 
 data class Condition(
     val title: String,
+    val badge: String,
     val message: String,
 )
 
@@ -309,7 +311,6 @@ fun HomeScreen(
             }
         }
     )
-
 
     DailyCheckStatusResultBottomSheet(
         bottomSheetVisibility = dailyResultBottomSheetVisibility,
@@ -532,14 +533,14 @@ private fun GreetingWithIcons(name: String) {
             }
         )
 
-        IconButton(
-            onClick = {},
+        Box(
             modifier = Modifier
                 .constrainAs(todayIcon) {
                     top.linkTo(greetingText.top)
                     bottom.linkTo(greetingText.bottom)
                     start.linkTo(greetingText.end, margin = 8.dp)
                 }
+                .alpha(0f) // Not sure if we are going to have this button anymore
         ) {
             Icon(
                 painter = painterResource(Res.drawable.today),
@@ -684,7 +685,7 @@ private fun AssessmentList(
     onDailyCheckClick: () -> Unit = {},
     dailyCheckIsDone: Boolean = false,
     dailyCheckTime: String = "",
-    exerciseList: List<DailyExerciseMessageResponse.DailyExerciseResponse> = listOf(),
+    exerciseList: List<DailyExerciseResponse> = listOf(),
 ) {
     val userIsLogged = isUserLoggedIn
 
@@ -703,7 +704,6 @@ private fun AssessmentList(
             onClickCard = onDailyCheckClick,
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
         )
-
 
         exerciseList.forEachIndexed { index, exercise ->
             SDSCardAssessment(
@@ -799,21 +799,33 @@ private fun EyeWellnessTips() {
     Column(
         verticalArrangement = Arrangement.spacedBy(SightUPTheme.spacing.spacing_base),
         modifier = Modifier.fillMaxWidth()
-            .padding(top = SightUPTheme.spacing.spacing_md, bottom = SightUPTheme.spacing.spacing_base)
+            .padding(bottom = SightUPTheme.spacing.spacing_base)
             .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
     ) {
         EyeWellnessTipsTitle()
 
         val conditions = mutableStateListOf(
-            Condition("Eye Strain", "Message for Eye Strain"),
-            Condition("Dry Eyes", "Message for Dry Eyes"),
-            Condition("Red Eyes", "Message for Red Eyes")
+            Condition(
+                "Apply eye drops",
+                "Eye Strain",
+                "Use of eye drops like artificial tears. You can also try to blink more often when using a screen, which may prevent the symptom from occurring."
+            ),
+            Condition(
+                "Apply eye drops",
+                "Dry Eyes",
+                "Eye drops like artificial tears can get  without a prescription. There are also over-the-counter moisturizing  gels and ointments that may help your eyes feel better."
+            ),
+            Condition(
+                "Wash your hands",
+                "Red Eyes",
+                "If you have discharge, wash the area around your eyes 2 or 3 times a day. Use a clean, wet washcloth or a fresh cotton ball each time while cleaning. "
+            )
         )
 
         val items = remember {
             conditions.map { condition ->
                 ExpandableItem(
-                    title = condition.title, message = condition.message, isExpanded = false
+                    title = condition.title, badge = condition.badge, message = condition.message, isExpanded = false
                 )
             }
         }
@@ -830,7 +842,6 @@ private fun EyeWellnessTips() {
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -975,7 +986,7 @@ private fun DailyCheckStatusResultBottomSheet(
                                 )
                             }
                         }
-
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_12))
                         EyeWellnessTips()
                     }
 

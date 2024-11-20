@@ -131,6 +131,7 @@ fun ShowProfileSetup(
         },
         onPrimaryClick = {
             viewModel.hideBottomSheet()
+            showDialog = false
         },
         buttonPrimaryText = "Set Up Later",
         onSecondaryClick = {},

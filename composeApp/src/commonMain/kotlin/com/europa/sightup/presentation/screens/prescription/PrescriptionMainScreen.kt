@@ -159,6 +159,10 @@ fun PrescriptionScreen(
                         text = PrescriptionType.CONTACT_LENSES.title,
                         prescription = userPrescription.contactLens,
                         onClickVisionHistory = {
+                        },
+                        onClickEdit = {
+                            textBottomSheet = PrescriptionType.CONTACT_LENSES.title
+                            addPrescriptionSheetVisibility = BottomSheetEnum.SHOW
                         }
                     )
                 }

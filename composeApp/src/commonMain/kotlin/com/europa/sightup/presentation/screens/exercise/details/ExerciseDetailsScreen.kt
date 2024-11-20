@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.toRoute
@@ -63,12 +61,9 @@ fun ExerciseDetailsScreen(
 
     var isMusicAudioGuidanceEnable by rememberSaveable { mutableStateOf(true) }
 
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
             .background(SightUPTheme.sightUPColors.background_default)
     ) {
         SDSTopBar(
@@ -87,92 +82,91 @@ fun ExerciseDetailsScreen(
                     horizontal = SightUPTheme.spacing.spacing_xs,
                 )
         )
-        Spacer(Modifier.weight(ONE_FLOAT))
-        CoilImage(
-            imageModel = { image },
-            imageOptions = ImageOptions(
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center,
-                requestSize = IntSize(
-                    width = -1,
-                    height = 130.dp.value.toInt(),
-                ),
-            ),
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = SightUPTheme.spacing.spacing_side_margin,
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(Modifier.weight(ONE_FLOAT))
+            CoilImage(
+                imageModel = { image },
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.FillWidth,
+                    alignment = Alignment.Center,
                 ),
-            loading = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = SightUPTheme.spacing.spacing_side_margin,
+                    ),
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                },
+                failure = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Image failed to load")
+                    }
                 }
-            },
-            failure = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Image failed to load")
-                }
-            }
-        )
-        Spacer(Modifier.height(SightUPTheme.sizes.size_32))
-        Text(
-            text = "Place your phone on a safe place and follow the instructions on the screen.",
-            style = SightUPTheme.textStyles.large,
-            modifier = Modifier
-                .padding(
-                    start = SightUPTheme.spacing.spacing_side_margin,
-                    end = SightUPTheme.spacing.spacing_side_margin,
-                )
-        )
-        Spacer(
-            Modifier
-                .defaultMinSize(minHeight = SightUPTheme.sizes.size_32)
-                .weight(ONE_FLOAT)
-        )
-
-        val arguments = navController?.currentBackStackEntry?.toRoute<ExerciseDetails>()
-        SDSCardExerciseBottom(
-            category = category,
-            title = title,
-            motivation = motivation,
-            duration = duration,
-            buttonText = buttonText,
-            onClick = {
-                if (showLoginSignUp) {
-                    joinInSheetVisibility = BottomSheetEnum.SHOW
-                    return@SDSCardExerciseBottom
-                } else {
-                    navController?.navigate(
-                        ExerciseCountdown(
-                            exerciseId = idExercise,
-                            category = arguments?.category ?: "",
-                            exerciseName = title,
-                            duration = duration,
-                            video = arguments?.video ?: "",
-                            finishTitle = arguments?.finishTitle ?: "",
-                            advice = arguments?.advice ?: "",
-                            musicAudioGuidanceEnabled = isMusicAudioGuidanceEnable
-                        )
+            )
+            Spacer(Modifier.height(SightUPTheme.sizes.size_32))
+            Text(
+                text = "Place your phone on a safe place and follow the instructions on the screen.",
+                style = SightUPTheme.textStyles.large,
+                modifier = Modifier
+                    .padding(
+                        start = SightUPTheme.spacing.spacing_side_margin,
+                        end = SightUPTheme.spacing.spacing_side_margin,
                     )
-                }
-            },
-            isChecked = isMusicAudioGuidanceEnable,
-            onCheckedChanged = { isChecked ->
-                isMusicAudioGuidanceEnable = isChecked
-            },
-            modifier = Modifier
-                .padding(
-                    start = SightUPTheme.spacing.spacing_side_margin,
-                    end = SightUPTheme.spacing.spacing_side_margin,
-                    bottom = SightUPTheme.spacing.spacing_md,
-                )
-        )
+            )
+            Spacer(Modifier.height(SightUPTheme.sizes.size_12))
+            Spacer(Modifier.weight(ONE_FLOAT))
+
+            val arguments = navController?.currentBackStackEntry?.toRoute<ExerciseDetails>()
+            SDSCardExerciseBottom(
+                category = category,
+                title = title,
+                motivation = motivation,
+                duration = duration,
+                buttonText = buttonText,
+                onClick = {
+                    if (showLoginSignUp) {
+                        joinInSheetVisibility = BottomSheetEnum.SHOW
+                        return@SDSCardExerciseBottom
+                    } else {
+                        navController?.navigate(
+                            ExerciseCountdown(
+                                exerciseId = idExercise,
+                                category = arguments?.category ?: "",
+                                exerciseName = title,
+                                duration = duration,
+                                video = arguments?.video ?: "",
+                                finishTitle = arguments?.finishTitle ?: "",
+                                advice = arguments?.advice ?: "",
+                                musicAudioGuidanceEnabled = isMusicAudioGuidanceEnable
+                            )
+                        )
+                    }
+                },
+                isChecked = isMusicAudioGuidanceEnable,
+                onCheckedChanged = { isChecked ->
+                    isMusicAudioGuidanceEnable = isChecked
+                },
+                modifier = Modifier
+                    .padding(
+                        start = SightUPTheme.spacing.spacing_side_margin,
+                        end = SightUPTheme.spacing.spacing_side_margin,
+                        bottom = SightUPTheme.spacing.spacing_md,
+                    )
+            )
+        }
     }
 
     JoinInBottomSheet(

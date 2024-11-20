@@ -155,7 +155,12 @@ fun ExerciseRunningScreen(
                 VideoPlayerView(
                     modifier = Modifier
                         .fillMaxSize(),
-                    url = exerciseVideo,
+                    // Because Blink exercise video is too heavy to download, we use the local file
+                    url = if (exerciseName.equals("Blink Relaxation", ignoreCase = true)) {
+                        getLocalFilePathFor("blink_relaxation_exercise.mp4")
+                    } else {
+                        exerciseVideo
+                    },
                     playerConfig = PlayerConfig(
                         isPauseResumeEnabled = false,
                         isSeekBarVisible = false,
@@ -245,7 +250,7 @@ fun ExerciseRunningScreen(
                     .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
                     .background(SightUPTheme.sightUPColors.background_default)
                     .alpha(alphaGuideBox)
-                    .clickableWithRipple {
+                    .clickableWithRipple(indication = null) {
                         controlAlpha = false
                     },
             ) {
@@ -285,13 +290,11 @@ fun ExerciseRunningScreen(
                     )
                 }
 
-
                 val progress by animateLottieCompositionAsState(
                     composition = composition.value,
                     speed = 1.1f,
                     iterations = Compottie.IterateForever
                 )
-
 
                 Spacer(Modifier.weight(ONE_FLOAT))
 
@@ -341,7 +344,6 @@ fun ExerciseRunningScreen(
                         timeSeconds = exerciseDuration,
                         modifier = Modifier,
                     )
-
                     if (repetitions.isNotEmpty()) {
                         Row(
                             modifier = Modifier

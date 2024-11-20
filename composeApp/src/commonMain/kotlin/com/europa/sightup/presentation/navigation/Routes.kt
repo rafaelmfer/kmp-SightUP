@@ -127,6 +127,15 @@ sealed interface TestScreens {
         }
     }
 
+//    @Serializable
+//    data class TestEvaluatingResults(
+//        val appTest: Boolean = true,
+//        val testId: String = "",
+//        val testTitle: String = "",
+//        val left: String = "",
+//        val right: String = "",
+//    ) : TestScreens
+
     @Serializable
     data class TestResult(
         val appTest: Boolean,

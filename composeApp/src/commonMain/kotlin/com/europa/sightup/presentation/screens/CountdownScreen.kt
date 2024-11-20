@@ -88,6 +88,7 @@ fun CountdownScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(SightUPTheme.sightUPColors.background_default)
     ) {
         if (titleHeader != null || onLeftButtonHeaderClick != null || onRightButtonHeaderClick != null) {
             SDSTopBar(

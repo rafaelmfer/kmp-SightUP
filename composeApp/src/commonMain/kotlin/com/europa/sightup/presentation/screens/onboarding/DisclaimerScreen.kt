@@ -57,7 +57,7 @@ fun DisclaimerScreen(navController: NavController? = null) {
                 .fillMaxWidth()
                 .padding(
                     top = SightUPTheme.spacing.spacing_xs,
-                    bottom = SightUPTheme.spacing.spacing_lg
+                    bottom = SightUPTheme.spacing.spacing_md
                 )
         ) {
             Text(

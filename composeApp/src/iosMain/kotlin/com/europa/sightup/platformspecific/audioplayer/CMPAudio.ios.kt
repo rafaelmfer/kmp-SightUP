@@ -8,10 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCAction
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import platform.AVFoundation.AVPlayerItem
 import platform.AVFoundation.AVPlayerItemDidPlayToEndTimeNotification
 import platform.AVFoundation.AVQueuePlayer
@@ -32,7 +31,16 @@ import platform.Foundation.NSSelectorFromString
 import platform.Foundation.NSURL
 import platform.darwin.NSObject
 
-@OptIn(ExperimentalForeignApi::class)
+
+fun createUrl(url: String): NSURL? {
+    return if (url.startsWith("http://") || url.startsWith("https://")) {
+        NSURL.URLWithString(url)
+    } else {
+        NSURL.fileURLWithPath(url)
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 @Composable
 actual fun CMPAudioPlayer(
     modifier: Modifier,
@@ -44,44 +52,43 @@ actual fun CMPAudioPlayer(
     sliderTime: Int?,
     isRepeat: Boolean,
     loadingState: (Boolean) -> Unit,
-    didEndAudio: () -> Unit
+    didEndAudio: () -> Unit,
 ) {
     val playerItem = remember { mutableStateOf<AVPlayerItem?>(null) }
-    val player: AVQueuePlayer by remember { mutableStateOf(AVQueuePlayer(playerItem.value)) }
+    val player = remember { AVQueuePlayer() }
     var repeatStatus by remember { mutableStateOf(isRepeat) }
 
+    // Load the audio item when the URL changes
     LaunchedEffect(url) {
-        val urlObject = NSURL.URLWithString(url)
-        val newItem = urlObject?.let { AVPlayerItem(uRL = it) }
-        playerItem.value = newItem
-        playerItem.value?.let {
-            player.replaceCurrentItemWithPlayerItem(it)
-        }
+        playerItem.value = createUrl(url)?.let { AVPlayerItem(uRL = it) }
+        player.replaceCurrentItemWithPlayerItem(playerItem.value)
+
         if (isPause) {
             player.pause()
         } else {
             player.play()
         }
     }
+
+    // Update repeat status when it changes
     LaunchedEffect(isRepeat) {
         repeatStatus = isRepeat
     }
 
+    // Handle play/pause and seeking when isPause or sliderTime changes
     LaunchedEffect(isPause, sliderTime) {
-        MainScope().launch {
-            if (isPause) {
-                player.pause()
-            } else {
-                player.play()
-            }
-            sliderTime?.let {
-                val time = CMTimeMakeWithSeconds(it.toDouble(), 1)
-                player.seekToTime(time)
-            }
+        if (isPause) {
+            player.pause()
+        } else {
+            player.play()
+        }
+        sliderTime?.let {
+            player.seekToTime(CMTimeMakeWithSeconds(it.toDouble(), 1))
         }
     }
 
     DisposableEffect(Unit) {
+        // Observer for when the audio item finishes playing
         val observerObject = object : NSObject() {
             @ObjCAction
             fun onPlayerItemDidPlayToEndTime() {
@@ -98,21 +105,21 @@ actual fun CMPAudioPlayer(
             }
         }
 
+        // Periodic time observer to update current and total time
         val timeObserver = player.addPeriodicTimeObserverForInterval(
             CMTimeMakeWithSeconds(1.0, 1),
             null
-        ) { _ ->
+        ) {
             if (!isSliding) {
-                MainScope().launch {
-                    val duration = player.currentItem?.duration?.let { CMTimeGetSeconds(it) } ?: 0.0
-                    val current = CMTimeGetSeconds(player.currentTime())
-                    currentTime(current.toInt())
-                    totalTime(duration.toInt())
-                    loadingState(player.currentItem?.playbackLikelyToKeepUp?.not() ?: false)
-                }
+                val duration = player.currentItem?.duration?.let { CMTimeGetSeconds(it) } ?: 0.0
+                val current = CMTimeGetSeconds(player.currentTime())
+                currentTime(current.toInt())
+                totalTime(duration.toInt())
+                loadingState(player.currentItem?.playbackLikelyToKeepUp?.not() ?: false)
             }
         }
 
+        // Add observer for player item end notification
         NSNotificationCenter.defaultCenter().addObserver(
             observerObject,
             NSSelectorFromString("onPlayerItemDidPlayToEndTime"),
