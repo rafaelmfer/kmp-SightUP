@@ -73,8 +73,9 @@ fun SDSDialog(
                 ) {
                     if (title.isNotBlank()) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(top = SightUPTheme.spacing.spacing_sm),
                             horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 text = title,
@@ -82,7 +83,7 @@ fun SDSDialog(
                                 color = SightUPTheme.sightUPColors.text_primary,
                                 modifier = Modifier
                                     .padding(
-                                        top = if (onClose != null) SightUPTheme.spacing.spacing_base else SightUPTheme.spacing.spacing_md,
+                                        top = if (onClose != null) 0.dp else SightUPTheme.spacing.spacing_sm,
                                         start = SightUPTheme.spacing.spacing_md,
                                         end = if (onClose != null) SightUPTheme.spacing.spacing_base else SightUPTheme.spacing.spacing_md
                                     )
@@ -97,7 +98,7 @@ fun SDSDialog(
                                     },
                                     modifier = Modifier
                                         .padding(
-                                            top = SightUPTheme.spacing.spacing_sm,
+                                            // top = SightUPTheme.spacing.spacing_sm,
                                             end = SightUPTheme.spacing.spacing_sm
                                         )
                                         .wrapContentWidth()
@@ -142,7 +143,6 @@ fun SDSDialog(
                                 SDSButton(
                                     text = buttonPrimaryText,
                                     onClick = {
-                                        onDismiss(false)
                                         onPrimaryClick()
                                     },
                                     modifier = Modifier

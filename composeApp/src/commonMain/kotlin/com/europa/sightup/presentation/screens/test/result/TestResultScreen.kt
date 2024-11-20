@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.screens.test.result
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,14 +31,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,10 +51,14 @@ import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.data.remote.response.VisionTestTypes
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
+import com.europa.sightup.presentation.designsystem.components.PagerTestResultContent
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSCardTest
 import com.europa.sightup.presentation.designsystem.components.SDSDialog
+import com.europa.sightup.presentation.designsystem.components.SDSDivider
+import com.europa.sightup.presentation.designsystem.components.SDSPagerWithDots
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.navigation.PrescriptionsScreens
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.screens.test.active.EChart
@@ -56,18 +67,27 @@ import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.UIState
+import com.europa.sightup.utils.clickableWithRipple
 import com.europa.sightup.utils.navigate
+import io.github.alexzhirkevich.compottie.Compottie
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import multiplatform.network.cmptoast.showToast
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.information
+import sightupkmpapp.composeapp.generated.resources.tip
 
 @Composable
 fun TestResultScreen(
@@ -78,7 +98,8 @@ fun TestResultScreen(
     right: String = "",
     navController: NavController,
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showDialogDiscard by remember { mutableStateOf(false) }
+    var showDialogSave by remember { mutableStateOf(false) }
 
     val today: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val formattedDate = formatDate(today)
@@ -86,7 +107,6 @@ fun TestResultScreen(
     val viewModel = koinViewModel<TestResultViewModel>()
     val testResultState by viewModel.newTestResult.collectAsState()
     val testListState by viewModel.test.collectAsState()
-    val saveSuccess by viewModel.saveSuccess.collectAsState()
 
     var visualAcuityTestContent by remember { mutableStateOf<TestResponse?>(null) }
     var astigmatismTestContent by remember { mutableStateOf<TestResponse?>(null) }
@@ -102,6 +122,8 @@ fun TestResultScreen(
             testType = VisionTestTypes.Astigmatism.title
         }
     }
+
+    // TODO: this is not taking more than a second
     LaunchedEffect(Unit) {
         viewModel.getTests()
         delay(10000L)
@@ -114,12 +136,6 @@ fun TestResultScreen(
             val tests = (testListState as UIState.Success<List<TestResponse>>).data
             visualAcuityTestContent = tests.find { it.title == VisionTestTypes.VisionAcuity.title }
             astigmatismTestContent = tests.find { it.title == VisionTestTypes.Astigmatism.title }
-        }
-    }
-
-    LaunchedEffect(saveSuccess) {
-        if (saveSuccess) {
-            showToast("Test saved successfully")
         }
     }
 
@@ -152,7 +168,7 @@ fun TestResultScreen(
                 iconRight = Res.drawable.close,
                 iconRightVisible = true,
                 onRightButtonClick = {
-                    showDialog = true
+                    showDialogDiscard = true
                 },
                 modifier = Modifier.background(SightUPTheme.sightUPColors.background_light)
                     .padding(horizontal = SightUPTheme.spacing.spacing_xs)
@@ -174,12 +190,16 @@ fun TestResultScreen(
                         left = left,
                         right = right
                     )
+                    showDialogSave = true
                 }
             )
         },
         content = { paddingValues ->
             if (isLoading && showLoadingAnimation) {
-                AnimationEvaluatingResultsScreen(modifier = Modifier.padding(paddingValues))
+                AnimationEvaluatingResultsScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    onResultReady = { showLoadingAnimation = false }
+                )
             } else {
                 val scrollState = rememberScrollState()
                 Column(
@@ -187,7 +207,6 @@ fun TestResultScreen(
                         .background(color = SightUPTheme.sightUPColors.background_light)
                         .padding(
                             horizontal = SightUPTheme.spacing.spacing_side_margin,
-                            // vertical = SightUPTheme.spacing.spacing_md
                         )
                         .verticalScroll(scrollState)
                 ) {
@@ -250,8 +269,8 @@ fun TestResultScreen(
     )
 
     SDSDialog(
-        showDialog = showDialog,
-        onDismiss = { showDialog = it },
+        showDialog = showDialogDiscard,
+        onDismiss = { showDialogDiscard = it },
         title = "Discard results?",
         onClose = {},
         content = { _ ->
@@ -276,7 +295,7 @@ fun TestResultScreen(
                 )
                 Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
                 Text(
-                    text = "• You need the result for this single test",
+                    text = "• You don't need the result for this single test",
                     style = SightUPTheme.textStyles.caption,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -290,6 +309,38 @@ fun TestResultScreen(
         buttonPrimaryText = "Discard",
         onSecondaryClick = {},
         buttonSecondaryText = "No",
+    )
+
+    SDSDialog(
+        showDialog = showDialogSave,
+        onDismiss = { showDialogSave = it },
+        title = "Successfully saved!",
+        onClose = {},
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "Check your previous vision test result and differences in Prescriptions.",
+                    style = SightUPTheme.textStyles.body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = {
+            navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+        },
+        buttonPrimaryText = "Back vision test" +
+                "",
+        onSecondaryClick = {
+            navController.navigate(PrescriptionsScreens.PrescriptionsRoot)
+        },
+        buttonSecondaryText = "Go prescriptions",
     )
 }
 
@@ -322,7 +373,8 @@ private fun AstigmatismCardResults(
 
             TestCardHeader(
                 title = "Astigmatism",
-                date = date
+                testDescription = VisionTestTypes.Astigmatism.description,
+                date = date,
             )
 
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
@@ -384,6 +436,11 @@ private fun EyeAstigmatismShowResults(
     eyeLabel: String,
     astigmatismValue: String,
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+    val currentPage = remember { mutableStateOf(0) }
+    val pagerState = rememberPagerState(pageCount = { 3 })
+    val coroutineScope = rememberCoroutineScope()
+
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -405,6 +462,8 @@ private fun EyeAstigmatismShowResults(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top = SightUPTheme.spacing.spacing_2xs)
+                    .clickableWithRipple { showDialog.value = true }
             ) {
                 Text(
                     text = "$astigmatismValue\u00B0",
@@ -418,6 +477,81 @@ private fun EyeAstigmatismShowResults(
                 )
             }
         }
+    }
+    if (showDialog.value) {
+        SDSDialog(
+            showDialog = true,
+            onDismiss = {
+                showDialog.value = false
+                currentPage.value = 0
+                coroutineScope.launch {
+                    pagerState.scrollToPage(0)
+                }
+            },
+            title = if (currentPage.value == 0) "Results meaning" else "Examples in daily life",
+            onClose = if (currentPage.value == 0) {
+                {
+                    showDialog.value = false
+                    currentPage.value = 0
+                }
+            } else {
+                null
+            },
+            content = { _ ->
+                when (currentPage.value) {
+                    0 -> Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = SightUPTheme.spacing.spacing_md)
+                    ) {
+                        DialogContentTestResults(
+                            imageRes = VisionTestTypes.Astigmatism.resultImage,
+                            imageHeight = 68.dp,
+                            text = "Your astigmatism is located at a $astigmatismValue° axis. It means the shape of your eye causes light to focus unevenly at this angle."
+                        )
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+                    }
+
+                    1 -> SDSPagerWithDots(
+                        pagerState = pagerState,
+                        pageCount = 3,
+                        contentProvider = { page ->
+                            when (page) {
+                                0 -> PagerTestResultContent(
+                                    VisionTestTypes.Astigmatism.resultReadImage,
+                                    "Reading",
+                                    VisionTestTypes.Astigmatism.resultReadDescription
+                                )
+
+                                1 -> PagerTestResultContent(
+                                    VisionTestTypes.Astigmatism.resultDriveImage,
+                                    "Driving",
+                                    VisionTestTypes.Astigmatism.resultDriveDescription
+                                )
+
+                                2 -> PagerTestResultContent(
+                                    VisionTestTypes.Astigmatism.resultPhoneImage,
+                                    "Using smartphone",
+                                    VisionTestTypes.Astigmatism.resultPhoneDescription
+                                )
+                            }
+                        }
+                    )
+                }
+            },
+            onPrimaryClick = {
+                if (currentPage.value == 0) {
+                    currentPage.value = 1
+                } else {
+                    currentPage.value = 0
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(0)
+                    }
+                    showDialog.value = false
+                }
+            },
+            buttonPrimaryText = if (currentPage.value == 0) "Next" else "Close"
+        )
     }
 }
 
@@ -451,7 +585,8 @@ private fun VisualAcuityCardResults(
         ) {
             TestCardHeader(
                 title = "Visual Acuity",
-                date = date
+                testDescription = VisionTestTypes.VisionAcuity.description,
+                date = date,
             )
 
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
@@ -478,10 +613,28 @@ private fun EyeAcuityShowResults(
     acuityPosition: Int,
     modifier: Modifier = Modifier,
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+    val currentPage = remember { mutableStateOf(0) }
+    val pagerState = rememberPagerState(pageCount = { 3 })
+    val coroutineScope = rememberCoroutineScope()
+
+    val (topNum, bottomNum) = acuityValue.split("/").let {
+        val top = it.getOrNull(0)?.toFloatOrNull()
+        val bottom = it.getOrNull(1)?.toFloatOrNull()
+        top to bottom
+    }
+
+    val decimalRtoL = if (topNum != null && bottomNum != null && bottomNum != 0f) {
+        val ratio = topNum / bottomNum
+        ratio.toString().take(3) // workaround to take only 3 decimals
+    } else {
+        null
+    }
+
     Column(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().clickableWithRipple { showDialog.value = true }
         ) {
             Text(
                 text = eyeLabel,
@@ -503,6 +656,139 @@ private fun EyeAcuityShowResults(
 
         VisionAcuitySlider(
             selectedIndex = acuityPosition,
+        )
+    }
+
+    if (showDialog.value) {
+        SDSDialog(
+            showDialog = true,
+            onDismiss = {
+                showDialog.value = false
+                currentPage.value = 0
+                coroutineScope.launch {
+                    pagerState.scrollToPage(0)
+                }
+            },
+            title = if (currentPage.value == 0) "Results meaning" else "Examples in daily life",
+            onClose = if (currentPage.value == 0) {
+                {
+                    showDialog.value = false
+                    currentPage.value = 0
+                }
+            } else {
+                null
+            },
+            content = { _ ->
+                when (currentPage.value) {
+                    0 -> Column(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = SightUPTheme.spacing.spacing_md),
+                    ) {
+                        DialogContentTestResults(
+                            imageRes = VisionTestTypes.VisionAcuity.resultImage,
+                            imageHeight = 68.dp,
+                            text = "You need to be ${topNum?.toInt()} feet away to see what most people can see from ${bottomNum?.toInt()} feet.",
+                        )
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+
+                        SDSDivider()
+
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.tip),
+                                contentDescription = "description",
+                                modifier = Modifier.size(16.dp)
+                            )
+
+                            Text(
+                                text = "Measurement notation",
+                                style = SightUPTheme.textStyles.body,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .fillMaxWidth().padding(start = SightUPTheme.spacing.spacing_2xs)
+                            )
+                        }
+
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Snellen [Feet]",
+                                style = SightUPTheme.textStyles.body2,
+                            )
+                            Text(
+                                text = acuityValue,
+                                style = SightUPTheme.textStyles.button,
+                                color = SightUPTheme.sightUPColors.primary_700,
+                            )
+                        }
+
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Decimal",
+                                style = SightUPTheme.textStyles.body2,
+                            )
+                            Text(
+                                text = decimalRtoL ?: "",
+                                style = SightUPTheme.textStyles.button,
+                                color = SightUPTheme.sightUPColors.primary_700,
+                            )
+                        }
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+                    }
+
+
+                    1 -> SDSPagerWithDots(
+                        pagerState = pagerState,
+                        pageCount = 3,
+                        contentProvider = { page ->
+                            when (page) {
+                                0 -> PagerTestResultContent(
+                                    VisionTestTypes.VisionAcuity.resultReadImage,
+                                    "Reading",
+                                    VisionTestTypes.VisionAcuity.resultReadDescription
+                                )
+
+                                1 -> PagerTestResultContent(
+                                    VisionTestTypes.VisionAcuity.resultDriveImage,
+                                    "Driving",
+                                    VisionTestTypes.VisionAcuity.resultDriveDescription
+                                )
+
+                                2 -> PagerTestResultContent(
+                                    VisionTestTypes.VisionAcuity.resultPhoneImage,
+                                    "Using smartphone",
+                                    VisionTestTypes.VisionAcuity.resultPhoneDescription
+                                )
+                            }
+                        }
+                    )
+                }
+            },
+            onPrimaryClick = {
+                if (currentPage.value == 0) {
+                    currentPage.value = 1
+                } else {
+                    currentPage.value = 0
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(0)
+                    }
+                    showDialog.value = false
+                }
+            },
+            buttonPrimaryText = if (currentPage.value == 0) "Next" else "Close"
         )
     }
 }
@@ -583,7 +869,7 @@ private fun VisionAcuitySlider(
                 Canvas(
                     modifier = Modifier.size(width = 12.dp, height = 8.dp)
                 ) {
-                    val trianglePath = androidx.compose.ui.graphics.Path().apply {
+                    val trianglePath = Path().apply {
                         moveTo(0f, 0f)
                         lineTo(size.width, 0f)
                         quadraticTo(
@@ -632,9 +918,12 @@ private fun VisionAcuitySlider(
 @Composable
 private fun TestCardHeader(
     title: String,
+    testDescription: String,
     date: String,
     modifier: Modifier = Modifier,
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+
     Column(modifier = modifier) {
         Text(
             text = date,
@@ -643,6 +932,7 @@ private fun TestCardHeader(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(top = 4.dp)
+                .clickableWithRipple { showDialog.value = true }
         ) {
             Text(
                 text = title,
@@ -656,6 +946,30 @@ private fun TestCardHeader(
             )
         }
     }
+
+    SDSDialog(
+        showDialog = showDialog.value,
+        onDismiss = { showDialog.value = it },
+        title = "About the test",
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = testDescription,
+                    style = SightUPTheme.textStyles.body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = { showDialog.value = false },
+        buttonPrimaryText = "Okay",
+    )
 }
 
 @Composable
@@ -688,19 +1002,84 @@ private fun ButtonBottomBar(
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun AnimationEvaluatingResultsScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    onResultReady: () -> Unit,
 ) {
+    val isPlaying by remember { mutableStateOf(true) }
+
+    val animationPath = "files/evaluate_animation.json"
+    val compositionResult by rememberLottieComposition {
+        LottieCompositionSpec.JsonString(
+            Res.readBytes(animationPath).decodeToString()
+        )
+    }
+
+    val progress by animateLottieCompositionAsState(
+        composition = compositionResult,
+        isPlaying = isPlaying,
+        iterations = Compottie.IterateForever
+    )
+
+    LaunchedEffect(progress) {
+        if (progress >= 0.99f) {
+            onResultReady()
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize().then(modifier),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = rememberLottiePainter(
+                composition = compositionResult,
+                progress = { progress }
+            ),
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Transparent),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
         Text(
             text = "Evaluating the results now",
-            style = SightUPTheme.textStyles.h3,
+            style = SightUPTheme.textStyles.h5,
             modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
+}
+
+
+@Composable
+private fun DialogContentTestResults(
+    imageRes: DrawableResource,
+    imageHeight: Dp = 130.dp,
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+
+        Image(
+            painter = painterResource(imageRes),
+            contentDescription = "Test representation",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(imageHeight),
+            contentScale = ContentScale.Inside
+        )
+
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+
+        Text(
+            text = text,
+            style = SightUPTheme.textStyles.body,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

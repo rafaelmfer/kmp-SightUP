@@ -131,7 +131,7 @@ fun NavGraphBuilder.exerciseNavGraph(navController: NavHostController) {
                         Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
                     }
                 },
-                onPrimaryClick = {},
+                onPrimaryClick = { showDialog = false},
                 buttonPrimaryText = "Continue",
                 onSecondaryClick = {
                     navController.goBackToExerciseHome()

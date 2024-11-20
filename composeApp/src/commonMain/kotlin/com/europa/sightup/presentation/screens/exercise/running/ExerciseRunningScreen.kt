@@ -426,7 +426,7 @@ fun ExerciseRunningScreen(
                     Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
                 }
             },
-            onPrimaryClick = {},
+            onPrimaryClick = { showDialog = false},
             buttonPrimaryText = "Continue",
             onSecondaryClick = {
                 navigateTo = true

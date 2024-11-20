@@ -97,8 +97,6 @@ private fun TestScreen(
 
 @Composable
 private fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, navController: NavController) {
-    val showDialogs = remember { mutableStateListOf(*BooleanArray(tests.size) { false }.toTypedArray()) }
-
     SDSTopBar(
         modifier = modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
         title = "Vision Tests",
@@ -121,48 +119,9 @@ private fun TestList(tests: List<TestResponse>, modifier: Modifier = Modifier, n
                     )
                 },
                 test = test,
-                clickInfoIcon = {
-                    showDialogs[index] = true
-                }
             )
             Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_xs))
         }
-    }
-
-    tests.forEachIndexed { index, testResponse ->
-        var textDialog by remember { mutableStateOf("") }
-        if (testResponse.title == VisionTestTypes.VisionAcuity.title) {
-            textDialog =
-                "Visual Acuity test measures the sharpness of your vision.  Results are shown as 20/20 or 20/200, comparing your vision to normal eyesight in a North America measurement."
-        } else if (testResponse.title == VisionTestTypes.Astigmatism.title) {
-            textDialog =
-                "Astigmatism test measures uneven curvature in the cornea or lens that can distort your vision. It indicates the location of astigmatism. The number ranges from 1 to 180. Axis does not indicate the strength of an eyeglasses prescription."
-        }
-
-        SDSDialog(
-            showDialog = showDialogs[index],
-            onDismiss = { showDialogs[index] = it },
-            title = "${testResponse.title} Test",
-            onClose = null,
-            content = { _ ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = SightUPTheme.spacing.spacing_md)
-                ) {
-                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
-                    Text(
-                        text = textDialog,
-                        style = SightUPTheme.textStyles.body,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
-                }
-            },
-            onPrimaryClick = {},
-            buttonPrimaryText = "Okay",
-        )
     }
 }
 

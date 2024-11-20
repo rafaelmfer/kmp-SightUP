@@ -207,7 +207,7 @@ fun TutorialTestScreen(
                 Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
             }
         },
-        onPrimaryClick = {},
+        onPrimaryClick = { showDialog = false},
         buttonPrimaryText = "Continue",
         onSecondaryClick = {
             navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
