@@ -93,12 +93,11 @@ fun SDSDialog(
                             if (onClose != null) {
                                 IconButton(
                                     onClick = {
-                                        onDismiss(false)
                                         onClose()
+                                        onDismiss(false)
                                     },
                                     modifier = Modifier
                                         .padding(
-                                            // top = SightUPTheme.spacing.spacing_sm,
                                             end = SightUPTheme.spacing.spacing_sm
                                         )
                                         .wrapContentWidth()
@@ -129,8 +128,8 @@ fun SDSDialog(
                                 SDSButton(
                                     text = buttonSecondaryText,
                                     onClick = {
-                                        onDismiss(false)
                                         onSecondaryClick()
+                                        onDismiss(false)
                                     },
                                     buttonStyle = ButtonStyle.OUTLINED,
                                     modifier = Modifier
