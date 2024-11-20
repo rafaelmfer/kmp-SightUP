@@ -3,6 +3,7 @@ package com.europa.sightup.presentation.designsystem.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +18,15 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.data.remote.response.TestResponse
+import com.europa.sightup.data.remote.response.VisionTestTypes
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -43,6 +47,8 @@ fun SDSCardTest(
     navigateToTest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,7 +101,9 @@ fun SDSCardTest(
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_base))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickableWithRipple { showDialog.value = true },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -142,4 +150,32 @@ fun SDSCardTest(
             }
         }
     }
+
+    SDSDialog(
+        showDialog = showDialog.value,
+        onDismiss = { showDialog.value = it },
+        title = "About the test",
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = if (test.title == "Astigmatism") {
+                        VisionTestTypes.Astigmatism.description
+                    } else {
+                        VisionTestTypes.VisionAcuity.description
+                    },
+                    style = SightUPTheme.textStyles.body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = { showDialog.value = false },
+        buttonPrimaryText = "Okay",
+    )
 }

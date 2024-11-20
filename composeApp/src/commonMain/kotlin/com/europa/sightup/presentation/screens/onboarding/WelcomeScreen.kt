@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.onboarding.setupProfile.ProfileStep
@@ -85,11 +86,13 @@ fun ShowProfileSetup(
         else -> ProfileStep.Step3
     }
 
+    var showDialog by remember { mutableStateOf(false) }
+
     SDSBottomSheet(
         fullHeight = true,
         isDismissible = false,
         expanded = bottomSheetState,
-        sheetContent = { step.content(viewModel) },
+        sheetContent = { step.content(viewModel) { showDialog = it } },
         title = step.title,
         iconLeft = step.iconLeft,
         onIconLeftClick = {
@@ -104,6 +107,34 @@ fun ShowProfileSetup(
         iconRight = step.iconRight,
         iconRightVisible = step.iconRightVisible,
         onIconRightClick = { viewModel.hideBottomSheet() }
+    )
+
+    SDSDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = it },
+        title = "Stop setting up profile?",
+        onClose = null,
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "Your profile information enhances your SightUP experience.",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = {
+            viewModel.hideBottomSheet()
+        },
+        buttonPrimaryText = "Set Up Later",
+        onSecondaryClick = {},
+        buttonSecondaryText = "Back to Edit",
     )
 }
 

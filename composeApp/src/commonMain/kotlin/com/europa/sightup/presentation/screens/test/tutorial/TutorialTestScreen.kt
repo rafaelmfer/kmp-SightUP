@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +30,7 @@ import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
 import com.europa.sightup.platformspecific.getLocalFilePathFor
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchBoxContainer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepProgressBar
@@ -54,6 +53,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
+import sightupkmpapp.composeapp.generated.resources.close
 import sightupkmpapp.composeapp.generated.resources.test_distance_instruction
 import sightupkmpapp.composeapp.generated.resources.test_left_eye
 import sightupkmpapp.composeapp.generated.resources.test_mode_subtitle
@@ -75,6 +75,7 @@ fun TutorialTestScreen(
 
     var isAudioPaused by rememberSaveable { mutableStateOf(false) }
 
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentStep) {
         scrollState.animateScrollTo(0)
@@ -87,27 +88,17 @@ fun TutorialTestScreen(
             .fillMaxSize()
     ) {
         Column {
-            if (currentStep > 1) {
-                SDSTopBar(
-                    modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
-                    title = test.title,
-                    iconRight = Icons.Default.Close,
-                    iconRightVisible = true,
-                    onRightButtonClick = { navController.popBackStack<TestScreens.TestRoot>(inclusive = false) },
-                    iconLeftVisible = true,
-                    onLeftButtonClick = { tutorialViewModel.goBackStep() },
-                )
-            } else {
-                SDSTopBar(
-                    modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
-                    title = test.title,
-                    iconRight = Icons.Default.Close,
-                    iconRightVisible = true,
-                    onRightButtonClick = {
-                        navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
-                    },
-                )
-            }
+            SDSTopBar(
+                modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_xs),
+                title = test.title,
+                iconRight = Res.drawable.close,
+                iconRightVisible = true,
+                onRightButtonClick = {
+                    showDialog = true
+                },
+                iconLeftVisible = currentStep > 1,
+                onLeftButtonClick = { tutorialViewModel.goBackStep() }
+            )
 
             StepProgressBar(
                 numberOfSteps = numberOfSteps,
@@ -194,6 +185,35 @@ fun TutorialTestScreen(
             }
         }
     }
+
+    SDSDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = it },
+        title = "Are you sure you want to exit?",
+        onClose = null,
+        content = { _ ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SightUPTheme.spacing.spacing_md)
+            ) {
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+                Text(
+                    text = "If you cancel, you’ll need to restart the test.",
+                    style = SightUPTheme.textStyles.body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+            }
+        },
+        onPrimaryClick = { showDialog = false},
+        buttonPrimaryText = "Continue",
+        onSecondaryClick = {
+            navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
+        },
+        buttonSecondaryText = "End",
+    )
 }
 
 @Composable
