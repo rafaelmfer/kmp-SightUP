@@ -133,6 +133,8 @@ private fun FilterChips(onChipClick: (String) -> Unit, selectedFilter: String) {
     LazyRow(
         contentPadding = PaddingValues(
             top = SightUPTheme.spacing.spacing_sm,
+            start = SightUPTheme.spacing.spacing_side_margin,
+            end = SightUPTheme.spacing.spacing_side_margin,
             bottom = SightUPTheme.spacing.spacing_base
         ),
         modifier = Modifier

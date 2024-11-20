@@ -133,8 +133,8 @@ fun SDSCardAssessment(
         ConstraintLayout(
             modifier = Modifier
                 .constrainAs(clCard) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
+                    top.linkTo(parent.top, margin = SightUPSpacing.default.spacing_xs)
+                    bottom.linkTo(parent.bottom, margin = SightUPSpacing.default.spacing_xs)
                     start.linkTo(clIndicators.end)
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
@@ -146,12 +146,12 @@ fun SDSCardAssessment(
                 )
                 .background(
                     color = SightUPTheme.sightUPColors.background_default,
-                    shape = SightUPTheme.shapes.small
+                    shape = SightUPTheme.shapes.medium
                 )
                 .border(
                     width = SightUPBorder.Width.sm,
                     color = SightUPTheme.sightUPColors.border_card,
-                    shape = SightUPTheme.shapes.small
+                    shape = SightUPTheme.shapes.medium
                 )
                 .applyIf(isDone) {
                     alpha(0.6f)

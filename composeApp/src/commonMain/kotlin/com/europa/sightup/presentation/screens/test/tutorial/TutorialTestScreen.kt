@@ -1,16 +1,26 @@
 package com.europa.sightup.presentation.screens.test.tutorial
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,34 +32,46 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import chaintech.videoplayer.model.PlayerConfig
+import chaintech.videoplayer.model.ScreenResize
+import chaintech.videoplayer.ui.video.VideoPlayerView
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
 import com.europa.sightup.platformspecific.getLocalFilePathFor
+import com.europa.sightup.presentation.designsystem.components.CardWithTestInstructions
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSSwitchBoxContainer
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.StepProgressBar
-import com.europa.sightup.presentation.designsystem.components.StepScreenWithAnimation
-import com.europa.sightup.presentation.designsystem.components.StepScreenWithVideo
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.navigate
 import com.europa.sightup.utils.slideInFromLeft
 import com.europa.sightup.utils.slideInFromRight
 import com.europa.sightup.utils.slideOutToLeft
 import com.europa.sightup.utils.slideOutToRight
+import io.github.alexzhirkevich.compottie.Compottie
+import io.github.alexzhirkevich.compottie.LottieCompositionResult
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -112,18 +134,9 @@ fun TutorialTestScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-                .verticalScroll(scrollState),
+                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Heading text
-            Text(
-                text = titles[currentStep - 1],
-                style = SightUPTheme.textStyles.h2
-            )
-
-            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
-
             AnimatedContent(
                 targetState = currentStep,
                 transitionSpec = {
@@ -136,7 +149,8 @@ fun TutorialTestScreen(
             ) { targetState ->
                 when (targetState) {
                     1 -> FirstStep(
-                        selectedMode,
+                        title = titles[currentStep - 1],
+                        selectedMode = selectedMode,
                         onModeSelected = {
                             tutorialViewModel.updateSelectedMode(it)
                         },
@@ -146,6 +160,7 @@ fun TutorialTestScreen(
                     )
 
                     2 -> SecondStep(
+                        title = titles[currentStep - 1],
                         animation =
                         if (test.title.contains(ActiveTest.Astigmatism.name)) ActiveTest.Astigmatism.distanceLottie
                         else ActiveTest.VisualAcuity.distanceLottie,
@@ -155,19 +170,21 @@ fun TutorialTestScreen(
                     )
 
                     3 -> ThirdStep(
+                        title = titles[currentStep - 1],
                         selectedMode = selectedMode,
                         test = test,
                         onClick = { tutorialViewModel.advanceStep() },
                         isChecked = isAudioPaused,
                         onCheckedChanged = { checked -> isAudioPaused = checked },
                         video = when (selectedMode) {
-                            TestModeEnum.Touch -> test.videoMode.touch.replace("test_videos/", "test_videos%2F")
-                            TestModeEnum.Voice -> test.videoMode.voice.replace("test_videos/", "test_videos%2F")
-                            TestModeEnum.SmartWatch -> test.videoMode.smartwatch.replace("test_videos/", "test_videos%2F")
+                            TestModeEnum.Touch -> test.videoMode.touch
+                            TestModeEnum.Voice -> test.videoMode.voice
+                            TestModeEnum.SmartWatch -> test.videoMode.smartwatch
                         }
                     )
 
                     4 -> FourthStep(
+                        title = titles[currentStep - 1],
                         viewModel = tutorialViewModel,
                         navController = navController,
                         test = test,
@@ -207,7 +224,7 @@ fun TutorialTestScreen(
                 Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
             }
         },
-        onPrimaryClick = { showDialog = false},
+        onPrimaryClick = { showDialog = false },
         buttonPrimaryText = "Continue",
         onSecondaryClick = {
             navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
@@ -218,6 +235,7 @@ fun TutorialTestScreen(
 
 @Composable
 private fun FirstStep(
+    title: String,
     selectedMode: TestModeEnum,
     onModeSelected: (TestModeEnum) -> Unit,
     onClick: () -> Unit,
@@ -227,42 +245,181 @@ private fun FirstStep(
     val modes = listOf(TestModeEnum.Touch, TestModeEnum.Voice, TestModeEnum.SmartWatch)
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
     ) {
+        Text(
+            text = title,
+            style = SightUPTheme.textStyles.h2
+        )
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
 
-        Column(
+        Text(
+            text = stringResource(Res.string.test_mode_subtitle),
+            style = SightUPTheme.textStyles.body,
+            color = SightUPTheme.sightUPColors.text_primary,
+            lineHeight = SightUPLineHeight.default.lineHeight_xs,
+            textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(Res.string.test_mode_subtitle),
-                style = SightUPTheme.textStyles.body,
-                color = SightUPTheme.sightUPColors.text_primary,
-                lineHeight = SightUPLineHeight.default.lineHeight_xs,
-                textAlign = TextAlign.Center,
-            )
-            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        )
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
 
-            modes.forEach { mode ->
-                ModeSelectionCard(
-                    mode = mode,
-                    isSelected = selectedMode == mode,
-                    onClick = { onModeSelected(mode) }
-                )
-                Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-            }
+        modes.forEach { mode ->
+            ModeSelectionCard(
+                mode = mode,
+                isSelected = selectedMode == mode,
+                onClick = { onModeSelected(mode) }
+            )
+            Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         }
 
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Spacer(Modifier.weight(ONE_FLOAT))
         SDSSwitchBoxContainer(
             text = "audio support",
             isChecked = isChecked,
             onCheckedChanged = onCheckedChanged,
         )
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
+        SDSButton(
+            text = "Next",
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = SightUPTheme.spacing.spacing_md),
+            textStyle = SightUPTheme.textStyles.button,
+        )
+    }
+
+    CMPAudioPlayer(
+        modifier = Modifier.height(0.dp),
+        url = getLocalFilePathFor("select_test_mode.m4a"),
+        isPause = !isChecked,
+        totalTime = { },
+        currentTime = { },
+        isSliding = false,
+        sliderTime = null,
+        isRepeat = true,
+        loadingState = { },
+        didEndAudio = { }
+    )
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+private fun SecondStep(
+    title: String = "",
+    onClick: () -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChanged: (Boolean) -> Unit = {},
+    animation: String,
+) {
+    var showCamera by remember { mutableStateOf(false) }
+    var hideLoading by remember { mutableStateOf(false) }
+
+    val composition: LottieCompositionResult = rememberLottieComposition {
+        LottieCompositionSpec.JsonString(
+            Res.readBytes(animation).decodeToString()
+        )
+    }
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition.value,
+        speed = 1.2f,
+        iterations = Compottie.IterateForever,
+    )
+
+    LaunchedEffect(composition) {
+        composition.await()
+        delay(1200L)
+        hideLoading = true
+    }
+
+    if (showCamera) {
+        SetDistanceScreen(onClick = onClick)
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = title,
+                style = SightUPTheme.textStyles.h2,
+                color = SightUPTheme.sightUPColors.text_primary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(SightUPTheme.sightUPColors.background_default),
+                contentAlignment = Alignment.Center
+            ) {
+                androidx.compose.animation.AnimatedVisibility(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    visible = composition.isComplete,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.CenterVertically),
+                    exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically),
+                ) {
+                    Image(
+                        painter = rememberLottiePainter(
+                            composition = composition.value,
+                            progress = { progress },
+                        ),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+                if (!hideLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .padding(vertical = 120.dp)
+                                .size(SightUPTheme.sizes.size_56)
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+            CardWithTestInstructions(
+                text = stringResource(Res.string.test_distance_instruction)
+            )
+
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+            Spacer(modifier = Modifier.weight(ONE_FLOAT))
+            SDSSwitchBoxContainer(
+                text = "audio support",
+                isChecked = isChecked,
+                onCheckedChanged = onCheckedChanged,
+            )
+            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+            SDSButton(
+                text = "Set Distance",
+                onClick = { showCamera = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = SightUPTheme.spacing.spacing_md),
+                textStyle = SightUPTheme.textStyles.button,
+            )
+        }
+
         CMPAudioPlayer(
             modifier = Modifier.height(0.dp),
-            url = getLocalFilePathFor("select_test_mode.m4a"),
+            url = getLocalFilePathFor("test_distance.m4a"),
             isPause = !isChecked,
             totalTime = { },
             currentTime = { },
@@ -272,76 +429,12 @@ private fun FirstStep(
             loadingState = { },
             didEndAudio = { }
         )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-
-        SDSButton(
-            text = "Next",
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
-            textStyle = SightUPTheme.textStyles.button,
-        )
-    }
-}
-
-@Composable
-private fun SecondStep(
-    onClick: () -> Unit,
-    isChecked: Boolean = false,
-    onCheckedChanged: (Boolean) -> Unit = {},
-    animation: String,
-) {
-    var showCamera by remember { mutableStateOf(false) }
-
-    if (showCamera) {
-        SetDistanceScreen(onClick = onClick)
-    } else {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            StepScreenWithAnimation(
-                animationPath = animation,
-                instructionText = stringResource(Res.string.test_distance_instruction),
-            )
-
-            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-            SDSSwitchBoxContainer(
-                text = "audio support",
-                isChecked = isChecked,
-                onCheckedChanged = onCheckedChanged,
-            )
-
-            CMPAudioPlayer(
-                modifier = Modifier.height(0.dp),
-                url = getLocalFilePathFor("test_distance.m4a"),
-                isPause = !isChecked,
-                totalTime = { },
-                currentTime = { },
-                isSliding = false,
-                sliderTime = null,
-                isRepeat = true,
-                loadingState = { },
-                didEndAudio = { }
-            )
-
-            Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-
-            SDSButton(
-                text = "Set Distance",
-                onClick = { showCamera = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = SightUPTheme.spacing.spacing_base),
-                textStyle = SightUPTheme.textStyles.button,
-            )
-        }
     }
 }
 
 @Composable
 private fun ThirdStep(
+    title: String = "",
     test: TestResponse,
     selectedMode: TestModeEnum,
     onClick: () -> Unit,
@@ -354,29 +447,81 @@ private fun ThirdStep(
         TestModeEnum.Voice -> test.testMode.voice
         TestModeEnum.SmartWatch -> test.testMode.smartwatch
     }
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        StepScreenWithVideo(
-            videoPath = video,
-            muteVideo = !isChecked,
-            instructionText = modeText,
+        Text(
+            text = title,
+            style = SightUPTheme.textStyles.h2,
+            color = SightUPTheme.sightUPColors.text_primary,
         )
 
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .background(SightUPTheme.sightUPColors.background_default),
+            contentAlignment = Alignment.Center
+        ) {
+            VideoPlayerView(
+                modifier = Modifier
+                    .fillMaxSize(),
+                url = getLocalFilePathFor(video),
+                playerConfig = PlayerConfig(
+                    isPauseResumeEnabled = false,
+                    isSeekBarVisible = false,
+                    isDurationVisible = false,
+                    isAutoHideControlEnabled = true,
+                    isFastForwardBackwardEnabled = false,
+                    isMuteControlEnabled = false,
+                    isSpeedControlEnabled = false,
+                    isFullScreenEnabled = false,
+                    isScreenLockEnabled = false,
+                    isMute = !isChecked,
+                    isPause = false,
+                    isScreenResizeEnabled = false,
+                    loop = true,
+                    videoFitMode = ScreenResize.FILL,
+                    loaderView = {
+//                        Column(
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//                                .defaultMinSize(minHeight = 300.dp)
+//                                .background(SightUPTheme.sightUPColors.background_default),
+//                            horizontalAlignment = Alignment.CenterHorizontally,
+//                            verticalArrangement = Arrangement.Center
+//                        ) {
+//                            CircularProgressIndicator()
+//                        }
+                    },
+                )
+            )
+        }
+
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+
+        CardWithTestInstructions(text = modeText)
+
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(Modifier.weight(ONE_FLOAT))
+
         SDSSwitchBoxContainer(
             text = "audio support",
             isChecked = isChecked,
             onCheckedChanged = onCheckedChanged,
         )
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         SDSButton(
             text = "Next",
             onClick = onClick,
-            modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = SightUPTheme.spacing.spacing_md),
             textStyle = SightUPTheme.textStyles.button,
         )
     }
@@ -384,6 +529,7 @@ private fun ThirdStep(
 
 @Composable
 private fun FourthStep(
+    title: String = "",
     viewModel: TutorialTestViewModel,
     navController: NavController,
     test: TestResponse,
@@ -397,26 +543,74 @@ private fun FourthStep(
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        StepScreenWithVideo(
-            videoPath = video,
-            muteVideo = !isChecked,
-            instructionText = instructionText
+        Text(
+            text = title,
+            style = SightUPTheme.textStyles.h2,
+            color = SightUPTheme.sightUPColors.text_primary,
         )
 
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_base))
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(1f)
+                .background(SightUPTheme.sightUPColors.background_default),
+            contentAlignment = Alignment.Center
+        ) {
+            VideoPlayerView(
+                modifier = Modifier
+                    .fillMaxSize(),
+                url = getLocalFilePathFor(video),
+                playerConfig = PlayerConfig(
+                    isPauseResumeEnabled = false,
+                    isSeekBarVisible = false,
+                    isDurationVisible = false,
+                    isAutoHideControlEnabled = true,
+                    isFastForwardBackwardEnabled = false,
+                    isMuteControlEnabled = false,
+                    isSpeedControlEnabled = false,
+                    isFullScreenEnabled = false,
+                    isScreenLockEnabled = false,
+                    isMute = !isChecked,
+                    isPause = false,
+                    isScreenResizeEnabled = false,
+                    loop = true,
+                    videoFitMode = ScreenResize.FILL,
+                    loaderView = {
+//                        Column(
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//                                .defaultMinSize(minHeight = 300.dp)
+//                                .background(SightUPTheme.sightUPColors.background_default),
+//                            horizontalAlignment = Alignment.CenterHorizontally,
+//                            verticalArrangement = Arrangement.Center
+//                        ) {
+//                            CircularProgressIndicator()
+//                        }
+                    },
+                )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+
+        CardWithTestInstructions(text = instructionText)
+
+        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_md))
+        Spacer(Modifier.weight(ONE_FLOAT))
 
         SDSSwitchBoxContainer(
             text = "audio support",
             isChecked = isChecked,
             onCheckedChanged = onCheckedChanged,
         )
-
-        Spacer(modifier = Modifier.height(SightUPTheme.spacing.spacing_sm))
-
+        Spacer(Modifier.height(SightUPTheme.spacing.spacing_sm))
         SDSButton(
             text = "Start",
             onClick = {
@@ -431,7 +625,8 @@ private fun FourthStep(
                     viewModel.updateEyeTested("left")
                 }
             },
-            modifier = Modifier.fillMaxWidth().padding(bottom = SightUPTheme.spacing.spacing_base),
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = SightUPTheme.spacing.spacing_md),
             textStyle = SightUPTheme.textStyles.button,
         )
     }

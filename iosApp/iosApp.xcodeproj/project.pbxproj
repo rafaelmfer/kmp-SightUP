@@ -23,6 +23,15 @@
 		04AB1BA12CC1932D00206492 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04AB1BA02CC1932D00206492 /* GoogleSignInSwift */; };
 		04D61F272CAF28D50037D897 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 04D61F262CAF28D50037D897 /* FirebaseCore */; };
 		04D61F292CAF28D50037D897 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 04D61F282CAF28D50037D897 /* FirebaseMessaging */; };
+		04E5B1D12CED113F00254A93 /* astigmatism_touch_mode.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1CB2CED113F00254A93 /* astigmatism_touch_mode.mp4 */; };
+		04E5B1D22CED113F00254A93 /* visual_acuity_voice_mode.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1CC2CED113F00254A93 /* visual_acuity_voice_mode.mp4 */; };
+		04E5B1D32CED113F00254A93 /* visual_acuity_smartwatch_mode.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1CD2CED113F00254A93 /* visual_acuity_smartwatch_mode.mp4 */; };
+		04E5B1D42CED113F00254A93 /* astigmatism_smartwatch_mode.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1CE2CED113F00254A93 /* astigmatism_smartwatch_mode.mp4 */; };
+		04E5B1D52CED113F00254A93 /* astigmatism_voice_mode.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1CF2CED113F00254A93 /* astigmatism_voice_mode.mp4 */; };
+		04E5B1D62CED113F00254A93 /* visual_acuity_touch_mode.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1D02CED113F00254A93 /* visual_acuity_touch_mode.mp4 */; };
+		04E5B1D92CED193D00254A93 /* covering_left_eye_test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1D72CED193D00254A93 /* covering_left_eye_test.mp4 */; };
+		04E5B1DA2CED193D00254A93 /* covering_right_eye_test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1D82CED193D00254A93 /* covering_right_eye_test.mp4 */; };
+		04E5B1DC2CED53CB00254A93 /* blink_relaxation_exercise.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04E5B1DB2CED53CA00254A93 /* blink_relaxation_exercise.mp4 */; };
 		04EE74FC2CC33C5D00BB83CD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 04EE74FB2CC33C5D00BB83CD /* FirebaseAuth */; };
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
@@ -43,6 +52,15 @@
 		0438267F2CE5B2BB00AAE7DB /* test_distance.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_distance.m4a; sourceTree = "<group>"; };
 		047C49C82CB3788A0020D659 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		047C49CC2CB381960020D659 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		04E5B1CB2CED113F00254A93 /* astigmatism_touch_mode.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = astigmatism_touch_mode.mp4; sourceTree = "<group>"; };
+		04E5B1CC2CED113F00254A93 /* visual_acuity_voice_mode.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = visual_acuity_voice_mode.mp4; sourceTree = "<group>"; };
+		04E5B1CD2CED113F00254A93 /* visual_acuity_smartwatch_mode.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = visual_acuity_smartwatch_mode.mp4; sourceTree = "<group>"; };
+		04E5B1CE2CED113F00254A93 /* astigmatism_smartwatch_mode.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = astigmatism_smartwatch_mode.mp4; sourceTree = "<group>"; };
+		04E5B1CF2CED113F00254A93 /* astigmatism_voice_mode.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = astigmatism_voice_mode.mp4; sourceTree = "<group>"; };
+		04E5B1D02CED113F00254A93 /* visual_acuity_touch_mode.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = visual_acuity_touch_mode.mp4; sourceTree = "<group>"; };
+		04E5B1D72CED193D00254A93 /* covering_left_eye_test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = covering_left_eye_test.mp4; sourceTree = "<group>"; };
+		04E5B1D82CED193D00254A93 /* covering_right_eye_test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = covering_right_eye_test.mp4; sourceTree = "<group>"; };
+		04E5B1DB2CED53CA00254A93 /* blink_relaxation_exercise.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = blink_relaxation_exercise.mp4; sourceTree = "<group>"; };
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
@@ -79,11 +97,20 @@
 		043826732CE3FBF900AAE7DB /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0438267D2CE5B2BA00AAE7DB /* astigmatism_start_screen.m4a */,
+				04E5B1D82CED193D00254A93 /* covering_right_eye_test.mp4 */,
+				04E5B1D72CED193D00254A93 /* covering_left_eye_test.mp4 */,
 				0438267C2CE5B2BA00AAE7DB /* select_test_mode.m4a */,
 				0438267F2CE5B2BB00AAE7DB /* test_distance.m4a */,
+				04E5B1CB2CED113F00254A93 /* astigmatism_touch_mode.mp4 */,
+				04E5B1CF2CED113F00254A93 /* astigmatism_voice_mode.mp4 */,
+				04E5B1CE2CED113F00254A93 /* astigmatism_smartwatch_mode.mp4 */,
+				0438267D2CE5B2BA00AAE7DB /* astigmatism_start_screen.m4a */,
+				04E5B1D02CED113F00254A93 /* visual_acuity_touch_mode.mp4 */,
+				04E5B1CC2CED113F00254A93 /* visual_acuity_voice_mode.mp4 */,
+				04E5B1CD2CED113F00254A93 /* visual_acuity_smartwatch_mode.mp4 */,
 				0438267E2CE5B2BA00AAE7DB /* visual_acuity_start_screen.m4a */,
 				0438267A2CE465CE00AAE7DB /* logo_animation.mp4 */,
+				04E5B1DB2CED53CA00254A93 /* blink_relaxation_exercise.mp4 */,
 				0438266F2CE3FBF900AAE7DB /* blink_relaxation_music.mp3 */,
 				043826702CE3FBF900AAE7DB /* circular_motion_music.mp3 */,
 				043826712CE3FBF900AAE7DB /* color_game_music.mp3 */,
@@ -220,6 +247,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E5B1DC2CED53CB00254A93 /* blink_relaxation_exercise.mp4 in Resources */,
+				04E5B1D92CED193D00254A93 /* covering_left_eye_test.mp4 in Resources */,
+				04E5B1DA2CED193D00254A93 /* covering_right_eye_test.mp4 in Resources */,
+				04E5B1D12CED113F00254A93 /* astigmatism_touch_mode.mp4 in Resources */,
+				04E5B1D52CED113F00254A93 /* astigmatism_voice_mode.mp4 in Resources */,
+				04E5B1D42CED113F00254A93 /* astigmatism_smartwatch_mode.mp4 in Resources */,
+				04E5B1D62CED113F00254A93 /* visual_acuity_touch_mode.mp4 in Resources */,
+				04E5B1D22CED113F00254A93 /* visual_acuity_voice_mode.mp4 in Resources */,
+				04E5B1D32CED113F00254A93 /* visual_acuity_smartwatch_mode.mp4 in Resources */,
 				043826802CE5B2BB00AAE7DB /* select_test_mode.m4a in Resources */,
 				043826812CE5B2BB00AAE7DB /* astigmatism_start_screen.m4a in Resources */,
 				043826822CE5B2BB00AAE7DB /* visual_acuity_start_screen.m4a in Resources */,

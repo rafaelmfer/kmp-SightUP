@@ -46,6 +46,7 @@ fun SDSInput(
     fullWidth: Boolean = false,
     singleLine: Boolean = true,
     minLines: Int = 1,
+    endIcon: @Composable (() -> Unit)? = null,
     textAlign: TextAlign = TextAlign.Start,
     contentPadding: PaddingValues = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -137,6 +138,7 @@ fun SDSInput(
                             )
                         }
                     },
+                    trailingIcon = endIcon,
                     contentPadding = contentPadding,
                     container = {
                         Box(

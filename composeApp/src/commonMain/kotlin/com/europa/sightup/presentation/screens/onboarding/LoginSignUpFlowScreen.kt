@@ -108,7 +108,6 @@ fun LoginSignUpScreen(
                         error = ""
                         bottomSheetTitle = stringResource(Res.string.sign_up_title)
                         LoginPasswordSheetContent(
-                            navController = navController,
                             onContinueClicked = {
                                 viewModel.doLogin(email, it)
                             },
@@ -119,7 +118,6 @@ fun LoginSignUpScreen(
                     is LoginUIState.PasswordError -> {
                         error = (state as LoginUIState.PasswordError).errorMessage
                         LoginPasswordSheetContent(
-                            navController = navController,
                             onContinueClicked = {
                                 viewModel.doLogin(email, it)
                             },

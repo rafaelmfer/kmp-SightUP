@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -411,6 +413,7 @@ private fun PrescriptionInputWithTitle(
             onValueChange = onLeftValueChange,
             fullWidth = false,
             textAlign = TextAlign.End,
+            hint = "",
             modifier = Modifier
                 .width(92.dp)
                 .constrainAs(inputLeft) {
@@ -419,12 +422,16 @@ private fun PrescriptionInputWithTitle(
                     start.linkTo(inputDescription.end)
                     end.linkTo(inputRight.start, margin = 16.dp)
                 },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Phone
+            )
         )
         SDSInput(
             value = rightValue,
             onValueChange = onRightValueChange,
             fullWidth = false,
             textAlign = TextAlign.End,
+            hint = "",
             modifier = Modifier
                 .width(92.dp)
                 .constrainAs(inputRight) {
@@ -434,6 +441,9 @@ private fun PrescriptionInputWithTitle(
                     end.linkTo(parent.end)
                     horizontalBias = 1f
                 },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Phone
+            )
         )
     }
 }
@@ -479,15 +489,23 @@ private fun PrescriptionInputRow(
                 value = leftValue,
                 onValueChange = onLeftValueChange,
                 fullWidth = false,
+                hint = "",
                 textAlign = TextAlign.End,
-                modifier = Modifier.width(92.dp)
+                modifier = Modifier.width(92.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Phone
+                )
             )
             SDSInput(
                 value = rightValue,
                 onValueChange = onRightValueChange,
                 fullWidth = false,
+                hint = "",
                 textAlign = TextAlign.End,
-                modifier = Modifier.width(92.dp)
+                modifier = Modifier.width(92.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Phone
+                )
             )
         }
     }

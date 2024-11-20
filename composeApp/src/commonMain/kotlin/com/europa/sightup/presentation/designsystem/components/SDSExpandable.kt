@@ -41,6 +41,7 @@ import sightupkmpapp.composeapp.generated.resources.drop_drow_arrow
 
 data class ExpandableItem(
     val title: String,
+    val badge: String,
     val message: String,
     var isExpanded: Boolean = false,
 )
@@ -78,13 +79,13 @@ fun ExpandableListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Apply eye drops",
+                text = item.title,
                 style = SightUPTheme.textStyles.body,
                 color = SightUPTheme.sightUPColors.text_primary
             )
             Spacer(Modifier.width(SightUPTheme.sizes.size_16))
             SDSConditions(
-                type = SDSConditionsEnum.fromString(item.title)
+                type = SDSConditionsEnum.fromString(item.badge)
             )
             Spacer(Modifier.weight(ONE_FLOAT))
             Icon(

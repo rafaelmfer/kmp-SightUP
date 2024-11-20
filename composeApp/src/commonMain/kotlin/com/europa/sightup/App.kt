@@ -83,13 +83,15 @@ fun InitNavGraph(
 fun AfterSplashScreen(navController: NavHostController) {
     var isVisible by remember { mutableStateOf(false) }
     var isPlayerVisible by remember { mutableStateOf(true) }
-    val fadeOutDuration = 500
+    val fadeOutDuration = 700
+    var isPause by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(7800)
+        delay(8000L)
         isVisible = true
+        isPause = true
 
-        delay(fadeOutDuration.toLong())
+        delay((fadeOutDuration - 200).toLong())
         isPlayerVisible = false
         navController.navigate(SightUPApp) {
             popUpTo(0) {
@@ -124,7 +126,7 @@ fun AfterSplashScreen(navController: NavHostController) {
                     isFullScreenEnabled = false,
                     isScreenLockEnabled = false,
                     isMute = false,
-                    isPause = false,
+                    isPause = isPause,
                     isScreenResizeEnabled = false,
                     loop = false,
                     videoFitMode = ScreenResize.FILL,

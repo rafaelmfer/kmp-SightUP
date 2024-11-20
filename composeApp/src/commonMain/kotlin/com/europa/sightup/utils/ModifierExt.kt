@@ -1,5 +1,6 @@
 package com.europa.sightup.utils
 
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ripple
@@ -18,6 +19,7 @@ fun Modifier.clickableWithRipple(
     onClickLabel: String? = null,
     role: Role? = null,
     interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = ripple(color = Color(0xff5691B9)),
     onClick: () -> Unit,
 ): Modifier {
     return composed {
@@ -26,7 +28,7 @@ fun Modifier.clickableWithRipple(
             onClickLabel = onClickLabel,
             role = role,
             interactionSource = interactionSource ?: remember { MutableInteractionSource() },
-            indication = ripple(color = Color(0xff5691B9)),
+            indication = indication,
             onClick = onClick,
         )
     }

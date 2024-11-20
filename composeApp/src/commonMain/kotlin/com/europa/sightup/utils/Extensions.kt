@@ -62,7 +62,7 @@ fun String.capitalizeWords(): String = lowercase().split(" ")
 fun String.toFormattedDate(outputFormat: String = "MMM dd, yyyy"): String {
     val instant = Instant.parse(this)
 
-    val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val localDate = instant.toLocalDateTime(TimeZone.UTC).date
 
     val year = localDate.year
     val month = localDate.monthNumber.toString().padStart(2, '0')
