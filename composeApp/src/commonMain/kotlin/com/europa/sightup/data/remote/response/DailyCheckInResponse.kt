@@ -5,12 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DailyCheckInResponse(
-    @SerialName("exerciseFelling") val exerciseFelling: String? = null,
     @SerialName("dailyCheckDate") val dailyCheckDate: String,
     @SerialName("email") val email: String,
     @SerialName("dailyCheckInfo") val dailyCheckInfo: DailyCheckInfo? = null,
     @SerialName("dailyExerciseInfo") val dailyExerciseInfo: List<DailyExerciseInfo>,
-    @SerialName("assessmentId") val assessmentId: String? = null,
 )
 
 @Serializable

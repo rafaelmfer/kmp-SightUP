@@ -11,6 +11,7 @@ data class DailyExerciseMessageResponse(
 
 @Serializable
 data class DailyExerciseResponse(
+    @SerialName("_id") val id: String,
     @SerialName("taskId") val taskId: String,
     @SerialName("title") val title: String,
     @SerialName("category") val category: String,
@@ -23,5 +24,4 @@ data class DailyExerciseResponse(
     @SerialName("video") val video: String,
     @SerialName("finishTitle") val finishTitle: String,
     @SerialName("done") val done: Boolean,
-    @SerialName("_id") val id: String,
 )

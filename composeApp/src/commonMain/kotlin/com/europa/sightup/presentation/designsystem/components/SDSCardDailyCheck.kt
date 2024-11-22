@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -144,6 +145,7 @@ fun SDSCardAssessment(
                     top = SightUPTheme.spacing.spacing_xs,
                     bottom = SightUPTheme.spacing.spacing_xs,
                 )
+                .clip(SightUPTheme.shapes.medium)
                 .background(
                     color = SightUPTheme.sightUPColors.background_default,
                     shape = SightUPTheme.shapes.medium

@@ -1,6 +1,11 @@
 package com.europa.sightup.presentation.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +44,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,6 +87,7 @@ import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.formatTime
 import com.europa.sightup.utils.isUserLoggedIn
+import com.europa.sightup.utils.toFormattedDate
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
@@ -90,7 +97,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
-import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -159,7 +165,7 @@ fun HomeScreen(
     navController: NavController,
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
-    val state by viewModel.dailyCheckGet.collectAsStateWithLifecycle()
+    val dailyCheckWeek by viewModel.dailyCheckGet.collectAsStateWithLifecycle()
     val dailyExerciseState by viewModel.dailyExerciseList.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -183,15 +189,11 @@ fun HomeScreen(
 
     val dailyCheckState by viewModel.dailyCheck.collectAsStateWithLifecycle()
 
-    val dailyCheckList = (state as? UIState.Success)?.data ?: emptyList()
+    val dailyCheckList = (dailyCheckWeek as? UIState.Success)?.data ?: emptyList()
     val mostRecentCheck = dailyCheckList.maxByOrNull { it.dailyCheckDate }
     val dailyCheckResult = mostRecentCheck?.dailyCheckInfo
     val dailyCheckTime = dailyCheckResult?.infoTime ?: ""
-    val dailyCheckIsDone = dailyCheckResult?.done ?: false // dailyCheckTime != ""
-
-    println("->Daily Check Rdo: $dailyCheckResult")
-    println("->Daily Check Time: $dailyCheckTime")
-    println("->Daily Check Is Done: $dailyCheckIsDone")
+    val dailyCheckIsDone = dailyCheckResult?.done ?: false
 
     var showHome by remember { mutableStateOf(false) }
 
@@ -223,28 +225,29 @@ fun HomeScreen(
     ) {
         GreetingWithIcons(name)
 
-        ShowCalendar(state)
+        ShowCalendar(dailyCheckWeek)
 
+        var closeNextVisionCard by rememberSaveable { mutableStateOf(true) }
         if (userIsLogged) {
-            NextTestCard(
-                nameOfTest = "Vision Acuity Test",
-                testDate = "Nov 25, 2024",
-                numberOfDays = 2,
-                onClickClose = {
-                    showToast(
-                        message = "Close",
-                        bottomPadding = 40
-                    )
-                },
-                onClickEdit = {
-                    showToast(
-                        message = "Edit",
-                        bottomPadding = 40
-                    )
-                }
-            )
-        }
+            AnimatedVisibility(
+                visible = closeNextVisionCard,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                NextTestCard(
+                    nameOfTest = "Vision Acuity Test",
+                    testDate = "2024-12-16T00:00:00.000Z".toFormattedDate("MMM dd, yyyy"),
+                    numberOfDays = 4,
+                    onClickClose = {
+                        closeNextVisionCard = false
+                    },
+                    onClickEdit = {
 
+                    }
+                )
+            }
+        }
 
         AssessmentList(
             navController = navController,
@@ -279,14 +282,8 @@ fun HomeScreen(
                     onCloseIconTopBar = {
                         dailyCheckBottomSheetVisibility = BottomSheetEnum.HIDE
                     },
-                    onComplete = { dailyCheckInput ->
-                        viewModel.saveDailyCheck(
-                            dailyCheckDate = dailyCheckInput.dailyCheckDate,
-                            email = dailyCheckInput.email,
-                            visionStatus = dailyCheckInput.dailyCheckInfo?.visionStatus ?: Moods.MODERATE.value,
-                            condition = dailyCheckInput.dailyCheckInfo?.condition ?: listOf(),
-                            causes = dailyCheckInput.dailyCheckInfo?.causes ?: listOf(),
-                        )
+                    onComplete = { request ->
+                        viewModel.saveDailyCheck(request)
                     },
                     modifier = Modifier
                 )
@@ -328,7 +325,6 @@ fun HomeScreen(
         causes = dailyCheckResult?.causes ?: listOf(),
         onDismiss = {
             viewModel.resetDailyCheckState()
-            viewModel.getAllDay()
         },
     )
 }
@@ -707,7 +703,7 @@ private fun AssessmentList(
             exerciseDuration = 0,
             subtitle = "Log your eye condition",
             lineUp = false,
-            lineDown = true,
+            lineDown = exerciseList.isNotEmpty(),
             eyeConditions = listOf(),
             onClickCard = onDailyCheckClick,
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)

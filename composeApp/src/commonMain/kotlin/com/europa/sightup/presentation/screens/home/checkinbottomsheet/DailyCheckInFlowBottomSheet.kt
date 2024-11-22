@@ -120,7 +120,7 @@ fun DailyCheckInFlowBottomSheet(
                                         visionStatus = visionStatus,
                                         condition = conditions,
                                         causes = causes,
-                                        done = true
+                                        done = true,
                                     ),
                                 )
                             )
