@@ -2,9 +2,10 @@ package com.europa.sightup.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.europa.sightup.data.remote.request.assessment.DailyCheckInfoRequest
 import com.europa.sightup.data.remote.request.assessment.DailyCheckRequest
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
-import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
+import com.europa.sightup.data.remote.response.DailyExerciseResponse
 import com.europa.sightup.data.remote.response.UserResponse
 import com.europa.sightup.data.remote.response.assessment.DailyCheckResponse
 import com.europa.sightup.data.repository.SightUpRepository
@@ -61,16 +62,34 @@ class HomeViewModel(private val repository: SightUpRepository) : ViewModel() {
     private val _dailyCheck = MutableStateFlow<UIState<DailyCheckResponse>>(UIState.InitialState())
     val dailyCheck: StateFlow<UIState<DailyCheckResponse>> = _dailyCheck.asStateFlow()
 
-    fun saveDailyCheck(request: DailyCheckRequest) {
+    fun saveDailyCheck(
+        dailyCheckDate: String,
+        email: String,
+        visionStatus: String,
+        condition: List<String>,
+        causes: List<String>,
+    ) {
+        val request = DailyCheckRequest(
+            dailyCheckDate = dailyCheckDate,
+            email = email,
+            dailyCheckInfo = DailyCheckInfoRequest(
+                visionStatus = visionStatus,
+                condition = condition,
+                causes = causes,
+                done = true
+            )
+        )
+
         repository.saveDailyCheck(request)
             .onStart {
                 _dailyCheck.update { UIState.Loading() }
             }
             .onEach { response: DailyCheckResponse ->
                 _dailyCheck.update { UIState.Success(response) }
+                getAllDay()
             }
             .catch { error ->
-                println(error.message)
+                println("Error: ${error.message}")
                 _dailyCheck.update { UIState.Error(error.message ?: "Unknown error") }
             }
             .launchIn(viewModelScope)
@@ -81,15 +100,15 @@ class HomeViewModel(private val repository: SightUpRepository) : ViewModel() {
     }
 
     // Exercise list
-    private val _dailyExerciseList = MutableStateFlow<UIState<List<DailyExerciseMessageResponse.DailyExerciseResponse>>>(UIState.InitialState())
-    val dailyExerciseList: StateFlow<UIState<List<DailyExerciseMessageResponse.DailyExerciseResponse>>> = _dailyExerciseList.asStateFlow()
+    private val _dailyExerciseList = MutableStateFlow<UIState<List<DailyExerciseResponse>>>(UIState.InitialState())
+    val dailyExerciseList: StateFlow<UIState<List<DailyExerciseResponse>>> = _dailyExerciseList.asStateFlow()
 
     fun getDailyExerciseList() {
         repository.getDailyExercise()
             .onStart {
                 _dailyExerciseList.update { UIState.Loading() }
             }
-            .onEach { list: List<DailyExerciseMessageResponse.DailyExerciseResponse> ->
+            .onEach { list: List<DailyExerciseResponse> ->
                 _dailyExerciseList.update { UIState.Success(list) }
             }
             .catch { error ->

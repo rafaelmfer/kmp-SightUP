@@ -24,7 +24,7 @@ data class DailyCheckInfoResponse(
     @SerialName("condition") val condition: List<String>,
     @SerialName("causes") val causes: List<String>,
     @SerialName("infoTime") val infoTime: String,
-    @SerialName("done") val done: Boolean = false,
+    @SerialName("done") val done: Boolean = true,
 )
 
 @Serializable

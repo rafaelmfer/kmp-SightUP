@@ -52,8 +52,6 @@ import sightupkmpapp.composeapp.generated.resources.welcome_take_test_button
 @Composable
 fun WelcomeScreen(
     navController: NavController? = null,
-    // TODO: Change this after testing
-    createProfile: Boolean = false,
 ) {
     val viewModel = koinViewModel<WelcomeViewModel>()
     val userState by viewModel.user.collectAsState()
@@ -65,7 +63,7 @@ fun WelcomeScreen(
     if (userState is UIState.Success) {
         val userResponse = (userState as UIState.Success).data
 
-        if (userResponse.email != null && !createProfile) {
+        if (userResponse.email != null && userResponse.preferences == null) {
             ShowProfileSetup(viewModel, navController)
         }
         MainWelcomeScreen(navController)

@@ -16,7 +16,7 @@ data class DailyCheckInfoRequest(
     @SerialName("visionStatus") val visionStatus: String,
     @SerialName("condition") val condition: List<String>,
     @SerialName("causes") val causes: List<String>,
-    @SerialName("done") val done: Boolean,
+    @SerialName("done") val done: Boolean = true,
 )
 
 @Serializable

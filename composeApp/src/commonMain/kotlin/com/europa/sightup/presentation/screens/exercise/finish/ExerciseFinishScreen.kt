@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
+import com.europa.sightup.data.remote.response.DailyExerciseResponse
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
@@ -72,7 +72,7 @@ fun ExerciseFinishScreen(
 
     val isExerciseInDailyList = when (dailyExerciseState) {
         is UIState.Success -> {
-            val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseMessageResponse.DailyExerciseResponse>>).data
+            val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseResponse>>).data
             exId = exerciseList.firstOrNull { it.title.contains(exerciseName, ignoreCase = true) }?.taskId ?: ""
             exerciseList.any { it.title.contains(exerciseName, ignoreCase = true) }
         }
