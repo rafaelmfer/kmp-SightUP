@@ -4,9 +4,6 @@ import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.presentation.designsystem.components.TestModeEnum
 import kotlinx.serialization.Serializable
 
-@Serializable
-object HomeExample
-
 /**
  * All screen will be defined in here.
  * All screens will be at the same level, so make sure to give them a unique name.

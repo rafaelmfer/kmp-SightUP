@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.designSystemNavGraph
 import com.europa.sightup.presentation.screens.home.HomeScreen
-import com.europa.sightup.utils.PostsWithState
 import com.europa.sightup.utils.slideInFromLeft
 import com.europa.sightup.utils.slideOutToLeft
 import com.europa.sightup.utils.slideOutToRight
@@ -37,10 +36,6 @@ fun NavigationGraph(
         accountNavGraph(navController = navController)
 
         if (getPlatform().isDebug) {
-            composable<HomeExample> {
-                // TODO: Replace this screen
-                PostsWithState()
-            }
             designSystemNavGraph(navController)
         }
     }
