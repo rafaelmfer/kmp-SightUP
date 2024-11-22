@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.europa.sightup.data.remote.response.ExerciseResponse
+import com.europa.sightup.platformspecific.ShareService
 import com.europa.sightup.presentation.designsystem.components.data.SDSConditionsEnum
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
@@ -36,6 +37,7 @@ import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.share
 
@@ -46,6 +48,8 @@ fun CardExercise(
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
+    val shareService = koinInject<ShareService>()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +103,9 @@ fun CardExercise(
                 }
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    shareService.shareText(exercise.title)
+                },
                 modifier = Modifier
                     .padding(SightUPTheme.spacing.spacing_xs)
                     .align(Alignment.TopEnd)

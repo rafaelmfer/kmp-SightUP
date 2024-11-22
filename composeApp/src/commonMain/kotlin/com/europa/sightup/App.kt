@@ -83,7 +83,7 @@ fun InitNavGraph(
 fun AfterSplashScreen(navController: NavHostController) {
     var isVisible by remember { mutableStateOf(false) }
     var isPlayerVisible by remember { mutableStateOf(true) }
-    val fadeOutDuration = 700
+    val fadeOutDuration = 500
     var isPause by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {

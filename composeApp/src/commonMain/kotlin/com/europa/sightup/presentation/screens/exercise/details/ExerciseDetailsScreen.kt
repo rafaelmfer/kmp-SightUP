@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.toRoute
+import com.europa.sightup.platformspecific.ShareService
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
@@ -41,6 +42,7 @@ import com.europa.sightup.utils.goBackToExerciseHome
 import com.europa.sightup.utils.isUserLoggedIn
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
+import org.koin.compose.koinInject
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.share
 
@@ -55,6 +57,8 @@ fun ExerciseDetailsScreen(
     buttonText: String = "",
     navController: NavController? = null,
 ) {
+    val shareService = koinInject<ShareService>()
+
     val showLoginSignUp = !isUserLoggedIn && !title.equals("Circular Motion", ignoreCase = true)
     var joinInSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
     var loginSignUpSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
@@ -75,7 +79,7 @@ fun ExerciseDetailsScreen(
             iconRightVisible = true,
             iconRight = Res.drawable.share,
             onRightButtonClick = {
-                // TODO: Implement share
+                shareService.shareText(title)
             },
             modifier = Modifier
                 .padding(

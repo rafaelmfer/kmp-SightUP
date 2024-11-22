@@ -60,7 +60,7 @@ fun UserNameScreen(
             style = SightUPTheme.textStyles.caption
         )
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_lg))
-        // TODO update the name
+
         SDSInput(
             value = username,
             onValueChange = { username = it },
@@ -79,7 +79,7 @@ fun UserNameScreen(
             onClick = {
                 viewModel.updateProfileData(username = username)
                 viewModel.outerStep++
-                      },
+            },
             enabled = username.isNotEmpty(),
             modifier = Modifier.fillMaxWidth(),
             buttonStyle = ButtonStyle.PRIMARY
