@@ -207,13 +207,13 @@ fun CustomSwitchExample() {
         checked = isChecked,
         onCheckedChange = { isChecked = it },
         modifier = Modifier
-            .width(36.dp) // TODO: Talk with designers because we cannot resize switch, because of accessibility
-            .height(20.dp), // TODO: they really want a small switch ??
+            .width(36.dp)
+            .height(20.dp),
         colors = SwitchDefaults.colors(
-            checkedThumbColor = SightUPTheme.sightUPColors.neutral_0, // Cor branca para o thumb quando ativado
-            uncheckedThumbColor = SightUPTheme.sightUPColors.neutral_0, // Cor branca para o thumb quando desativado
-            checkedTrackColor = SightUPTheme.sightUPColors.primary_600, // Cor azul para o track ativado
-            uncheckedTrackColor = SightUPTheme.sightUPColors.neutral_200, // Cor cinza para o track desativado
+            checkedThumbColor = SightUPTheme.sightUPColors.neutral_0,
+            uncheckedThumbColor = SightUPTheme.sightUPColors.neutral_0,
+            checkedTrackColor = SightUPTheme.sightUPColors.primary_600,
+            uncheckedTrackColor = SightUPTheme.sightUPColors.neutral_200,
         ),
         thumbContent = {
             if (isChecked) {

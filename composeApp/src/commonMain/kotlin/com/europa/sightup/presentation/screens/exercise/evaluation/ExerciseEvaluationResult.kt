@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyExerciseResponse
+import com.europa.sightup.platformspecific.ShareService
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -49,6 +50,7 @@ import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.goBackToExerciseHome
 import com.europa.sightup.utils.isUserLoggedIn
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.close
@@ -66,6 +68,8 @@ fun ExerciseEvaluationResult(
     navController: NavController? = null,
     modifier: Modifier = Modifier,
 ) {
+    val shareService = koinInject<ShareService>()
+
     val viewModel = koinViewModel<ExerciseEvaluationResultViewModel>()
 
     LaunchedEffect(Unit) {
@@ -99,8 +103,6 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> Res.drawable.evaluate_exercise_tired
-
-        else -> Res.drawable.evaluate_exercise_neutral
     }
     val title = when (mood) {
         Moods.VERY_GOOD,
@@ -112,7 +114,6 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> "We’re sorry to know your eyes are still tired."
-        else -> ""
     }
 
     val subtitle = when (mood) {
@@ -125,8 +126,6 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> "We’ll recommend new exercises to boost your eyesight and help you to feel better."
-
-        else -> ""
     }
     val scrollState = rememberScrollState()
     Column(
@@ -266,7 +265,7 @@ fun ExerciseEvaluationResult(
                     text = if (mood == Moods.VERY_GOOD || mood == Moods.GOOD) "Share" else "Eye Exercises",
                     onClick = {
                         if (mood == Moods.VERY_GOOD || mood == Moods.GOOD) {
-                            // TODO: Implement Share
+                            shareService.shareText(exerciseName)
                         } else {
                             navController?.goBackToExerciseHome()
                         }
@@ -295,7 +294,7 @@ fun ExerciseEvaluationResult(
                     text = if (mood == Moods.VERY_GOOD || mood == Moods.GOOD) "Share" else "Eye Exercises",
                     onClick = {
                         if (mood == Moods.VERY_GOOD || mood == Moods.GOOD) {
-                            // TODO: Implement Share
+                            shareService.shareText(exerciseName)
                         } else {
                             navController?.goBackToExerciseHome()
                         }

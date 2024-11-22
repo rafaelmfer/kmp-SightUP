@@ -2,19 +2,16 @@ package com.europa.sightup.di
 
 import com.europa.sightup.BuildConfigKMP
 import com.europa.sightup.data.network.NetworkClient
-import com.europa.sightup.data.remote.api.JsonPlaceholderApiService
 import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.api.createSightUpApiService
-import com.europa.sightup.data.repository.JsonPlaceholderRepository
 import com.europa.sightup.data.repository.SightUpRepository
 import com.europa.sightup.platformspecific.getPlatform
-import com.europa.sightup.presentation.MainViewModel
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
 import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResultViewModel
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreenViewModel
 import com.europa.sightup.presentation.screens.home.HomeViewModel
-import com.europa.sightup.presentation.screens.onboarding.WelcomeViewModel
 import com.europa.sightup.presentation.screens.onboarding.LoginViewModel
+import com.europa.sightup.presentation.screens.onboarding.WelcomeViewModel
 import com.europa.sightup.presentation.screens.prescription.PrescriptionMainViewModel
 import com.europa.sightup.presentation.screens.prescription.history.PrescriptionHistoryViewModel
 import com.europa.sightup.presentation.screens.test.active.ActiveTestViewModel
@@ -34,12 +31,6 @@ expect val targetModule: Module
 val commonModule = module {
     // NetworkClient
     single<HttpClient> { NetworkClient.provideHttpClient(kVaultStorage = get()) }
-    single<JsonPlaceholderApiService> {
-        NetworkClient.provideKtorfit(
-            baseUrl = BuildConfigKMP.BASE_URL,
-            httpClient = get()
-        ).create()
-    }
     single<SightUpApiService> {
         NetworkClient.provideKtorfit(
             baseUrl = if (getPlatform().name == ANDROID) BuildConfigKMP.BASE_URL_BACKEND_ANDROID_EMU else BuildConfigKMP.BASE_URL_BACKEND_IOS_EMU,
@@ -48,11 +39,9 @@ val commonModule = module {
     }
 
     // Repositories
-    single<JsonPlaceholderRepository> { JsonPlaceholderRepository(api = get()) }
     single<SightUpRepository> { SightUpRepository(api = get(), kVaultStorage = get()) }
 
     // ViewModels
-    viewModel { MainViewModel(repository = get()) }
     viewModel { LoginViewModel(repository = get()) }
     viewModel { WelcomeViewModel(repository = get()) }
     viewModel { TestViewModel(repository = get()) }

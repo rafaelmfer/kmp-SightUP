@@ -55,9 +55,6 @@ fun SDSTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(SightUPTheme.sizes.size_48)
-//            .padding(
-//                horizontal = SightUPTheme.spacing.spacing_xs
-//            )
             .then(modifier),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

@@ -54,14 +54,14 @@ fun SDSCardTest(
             .fillMaxWidth()
             .clip(SightUPTheme.shapes.large)
             .background(SightUPTheme.sightUPColors.background_default)
+            .then(modifier)
             .border(
                 width = SightUPBorder.Width.sm,
                 color = SightUPTheme.sightUPColors.border_card,
                 shape = SightUPTheme.shapes.large
             )
             .clickableWithRipple { navigateToTest() }
-            .padding(SightUPTheme.spacing.spacing_base)
-            .then(modifier),
+            .padding(SightUPTheme.spacing.spacing_base),
         colors = CardDefaults.cardColors(
             containerColor = SightUPTheme.sightUPColors.background_default
         )

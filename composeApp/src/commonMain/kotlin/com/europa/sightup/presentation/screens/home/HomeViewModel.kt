@@ -2,7 +2,6 @@ package com.europa.sightup.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.europa.sightup.data.remote.request.assessment.DailyCheckInfoRequest
 import com.europa.sightup.data.remote.request.assessment.DailyCheckRequest
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
 import com.europa.sightup.data.remote.response.DailyExerciseResponse
@@ -53,8 +52,6 @@ class HomeViewModel(private val repository: SightUpRepository) : ViewModel() {
             .catch { error ->
                 _dailyCheckGet.update { UIState.Error(error.message ?: "Unknown error") }
             }
-            .onCompletion {
-            }
             .launchIn(viewModelScope)
     }
 
@@ -62,35 +59,20 @@ class HomeViewModel(private val repository: SightUpRepository) : ViewModel() {
     private val _dailyCheck = MutableStateFlow<UIState<DailyCheckResponse>>(UIState.InitialState())
     val dailyCheck: StateFlow<UIState<DailyCheckResponse>> = _dailyCheck.asStateFlow()
 
-    fun saveDailyCheck(
-        dailyCheckDate: String,
-        email: String,
-        visionStatus: String,
-        condition: List<String>,
-        causes: List<String>,
-    ) {
-        val request = DailyCheckRequest(
-            dailyCheckDate = dailyCheckDate,
-            email = email,
-            dailyCheckInfo = DailyCheckInfoRequest(
-                visionStatus = visionStatus,
-                condition = condition,
-                causes = causes,
-                done = true
-            )
-        )
-
+    fun saveDailyCheck(request: DailyCheckRequest) {
         repository.saveDailyCheck(request)
             .onStart {
                 _dailyCheck.update { UIState.Loading() }
             }
             .onEach { response: DailyCheckResponse ->
                 _dailyCheck.update { UIState.Success(response) }
-                getAllDay()
             }
             .catch { error ->
                 println("Error: ${error.message}")
                 _dailyCheck.update { UIState.Error(error.message ?: "Unknown error") }
+            }
+            .onCompletion {
+                getAllDay()
             }
             .launchIn(viewModelScope)
     }
