@@ -7,18 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +37,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
-import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.arrow_left
@@ -48,17 +44,19 @@ import sightupkmpapp.composeapp.generated.resources.arrow_right
 
 @Composable
 fun SDSCalendarDay(
+    onDateSelected: (day: Int, month: String, year: Int) -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxSize()
-    ){
+            .fillMaxWidth()
+    ) {
         Calendar(
             onClickCalendar = { day, month, year ->
                 println(day)
                 println(month)
                 println(year)
+                onDateSelected(day.toInt(), month, year.toInt())
             }
         )
     }
@@ -67,11 +65,11 @@ fun SDSCalendarDay(
 
 @Composable
 fun Calendar(
-   onClickCalendar: (String, String, String) -> Unit
+    onClickCalendar: (String, String, String) -> Unit,
 ) {
     var currentMonth by remember { mutableStateOf(Clock.System.todayIn(TimeZone.currentSystemDefault())) }
     val daysList = remember { mutableListOf<String>() }
-    var activeToday:Boolean by remember { mutableStateOf(true)}
+    var activeToday: Boolean by remember { mutableStateOf(true) }
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     var dayCounter = 1
     var _currentMonth = currentMonth.monthNumber
@@ -85,7 +83,9 @@ fun Calendar(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                currentMonth.month.toString() + " " + currentMonth.year.toString(),
+                currentMonth.month.toString().lowercase().replaceFirstChar { it.uppercase() } +
+                        " " +
+                        currentMonth.year.toString(),
                 style = SightUPTheme.textStyles.subtitle
             )
 
@@ -133,7 +133,7 @@ fun Calendar(
             Month.OCTOBER -> check(today.month.number == 10)
             Month.NOVEMBER -> check(today.month.number == 11)
             Month.DECEMBER -> check(today.month.number == 12)
-            else -> TODO("A new month was added to the calendar?")
+            else -> ""
         }
 
         Column {
@@ -224,17 +224,16 @@ fun Calendar(
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .weight(1f)
-
-                                    .padding(vertical = 5.dp)
-                                    .padding(horizontal = 5.dp)
+                                    .padding(vertical = 0.dp)
+                                    .padding(horizontal = 0.dp)
                                     .let { modifier ->
-                                        if(activeToday) {
+                                        if (activeToday) {
                                             if (currentMonth.dayOfMonth.toString() == day) {
                                                 modifier.background(SightUPTheme.sightUPColors.primary_200, CircleShape)
                                             } else {
                                                 modifier
                                             }
-                                        }else{
+                                        } else {
                                             modifier
                                         }
                                     }
@@ -249,9 +248,8 @@ fun Calendar(
                                         }
                                         activeToday = false
                                         clickedStates[day] = !isClicked
-                                        showToast(clickedStates[day].toString())
                                         daysList.clear()
-                                        println(day.toString() +"-"+ currentMonth.month.toString() + "-" + currentMonth.year.toString())
+                                        println(day.toString() + "-" + currentMonth.month.toString() + "-" + currentMonth.year.toString())
                                         onClickCalendar(day, currentMonth.month.toString(), currentMonth.year.toString())
                                     }
                                     .padding(vertical = 10.dp)
@@ -269,21 +267,6 @@ fun Calendar(
                 }
 
                 Spacer(Modifier.height(8.dp))
-
-                Row(Modifier.fillMaxWidth()) {
-                    SDSButton(
-                        "Cancel",
-                        {},
-                        buttonStyle = ButtonStyle.OUTLINED,
-
-                        )
-                    Spacer(modifier = Modifier.weight(1f))
-                    SDSButton(
-                        "Save",
-                        {},
-                        buttonStyle = ButtonStyle.PRIMARY
-                    )
-                }
             }
 
         }

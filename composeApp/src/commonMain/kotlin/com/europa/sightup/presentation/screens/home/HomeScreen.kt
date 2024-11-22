@@ -59,7 +59,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyCheckInResponse
 import com.europa.sightup.data.remote.response.DailyExerciseResponse
-import com.europa.sightup.data.remote.response.assessment.DailyCheckInfoResponse
 import com.europa.sightup.presentation.designsystem.components.ExpandableItem
 import com.europa.sightup.presentation.designsystem.components.ExpandableListItem
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
@@ -171,6 +170,7 @@ fun HomeScreen(
 
     val user = viewModel.user.value as? UIState.Success
     val name = user?.data?.userName ?: "Guest"
+    val userIsLogged = isUserLoggedIn
 
     val scope = rememberCoroutineScope()
     var dailyCheckBottomSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
@@ -183,9 +183,15 @@ fun HomeScreen(
 
     val dailyCheckState by viewModel.dailyCheck.collectAsStateWithLifecycle()
 
-    var dailyCheckResult by remember { mutableStateOf<DailyCheckInfoResponse?>(null) }
-    var dailyCheckIsDone by remember { mutableStateOf(false) }
-    var dailyCheckTime by remember { mutableStateOf("") }
+    val dailyCheckList = (state as? UIState.Success)?.data ?: emptyList()
+    val mostRecentCheck = dailyCheckList.maxByOrNull { it.dailyCheckDate }
+    val dailyCheckResult = mostRecentCheck?.dailyCheckInfo
+    val dailyCheckTime = dailyCheckResult?.infoTime ?: ""
+    val dailyCheckIsDone = dailyCheckResult?.done ?: false // dailyCheckTime != ""
+
+    println("->Daily Check Rdo: $dailyCheckResult")
+    println("->Daily Check Time: $dailyCheckTime")
+    println("->Daily Check Is Done: $dailyCheckIsDone")
 
     var showHome by remember { mutableStateOf(false) }
 
@@ -219,23 +225,26 @@ fun HomeScreen(
 
         ShowCalendar(state)
 
-        NextTestCard(
-            nameOfTest = "Vision Acuity Test",
-            testDate = "Nov 09, 2024",
-            numberOfDays = 2,
-            onClickClose = {
-                showToast(
-                    message = "Close",
-                    bottomPadding = 40
-                )
-            },
-            onClickEdit = {
-                showToast(
-                    message = "Edit",
-                    bottomPadding = 40
-                )
-            }
-        )
+        if (userIsLogged) {
+            NextTestCard(
+                nameOfTest = "Vision Acuity Test",
+                testDate = "Nov 25, 2024",
+                numberOfDays = 2,
+                onClickClose = {
+                    showToast(
+                        message = "Close",
+                        bottomPadding = 40
+                    )
+                },
+                onClickEdit = {
+                    showToast(
+                        message = "Edit",
+                        bottomPadding = 40
+                    )
+                }
+            )
+        }
+
 
         AssessmentList(
             navController = navController,
@@ -270,8 +279,14 @@ fun HomeScreen(
                     onCloseIconTopBar = {
                         dailyCheckBottomSheetVisibility = BottomSheetEnum.HIDE
                     },
-                    onComplete = {
-                        viewModel.saveDailyCheck(it)
+                    onComplete = { dailyCheckInput ->
+                        viewModel.saveDailyCheck(
+                            dailyCheckDate = dailyCheckInput.dailyCheckDate,
+                            email = dailyCheckInput.email,
+                            visionStatus = dailyCheckInput.dailyCheckInfo?.visionStatus ?: Moods.MODERATE.value,
+                            condition = dailyCheckInput.dailyCheckInfo?.condition ?: listOf(),
+                            causes = dailyCheckInput.dailyCheckInfo?.causes ?: listOf(),
+                        )
                     },
                     modifier = Modifier
                 )
@@ -283,14 +298,6 @@ fun HomeScreen(
                     }
 
                     is UIState.Success -> {
-                        showToast(
-                            message = "Success",
-                            bottomPadding = 40
-                        )
-                        dailyCheckResult = (dailyCheckState as UIState.Success).data.updatedDaily.dailyCheckInfo
-                        dailyCheckIsDone = dailyCheckResult?.done ?: false
-                        dailyCheckTime = dailyCheckResult?.infoTime ?: ""
-
                         scope.hideBottomSheetWithAnimation(
                             sheetState = dailyCheckInSheetState,
                             onBottomSheetVisibilityChange = {
@@ -321,6 +328,7 @@ fun HomeScreen(
         causes = dailyCheckResult?.causes ?: listOf(),
         onDismiss = {
             viewModel.resetDailyCheckState()
+            viewModel.getAllDay()
         },
     )
 }
@@ -699,33 +707,61 @@ private fun AssessmentList(
             exerciseDuration = 0,
             subtitle = "Log your eye condition",
             lineUp = false,
-            lineDown = userIsLogged,
+            lineDown = true,
             eyeConditions = listOf(),
             onClickCard = onDailyCheckClick,
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
         )
 
-        exerciseList.forEachIndexed { index, exercise ->
+        if (userIsLogged) {
+            exerciseList.forEachIndexed { index, exercise ->
+                SDSCardAssessment(
+                    title = "${exercise.title} (${index + 1}/${exerciseList.size})",
+                    time = exercise.timeSchedule,
+                    isDone = exercise.done,
+                    exerciseDuration = exercise.duration,
+                    eyeConditions = exercise.eyeCondition,
+                    lineUp = true,
+                    lineDown = index != exerciseList.lastIndex,
+                    onClickCard = {
+                        navController?.navigate(
+                            ExerciseDetails(
+                                exerciseId = exercise.id,
+                                exerciseName = exercise.title,
+                                category = exercise.category,
+                                motivation = exercise.motivation,
+                                duration = exercise.duration,
+                                imageInstruction = exercise.imageInstruction,
+                                video = exercise.video,
+                                finishTitle = exercise.finishTitle,
+                                advice = exercise.advice
+                            )
+                        )
+                    },
+                    modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                )
+            }
+        } else {
             SDSCardAssessment(
-                title = "${exercise.title} (${index + 1}/${exerciseList.size})",
-                time = exercise.timeSchedule,
-                isDone = exercise.done,
-                exerciseDuration = exercise.duration,
-                eyeConditions = exercise.eyeCondition,
+                title = "Circular Motion",
+                time = "1:00 pm",
+                isDone = false,
+                exerciseDuration = 60,
+                eyeConditions = listOf("Eye Strain", "Dry Eyes", "Red Eyes"),
                 lineUp = true,
-                lineDown = index != exerciseList.lastIndex,
+                lineDown = false,
                 onClickCard = {
                     navController?.navigate(
                         ExerciseDetails(
-                            exerciseId = exercise.id,
-                            exerciseName = exercise.title,
-                            category = exercise.category,
-                            motivation = exercise.motivation,
-                            duration = exercise.duration,
-                            imageInstruction = exercise.imageInstruction,
-                            video = exercise.video,
-                            finishTitle = exercise.finishTitle,
-                            advice = exercise.advice
+                            exerciseId = "6702f88243321fa1eb25b51f",
+                            exerciseName = "Circular Motion",
+                            category = "Movement",
+                            motivation = "Let’s take a quick break and give your eyes some gentle movement!",
+                            duration = 60,
+                            imageInstruction = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/illustrations%2Feye_exercises%2Fcircular_motion.png?alt=media&token=4b5ad4e1-ba36-4780-9bb4-1925ffee2aa1",
+                            video = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/animations%2Fcircular_motion%2FCircular%20Motion_Exercise_fv.mp4?alt=media&token=d3d5ff28-af58-4c01-a94d-1fa1e679c895",
+                            finishTitle = "Great job! You have completed the Eye Movement Exercise.",
+                            advice = "For better results, repeat this exercise twice a day."
                         )
                     )
                 },

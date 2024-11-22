@@ -186,15 +186,15 @@ fun TestResultScreen(
             AnimatedVisibility(
                 visible = !showLoadingAnimation,
                 enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
-                    expandVertically(
-                        expandFrom = Alignment.Bottom,
-                        animationSpec = tween(durationMillis = 500, delayMillis = 500)
-                    ),
+                        expandVertically(
+                            expandFrom = Alignment.Bottom,
+                            animationSpec = tween(durationMillis = 500, delayMillis = 500)
+                        ),
                 exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
-                    shrinkVertically(
-                        shrinkTowards = Alignment.Bottom,
-                        animationSpec = tween(durationMillis = 500, delayMillis = 500)
-                    ),
+                        shrinkVertically(
+                            shrinkTowards = Alignment.Bottom,
+                            animationSpec = tween(durationMillis = 500, delayMillis = 500)
+                        ),
             ) {
                 ButtonBottomBar(
                     onClickTestAgain = {
@@ -360,11 +360,11 @@ fun TestResultScreen(
         onPrimaryClick = {
             navController.popBackStack<TestScreens.TestRoot>(inclusive = false)
         },
-        buttonPrimaryText = "Back to Vision Tests",
+        buttonPrimaryText = "Vision Tests",
         onSecondaryClick = {
             navController.navigate(PrescriptionsScreens.PrescriptionsRoot)
         },
-        buttonSecondaryText = "Go to Prescriptions",
+        buttonSecondaryText = "Prescriptions",
     )
 }
 
@@ -1091,7 +1091,7 @@ private fun AnimationEvaluatingResultsScreen(
     if (compositionResult.isComplete) {
 
         LaunchedEffect(Unit) {
-            delay(10000L)
+            delay(5000L)
             onResultReady()
         }
 

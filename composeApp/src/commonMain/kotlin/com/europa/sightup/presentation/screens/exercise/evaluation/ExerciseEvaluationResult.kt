@@ -31,7 +31,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.europa.sightup.data.remote.response.DailyExerciseMessageResponse
+import com.europa.sightup.data.remote.response.DailyExerciseResponse
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -77,7 +77,7 @@ fun ExerciseEvaluationResult(
 
     val hasScheduleForThisToday = when (dailyExerciseState) {
         is UIState.Success -> {
-            val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseMessageResponse.DailyExerciseResponse>>).data
+            val exerciseList = (dailyExerciseState as UIState.Success<List<DailyExerciseResponse>>).data
             exerciseList.any { it.title.contains(exerciseName, ignoreCase = true) }
         }
 
@@ -112,7 +112,6 @@ fun ExerciseEvaluationResult(
         Moods.POOR,
         Moods.VERY_POOR,
             -> "We’re sorry to know your eyes are still tired."
-
         else -> ""
     }
 

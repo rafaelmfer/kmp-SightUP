@@ -77,7 +77,7 @@ fun DailyCheckInFlowBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .applyIf(screenSizeInInches < 5.0f) {
+                .applyIf(screenSizeInInches < 4.9f) {
                     verticalScroll(scrollState)
                 }
         ) {

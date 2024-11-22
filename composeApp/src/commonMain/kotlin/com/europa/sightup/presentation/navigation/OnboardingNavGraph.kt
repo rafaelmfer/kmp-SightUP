@@ -41,7 +41,9 @@ fun NavGraphBuilder.onboardingNavGraph(navController: NavHostController) {
             popEnterTransition = { slideInFromLeft() },
             popExitTransition = { slideOutToRight() }
         ) {
-            WelcomeScreen(navController = navController)
+            WelcomeScreen(
+                navController = navController,
+            )
         }
     }
 }

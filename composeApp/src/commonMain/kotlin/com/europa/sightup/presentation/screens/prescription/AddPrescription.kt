@@ -3,6 +3,7 @@ package com.europa.sightup.presentation.screens.prescription
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,8 @@ import com.europa.sightup.data.remote.request.prescription.AddPrescriptionInfoRe
 import com.europa.sightup.data.remote.request.prescription.AddPrescriptionRequest
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
+import com.europa.sightup.presentation.designsystem.components.SDSCalendarDay
+import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSInput
 import com.europa.sightup.presentation.designsystem.components.SDSLocationBadge
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -282,6 +285,13 @@ private fun DatePickerField(
     initialDate: String,
     onDateChange: (String) -> Unit = {},
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+    var selectedDay by remember { mutableStateOf(0) }
+    var selectedMonth by remember { mutableStateOf("") }
+    var selectedYear by remember { mutableStateOf(0) }
+    var formattedDate by remember { mutableStateOf(initialDate) }
+
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -302,14 +312,14 @@ private fun DatePickerField(
                     shape = SightUPTheme.shapes.small
                 )
                 .clickableWithRipple {
-                    //TODO: Implement Date Picker
+                   showDialog = true
                 }
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = initialDate,
+                text =  formattedDate,
                 style = SightUPTheme.textStyles.body,
                 color = SightUPTheme.sightUPColors.text_primary
             )
@@ -321,6 +331,31 @@ private fun DatePickerField(
             )
         }
     }
+
+    SDSDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = it},
+        title = " ",
+        content = { _ ->
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            ){
+                SDSCalendarDay { day, month, year ->
+                    selectedDay = day
+                    selectedMonth = month
+                    selectedYear = year
+                }
+            }
+        },
+        onSecondaryClick = {},
+        buttonSecondaryText = "Cancel",
+        onPrimaryClick = {
+            formattedDate = "${selectedMonth.substring(0, 3).lowercase().replaceFirstChar { it.uppercase() }} $selectedDay, $selectedYear"
+            onDateChange(formattedDate)
+            showDialog = false
+        },
+        buttonPrimaryText = "Save",
+    )
 }
 
 @Composable
