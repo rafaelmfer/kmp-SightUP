@@ -32,6 +32,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.datetime.Instant
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -169,7 +170,12 @@ class SightUpRepository(
             val user = userInfo?.email ?: userInfo?.id ?: ""
             val response = api.getUserTests(user)
 
-            emit(response.tests.firstOrNull())
+            val mostRecentTest = response.tests.maxByOrNull {
+                val correctedDate = it.date.replace(":000Z", ".000Z")
+                Instant.parse(correctedDate)
+            }
+
+            emit(mostRecentTest)
         }.flowOn(Dispatchers.IO)
     }
 

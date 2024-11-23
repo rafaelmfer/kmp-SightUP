@@ -164,6 +164,7 @@ private fun HistoryList(history: List<HistoryTestResponse>) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+            .padding(bottom = SightUPTheme.spacing.spacing_md)
     ) {
         history.forEachIndexed { index, test ->
             ExpandableHistoryItem(

@@ -41,7 +41,6 @@ import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWithAnimation
-import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseRoot
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens
 import com.europa.sightup.presentation.navigation.TestScreens
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -51,6 +50,7 @@ import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.isUserLoggedIn
+import com.europa.sightup.utils.toFormattedDate
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import sightupkmpapp.composeapp.generated.resources.Res
@@ -78,6 +78,7 @@ fun PrescriptionScreen(
     LaunchedEffect(Unit) {
         viewModel.getUser()
     }
+
     val userIsLogged = isUserLoggedIn
     val prescription by viewModel.prescription.collectAsState()
     val userPrescriptions by viewModel.userPrescription.collectAsStateWithLifecycle()
@@ -108,10 +109,11 @@ fun PrescriptionScreen(
         } else {
             Spacer(Modifier.height(SightUPTheme.spacing.spacing_base))
             Text(
-                text = "Please, login to check your prescriptions",
+                text = "Please, login or sign up to check your prescriptions",
                 style = SightUPTheme.textStyles.body,
                 textAlign = TextAlign.Center,
                 color = SightUPTheme.sightUPColors.text_primary,
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -128,7 +130,12 @@ fun PrescriptionScreen(
 
         when (userPrescriptions) {
             is UIState.Loading -> {
-                CircularProgressIndicator()
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
 
             is UIState.Success -> {
@@ -213,9 +220,6 @@ fun PrescriptionScreen(
         sheetState = sheetState,
         fullHeight = true,
         iconRightVisible = false,
-        onIconRightClick = {
-            navController?.popBackStack<ExerciseRoot>(inclusive = false)
-        },
         onDismiss = {
             dismissSheet()
         },
@@ -252,6 +256,7 @@ fun PrescriptionScreen(
                     is PrescriptionRecordUIState.PrescriptionAdded -> {
                         dismissSheet()
                         viewModel.getUser()
+                        viewModel.getLatestRecords()
                     }
 
                     is PrescriptionRecordUIState.Error -> {
@@ -280,7 +285,12 @@ private fun VisionPrescription(
 
     when (records) {
         is VisionRecordUIState.Loading -> {
-            CircularProgressIndicator()
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
 
         is VisionRecordUIState.NoData -> {
@@ -345,7 +355,7 @@ private fun NextVisionTest(
         }
         Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
         Text(
-            text = "Sep 27, 2024",
+            text = "2024-12-16T00:00:00.000Z".toFormattedDate("MMM dd, yyyy"),
             style = SightUPTheme.textStyles.large,
             color = SightUPTheme.sightUPColors.text_primary,
             modifier = Modifier

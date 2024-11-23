@@ -76,11 +76,11 @@ import com.europa.sightup.presentation.designsystem.components.hideBottomSheetWi
 import com.europa.sightup.presentation.navigation.ExerciseScreens.ExerciseDetails
 import com.europa.sightup.presentation.screens.home.checkinbottomsheet.DailyCheckInFlowBottomSheet
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.color.SightUPContextColor
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.SightUPSpacing
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
-import com.europa.sightup.presentation.ui.theme.typography.fontWeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.Moods
 import com.europa.sightup.utils.ONE_FLOAT
@@ -97,6 +97,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -211,7 +212,27 @@ fun HomeScreen(
         }
 
         else -> {
-            listOf()
+            if (!userIsLogged) {
+                listOf(
+                    DailyExerciseResponse(
+                        id = "6702f88243321fa1eb25b51f",
+                        taskId = "6702f88243321fa1eb25b51f",
+                        category = "Movement",
+                        title = "Circular Motion",
+                        timeSchedule = "1:00 pm",
+                        done = false,
+                        duration = 60,
+                        eyeCondition = listOf("Eye Strain", "Dry Eyes", "Red Eyes"),
+                        motivation = "Let’s take a quick break and give your eyes some gentle movement!",
+                        imageInstruction = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/illustrations%2Feye_exercises%2Fcircular_motion.png?alt=media&token=4b5ad4e1-ba36-4780-9bb4-1925ffee2aa1",
+                        video = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/animations%2Fcircular_motion%2FCircular%20Motion_Exercise_fv.mp4?alt=media&token=d3d5ff28-af58-4c01-a94d-1fa1e679c895",
+                        finishTitle = "Great job! You have completed the Eye Movement Exercise.",
+                        advice = "For better results, repeat this exercise twice a day."
+                    )
+                )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -252,7 +273,15 @@ fun HomeScreen(
         AssessmentList(
             navController = navController,
             onDailyCheckClick = {
-                dailyCheckBottomSheetVisibility = BottomSheetEnum.SHOW
+                if (userIsLogged) {
+                    dailyCheckBottomSheetVisibility = BottomSheetEnum.SHOW
+                } else {
+                    showToast(
+                        "Please login to access this feature.",
+                        bottomPadding = 40,
+                        backgroundColor = SightUPContextColor.background_button
+                    )
+                }
             },
             dailyCheckIsDone = dailyCheckIsDone,
             dailyCheckTime = if (dailyCheckTime.isNotBlank()) dailyCheckTime.formatTime() else "",
@@ -330,6 +359,65 @@ fun HomeScreen(
 }
 
 @Composable
+private fun GreetingWithIcons(name: String) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+    ) {
+        val (greetingText, todayIcon, calendarIcon) = createRefs()
+
+        Text(
+            text = "Hello, $name",
+            style = SightUPTheme.textStyles.h3,
+            color = SightUPTheme.sightUPColors.text_primary,
+            modifier = Modifier.constrainAs(greetingText) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                bottom.linkTo(parent.bottom)
+                end.linkTo(todayIcon.start, margin = 8.dp)
+                width = Dimension.fillToConstraints
+            }
+        )
+
+        Box(
+            modifier = Modifier
+                .constrainAs(todayIcon) {
+                    top.linkTo(greetingText.top)
+                    bottom.linkTo(greetingText.bottom)
+                    start.linkTo(greetingText.end, margin = 8.dp)
+                }
+                .alpha(0f) // Not sure if we are going to have this button anymore
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.today),
+                contentDescription = "Today",
+                modifier = Modifier
+                    .size(SightUPTheme.sizes.size_32)
+            )
+        }
+
+        IconButton(
+            onClick = {},
+            modifier = Modifier
+                .constrainAs(calendarIcon) {
+                    top.linkTo(todayIcon.top)
+                    bottom.linkTo(todayIcon.bottom)
+                    start.linkTo(todayIcon.end)
+                    end.linkTo(parent.end)
+                }
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.schedule),
+                contentDescription = "Calendar",
+                modifier = Modifier
+                    .size(SightUPTheme.sizes.size_32)
+            )
+        }
+    }
+}
+
+@Composable
 fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
@@ -398,7 +486,7 @@ fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
                             color = Color.Black,
                             style = SightUPTheme.textStyles.caption,
                         )
-                        Spacer(Modifier.height(SightUPTheme.sizes.size_6))
+                        Spacer(Modifier.height(SightUPTheme.sizes.size_4))
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -437,18 +525,20 @@ fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
                         text = today.dayOfWeek.toString().substring(0, 1),
                         textAlign = TextAlign.Center,
                         color = Color.White,
-                        fontWeight = SightUPTheme.fontWeight.fontWeight_regular,
-                        style = SightUPTheme.textStyles.caption,
+                        style = SightUPTheme.textStyles.caption.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
                     )
-                    Spacer(Modifier.height(SightUPTheme.sizes.size_6))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_4))
                     Text(
                         modifier = Modifier
                             .fillMaxWidth(),
                         text = today.dayOfMonth.toString(),
-                        fontWeight = SightUPTheme.fontWeight.fontWeight_regular,
                         textAlign = TextAlign.Center,
                         color = Color.White,
-                        style = SightUPTheme.textStyles.body2,
+                        style = SightUPTheme.textStyles.body2.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
                     )
                 }
 
@@ -488,7 +578,7 @@ fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
                         color = Color.Black,
                         style = SightUPTheme.textStyles.caption,
                     )
-                    Spacer(Modifier.height(SightUPTheme.sizes.size_6))
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_4))
                     Text(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -516,69 +606,10 @@ fun ShowCalendar(state: UIState<List<DailyCheckInResponse>>) {
 }
 
 @Composable
-private fun GreetingWithIcons(name: String) {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-    ) {
-        val (greetingText, todayIcon, calendarIcon) = createRefs()
-
-        Text(
-            text = "Hello, $name",
-            style = SightUPTheme.textStyles.h3,
-            color = SightUPTheme.sightUPColors.text_primary,
-            modifier = Modifier.constrainAs(greetingText) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                bottom.linkTo(parent.bottom)
-                end.linkTo(todayIcon.start, margin = 8.dp)
-                width = Dimension.fillToConstraints
-            }
-        )
-
-        Box(
-            modifier = Modifier
-                .constrainAs(todayIcon) {
-                    top.linkTo(greetingText.top)
-                    bottom.linkTo(greetingText.bottom)
-                    start.linkTo(greetingText.end, margin = 8.dp)
-                }
-                .alpha(0f) // Not sure if we are going to have this button anymore
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.today),
-                contentDescription = "Today",
-                modifier = Modifier
-                    .size(SightUPTheme.sizes.size_32)
-            )
-        }
-
-        IconButton(
-            onClick = {},
-            modifier = Modifier
-                .constrainAs(calendarIcon) {
-                    top.linkTo(todayIcon.top)
-                    bottom.linkTo(todayIcon.bottom)
-                    start.linkTo(todayIcon.end)
-                    end.linkTo(parent.end)
-                }
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.schedule),
-                contentDescription = "Calendar",
-                modifier = Modifier
-                    .size(SightUPTheme.sizes.size_32)
-            )
-        }
-    }
-}
-
-@Composable
 private fun NextTestCard(
-    nameOfTest: String = "Vision Acuity Test",
-    testDate: String = "Oct 04, 2024",
-    numberOfDays: Int = 9,
+    nameOfTest: String = "",
+    testDate: String = "",
+    numberOfDays: Int = 1,
     onClickClose: () -> Unit = {},
     onClickEdit: () -> Unit = {},
 ) {
@@ -691,7 +722,6 @@ private fun AssessmentList(
     dailyCheckTime: String = "",
     exerciseList: List<DailyExerciseResponse> = listOf(),
 ) {
-    val userIsLogged = isUserLoggedIn
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -709,55 +739,27 @@ private fun AssessmentList(
             modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
         )
 
-        if (userIsLogged) {
-            exerciseList.forEachIndexed { index, exercise ->
-                SDSCardAssessment(
-                    title = "${exercise.title} (${index + 1}/${exerciseList.size})",
-                    time = exercise.timeSchedule,
-                    isDone = exercise.done,
-                    exerciseDuration = exercise.duration,
-                    eyeConditions = exercise.eyeCondition,
-                    lineUp = true,
-                    lineDown = index != exerciseList.lastIndex,
-                    onClickCard = {
-                        navController?.navigate(
-                            ExerciseDetails(
-                                exerciseId = exercise.id,
-                                exerciseName = exercise.title,
-                                category = exercise.category,
-                                motivation = exercise.motivation,
-                                duration = exercise.duration,
-                                imageInstruction = exercise.imageInstruction,
-                                video = exercise.video,
-                                finishTitle = exercise.finishTitle,
-                                advice = exercise.advice
-                            )
-                        )
-                    },
-                    modifier = Modifier.padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
-                )
-            }
-        } else {
+        exerciseList.forEachIndexed { index, exercise ->
             SDSCardAssessment(
-                title = "Circular Motion",
-                time = "1:00 pm",
-                isDone = false,
-                exerciseDuration = 60,
-                eyeConditions = listOf("Eye Strain", "Dry Eyes", "Red Eyes"),
+                title = "${exercise.title} (${index + 1}/${exerciseList.size})",
+                time = exercise.timeSchedule,
+                isDone = exercise.done,
+                exerciseDuration = exercise.duration,
+                eyeConditions = exercise.eyeCondition,
                 lineUp = true,
-                lineDown = false,
+                lineDown = index != exerciseList.lastIndex,
                 onClickCard = {
                     navController?.navigate(
                         ExerciseDetails(
-                            exerciseId = "6702f88243321fa1eb25b51f",
-                            exerciseName = "Circular Motion",
-                            category = "Movement",
-                            motivation = "Let’s take a quick break and give your eyes some gentle movement!",
-                            duration = 60,
-                            imageInstruction = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/illustrations%2Feye_exercises%2Fcircular_motion.png?alt=media&token=4b5ad4e1-ba36-4780-9bb4-1925ffee2aa1",
-                            video = "https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/animations%2Fcircular_motion%2FCircular%20Motion_Exercise_fv.mp4?alt=media&token=d3d5ff28-af58-4c01-a94d-1fa1e679c895",
-                            finishTitle = "Great job! You have completed the Eye Movement Exercise.",
-                            advice = "For better results, repeat this exercise twice a day."
+                            exerciseId = exercise.id,
+                            exerciseName = exercise.title,
+                            category = exercise.category,
+                            motivation = exercise.motivation,
+                            duration = exercise.duration,
+                            imageInstruction = exercise.imageInstruction,
+                            video = exercise.video,
+                            finishTitle = exercise.finishTitle,
+                            advice = exercise.advice
                         )
                     )
                 },

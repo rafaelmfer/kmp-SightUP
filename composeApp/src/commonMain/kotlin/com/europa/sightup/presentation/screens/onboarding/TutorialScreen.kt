@@ -30,16 +30,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.europa.sightup.data.local.KVaultStorage
+import com.europa.sightup.data.network.NetworkClient.JWT_TOKEN
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSButton
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.navigation.Home
-import com.europa.sightup.presentation.navigation.OnboardingScreens
+import com.europa.sightup.presentation.navigation.OnboardingScreens.WelcomeScreen
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.USER_INFO
 import com.europa.sightup.utils.slideInFromLeft
 import com.europa.sightup.utils.slideInFromRight
 import com.europa.sightup.utils.slideOutToLeft
@@ -214,10 +216,10 @@ fun TutorialScreen(navController: NavController? = null) {
                     if (currentStep < 4) {
                         currentStep = 4
                     } else {
-//                        kVault.run {
-//                            remove(USER_INFO)
-//                            remove(JWT_TOKEN)
-//                        }
+                        kVault.run {
+                            remove(USER_INFO)
+                            remove(JWT_TOKEN)
+                        }
                         navigateTo = Home
                     }
                 },
@@ -252,7 +254,7 @@ fun TutorialScreen(navController: NavController? = null) {
             bottomSheetVisibility = it
         },
         onSuccessfulLogin = {
-            navigateTo = OnboardingScreens.WelcomeScreen
+            navigateTo = WelcomeScreen
         },
         navController = navController
     )
