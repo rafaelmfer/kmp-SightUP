@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import chaintech.videoplayer.model.PlayerConfig
 import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.video.VideoPlayerView
+import com.europa.sightup.platformspecific.StatusBarNavBarColors
 import com.europa.sightup.platformspecific.getLocalFilePathFor
 import com.europa.sightup.presentation.AppNavHost
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
@@ -100,6 +101,11 @@ fun AfterSplashScreen(navController: NavHostController) {
             launchSingleTop = true
         }
     }
+
+    StatusBarNavBarColors(
+        statusBarColor = SightUPTheme.sightUPColors.background_default,
+        navBarColor = SightUPTheme.sightUPColors.background_default
+    )
 
     Box(
         modifier = Modifier

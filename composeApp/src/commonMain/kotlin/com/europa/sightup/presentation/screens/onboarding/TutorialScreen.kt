@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -120,6 +121,7 @@ fun TutorialScreen(navController: NavController? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(SightUPTheme.sightUPColors.background_default)
             .graphicsLayer(alpha = screenAlpha)
     ) {
         IconButton(

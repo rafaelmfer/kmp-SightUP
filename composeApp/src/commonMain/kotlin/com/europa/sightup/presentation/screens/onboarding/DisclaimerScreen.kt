@@ -1,6 +1,7 @@
 package com.europa.sightup.presentation.screens.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ fun DisclaimerScreen(navController: NavController? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(SightUPTheme.sightUPColors.background_default)
             .padding(
                 start = SightUPTheme.spacing.spacing_side_margin,
                 end = SightUPTheme.spacing.spacing_side_margin,
