@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyExerciseResponse
+import com.europa.sightup.platformspecific.StatusBarNavBarColors
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
@@ -108,6 +109,10 @@ fun ExerciseFinishScreen(
         }
     }
 
+    StatusBarNavBarColors(
+        statusBarColor = SightUPTheme.sightUPColors.background_light,
+        navBarColor = SightUPTheme.sightUPColors.background_default
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()

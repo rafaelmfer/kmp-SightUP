@@ -11,15 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.europa.sightup.platformspecific.StatusBarNavBarColors
 import com.europa.sightup.presentation.navigation.AccountScreens.AccountRoot
 import com.europa.sightup.presentation.navigation.BottomNavBar
 import com.europa.sightup.presentation.navigation.BottomNavItem
@@ -28,6 +25,7 @@ import com.europa.sightup.presentation.navigation.Home
 import com.europa.sightup.presentation.navigation.NavigationGraph
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens.PrescriptionsRoot
 import com.europa.sightup.presentation.navigation.TestScreens.TestRoot
+import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.account
@@ -62,12 +60,10 @@ fun AppNavHost() {
         currentBackStackEntry?.destination?.route == screen::class.qualifiedName
     }
 
-    var showScaffold by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-//        delay(500)
-        showScaffold = true
-    }
+    StatusBarNavBarColors(
+        statusBarColor = if (showBottomBar) SightUPTheme.sightUPColors.background_light else SightUPTheme.sightUPColors.background_default,
+        navBarColor = SightUPTheme.sightUPColors.background_default
+    )
 
     Scaffold(
         bottomBar = {

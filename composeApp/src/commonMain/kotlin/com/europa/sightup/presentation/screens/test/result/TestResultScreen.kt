@@ -63,11 +63,14 @@ import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSDivider
 import com.europa.sightup.presentation.designsystem.components.SDSPagerWithDots
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
+import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
 import com.europa.sightup.presentation.navigation.PrescriptionsScreens
 import com.europa.sightup.presentation.navigation.TestScreens
+import com.europa.sightup.presentation.screens.onboarding.LoginSignUpScreen
 import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.screens.test.active.EChart
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.color.SightUPContextColor
 import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
@@ -75,6 +78,7 @@ import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.clickableWithRipple
+import com.europa.sightup.utils.isUserLoggedIn
 import com.europa.sightup.utils.navigate
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionResult
@@ -88,6 +92,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -108,6 +113,9 @@ fun TestResultScreen(
     right: String = "",
     navController: NavController,
 ) {
+    val userIsLogged = isUserLoggedIn
+    var loginSignUpSheetVisibility by remember { mutableStateOf(BottomSheetEnum.HIDE) }
+
     var showDialogDiscard by remember { mutableStateOf(false) }
     var showDialogSave by remember { mutableStateOf(false) }
 
@@ -186,15 +194,15 @@ fun TestResultScreen(
             AnimatedVisibility(
                 visible = !showLoadingAnimation,
                 enter = fadeIn(animationSpec = tween(durationMillis = 500)) +
-                        expandVertically(
-                            expandFrom = Alignment.Bottom,
-                            animationSpec = tween(durationMillis = 500, delayMillis = 500)
-                        ),
+                    expandVertically(
+                        expandFrom = Alignment.Bottom,
+                        animationSpec = tween(durationMillis = 500, delayMillis = 500)
+                    ),
                 exit = fadeOut(animationSpec = tween(durationMillis = 500)) +
-                        shrinkVertically(
-                            shrinkTowards = Alignment.Bottom,
-                            animationSpec = tween(durationMillis = 500, delayMillis = 500)
-                        ),
+                    shrinkVertically(
+                        shrinkTowards = Alignment.Bottom,
+                        animationSpec = tween(durationMillis = 500, delayMillis = 500)
+                    ),
             ) {
                 ButtonBottomBar(
                     onClickTestAgain = {
@@ -204,14 +212,23 @@ fun TestResultScreen(
                         }
                     },
                     onClickSave = {
-                        viewModel.saveVisionTest(
-                            appTest = appTest,
-                            testId = testId,
-                            testTitle = testTitle,
-                            left = left,
-                            right = right
-                        )
-                        showDialogSave = true
+                        if (userIsLogged) {
+                            viewModel.saveVisionTest(
+                                appTest = appTest,
+                                testId = testId,
+                                testTitle = testTitle,
+                                left = left,
+                                right = right
+                            )
+                            showDialogSave = true
+                        } else {
+                            showToast(
+                                message = "Please login to save results",
+                                bottomPadding = 40,
+                                backgroundColor = SightUPContextColor.background_button
+                            )
+                            loginSignUpSheetVisibility = BottomSheetEnum.SHOW
+                        }
                     },
                     modifier = Modifier.background(SightUPTheme.sightUPColors.background_default)
                 )
@@ -365,6 +382,17 @@ fun TestResultScreen(
             navController.navigate(PrescriptionsScreens.PrescriptionsRoot)
         },
         buttonSecondaryText = "Prescriptions",
+    )
+
+    LoginSignUpScreen(
+        bottomSheetVisible = loginSignUpSheetVisibility,
+        onBottomSheetVisibilityChange = {
+            loginSignUpSheetVisibility = it
+        },
+        onSuccessfulLogin = {
+            loginSignUpSheetVisibility = BottomSheetEnum.HIDE
+        },
+        navController = navController
     )
 }
 

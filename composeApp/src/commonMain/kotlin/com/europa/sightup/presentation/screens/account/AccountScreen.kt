@@ -28,12 +28,14 @@ import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
 import com.europa.sightup.utils.ONE_FLOAT
+import com.europa.sightup.utils.isUserLoggedIn
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sightupkmpapp.composeapp.generated.resources.Res
 import sightupkmpapp.composeapp.generated.resources.account
 import sightupkmpapp.composeapp.generated.resources.arrow_right
+import sightupkmpapp.composeapp.generated.resources.login_title
 import sightupkmpapp.composeapp.generated.resources.logout
 import sightupkmpapp.composeapp.generated.resources.notifications
 import sightupkmpapp.composeapp.generated.resources.preferences
@@ -45,26 +47,34 @@ fun AccountScreen(navController: NavHostController? = null) {
 
     val kVault = koinInject<KVaultStorage>()
 
+    val userIsLoggedIn = isUserLoggedIn
     val profile = stringResource(Res.string.profile)
     val preferences = stringResource(Res.string.preferences)
     val notifications = stringResource(Res.string.notifications)
     val termsAndConditions = stringResource(Res.string.terms_and_conditions)
     val logout = stringResource(Res.string.logout)
 
+    val login = stringResource(Res.string.login_title)
+
     val itemsButtons = remember {
-        listOf(
-            profile,
-            preferences,
-            notifications,
-            termsAndConditions,
-            logout,
-        )
+        if (userIsLoggedIn) {
+            listOf(
+                profile,
+                preferences,
+                notifications,
+                termsAndConditions,
+                logout
+            )
+        } else {
+            listOf(login)
+        }
     }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(SightUPTheme.sightUPColors.background_light)
+            .background(SightUPTheme.sightUPColors.background_light),
+        contentPadding = PaddingValues(bottom = SightUPTheme.spacing.spacing_md)
     ) {
         item {
             SDSTopBar(
@@ -83,7 +93,7 @@ fun AccountScreen(navController: NavHostController? = null) {
                         preferences -> {}
                         notifications -> {}
                         termsAndConditions -> {}
-                        logout -> {
+                        logout, login -> {
                             kVault.clear()
                             navController?.navigate(
                                 Disclaimer
