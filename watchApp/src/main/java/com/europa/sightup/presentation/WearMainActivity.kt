@@ -5,6 +5,7 @@
 
 package com.europa.sightup.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -29,10 +30,10 @@ class WearMainActivity : ComponentActivity() {
             }
         }
     }
+}
 
-    fun show(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
+fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
 @Composable

@@ -38,7 +38,7 @@ import com.europa.sightup.utils.WearMessageHelper
 @Composable
 fun ControlAstigmatismScreen() {
     val context = LocalContext.current
-    val activity = LocalContext.current as WearMainActivity
+
     val wearMessageHelper = remember { WearMessageHelper(context) }
 
     val MESSAGE_PATH_ACTIONS = "/actions"
@@ -92,51 +92,51 @@ fun ControlAstigmatismScreen() {
                         SDSControlEyeClockWear(
                             buttonOneOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 1.toString(), scope)
-                                activity.show("Line One")
+                                context.showToast("Line One")
                             },
                             buttonTwoOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 2.toString(), scope)
-                                activity.show("Line Two")
+                                context.showToast("Line Two")
                             },
                             buttonThreeOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 3.toString(), scope)
-                                activity.show("Line Three")
+                                context.showToast("Line Three")
                             },
                             buttonFourOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 4.toString(), scope)
-                                activity.show("Line Four")
+                                context.showToast("Line Four")
                             },
                             buttonFiveOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 5.toString(), scope)
-                                activity.show("Line Five")
+                                context.showToast("Line Five")
                             },
                             buttonSixOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 6.toString(), scope)
-                                activity.show("Line Six")
+                                context.showToast("Line Six")
                             },
                             buttonSevenOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 7.toString(), scope)
-                                activity.show("Line Seven")
+                                context.showToast("Line Seven")
                             },
                             buttonEightOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 8.toString(), scope)
-                                activity.show("Line Eight")
+                                context.showToast("Line Eight")
                             },
                             buttonNineOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 9.toString(), scope)
-                                activity.show("Line Nine")
+                                context.showToast("Line Nine")
                             },
                             buttonTenOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 10.toString(), scope)
-                                activity.show("Line Ten")
+                                context.showToast("Line Ten")
                             },
                             buttonElevenOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 11.toString(), scope)
-                                activity.show("Line Eleven")
+                                context.showToast("Line Eleven")
                             },
                             buttonTwelveOnClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, 12.toString(), scope)
-                                activity.show("Line Twelve")
+                                context.showToast("Line Twelve")
                             },
                         )
 
@@ -145,7 +145,7 @@ fun ControlAstigmatismScreen() {
                             text = "All lines same",
                             onClick = {
                                 wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "all lines", scope)
-                                activity.show("All lines")
+                                context.showToast("All lines")
                             },
                             modifier = Modifier
                                 .defaultMinSize(minHeight = 40.dp),

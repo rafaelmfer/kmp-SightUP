@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -376,6 +377,8 @@ private fun TestTypeContent(
 
     val messageReceiver = remember { createWearMessageReceiver("/actions") }
 
+    var rotation by remember { mutableStateOf(0f) }
+
     DisposableEffect(currentMode) {
         when (currentMode) {
             TestModeEnum.SmartWatch.displayName -> {
@@ -383,10 +386,26 @@ private fun TestTypeContent(
                     test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
                         messageReceiver.startListening { message ->
                             when (message) {
-                                "up" -> onClickChangeUI(EChart.UP)
-                                "down" -> onClickChangeUI(EChart.DOWN)
-                                "left" -> onClickChangeUI(EChart.LEFT)
-                                "right" -> onClickChangeUI(EChart.RIGHT)
+                                "up" -> {
+                                    onClickChangeUI(EChart.UP)
+                                    rotation = 270f
+                                }
+
+                                "down" -> {
+                                    onClickChangeUI(EChart.DOWN)
+                                    rotation = 90f
+                                }
+
+                                "left" -> {
+                                    onClickChangeUI(EChart.LEFT)
+                                    rotation = 180f
+                                }
+
+                                "right" -> {
+                                    onClickChangeUI(EChart.RIGHT)
+                                    rotation = 0f
+                                }
+
                                 "cannot see" -> onTestButtonClick()
                             }
                         }
@@ -459,10 +478,26 @@ private fun TestTypeContent(
                     test.title.contains(VisionTestTypes.VisionAcuity.title) -> {
                         voiceRecognition?.startListening { spokenText ->
                             when {
-                                spokenText.contains("down", ignoreCase = true) -> onClickChangeUI(EChart.DOWN)
-                                spokenText.contains("left", ignoreCase = true) -> onClickChangeUI(EChart.LEFT)
-                                spokenText.contains("right", ignoreCase = true) -> onClickChangeUI(EChart.RIGHT)
-                                spokenText.contains("up", ignoreCase = true) -> onClickChangeUI(EChart.UP)
+                                spokenText.contains("up", ignoreCase = true) -> {
+                                    onClickChangeUI(EChart.UP)
+                                    rotation = 270f
+                                }
+
+                                spokenText.contains("down", ignoreCase = true) -> {
+                                    onClickChangeUI(EChart.DOWN)
+                                    rotation = 90f
+                                }
+
+                                spokenText.contains("left", ignoreCase = true) -> {
+                                    onClickChangeUI(EChart.LEFT)
+                                    rotation = 180f
+                                }
+
+                                spokenText.contains("right", ignoreCase = true) -> {
+                                    onClickChangeUI(EChart.RIGHT)
+                                    rotation = 0f
+                                }
+
                                 spokenText.contains("cannot see", ignoreCase = true) -> onTestButtonClick()
                             }
                         }
@@ -471,66 +506,31 @@ private fun TestTypeContent(
                     test.title.contains(VisionTestTypes.Astigmatism.title) -> {
                         voiceRecognition?.startListening { spokenText ->
                             when {
-                                spokenText.contains("one", ignoreCase = true) -> {
-                                    onClickChangeUI(1)
-                                }
-
-                                spokenText.contains("two", ignoreCase = true) -> {
-                                    onClickChangeUI(2)
-                                }
-
-                                spokenText.contains("three", ignoreCase = true) -> {
-                                    onClickChangeUI(3)
-                                }
-
-                                spokenText.contains("four", ignoreCase = true) -> {
-                                    onClickChangeUI(4)
-                                }
-
-                                spokenText.contains("five", ignoreCase = true) -> {
-                                    onClickChangeUI(5)
-                                }
-
-                                spokenText.contains("six", ignoreCase = true) -> {
-                                    onClickChangeUI(6)
-                                }
-
-                                spokenText.contains("seven", ignoreCase = true) -> {
-                                    onClickChangeUI(7)
-                                }
-
-                                spokenText.contains("eight", ignoreCase = true) -> {
-                                    onClickChangeUI(8)
-                                }
-
-                                spokenText.contains("nine", ignoreCase = true) -> {
-                                    onClickChangeUI(9)
-                                }
-
+                                spokenText.contains("one", ignoreCase = true) -> onClickChangeUI(1)
+                                spokenText.contains("two", ignoreCase = true) -> onClickChangeUI(2)
+                                spokenText.contains("three", ignoreCase = true) -> onClickChangeUI(3)
+                                spokenText.contains("four", ignoreCase = true) -> onClickChangeUI(4)
+                                spokenText.contains("five", ignoreCase = true) -> onClickChangeUI(5)
+                                spokenText.contains("six", ignoreCase = true) -> onClickChangeUI(6)
+                                spokenText.contains("seven", ignoreCase = true) -> onClickChangeUI(7)
+                                spokenText.contains("eight", ignoreCase = true) -> onClickChangeUI(8)
+                                spokenText.contains("nine", ignoreCase = true) -> onClickChangeUI(9)
                                 spokenText.contains("ten", ignoreCase = true) || spokenText.contains(
                                     "10",
                                     ignoreCase = true
-                                ) -> {
-                                    onClickChangeUI(10)
-                                }
+                                ) -> onClickChangeUI(10)
 
                                 spokenText.contains("eleven", ignoreCase = true) || spokenText.contains(
                                     "11",
                                     ignoreCase = true
-                                ) -> {
-                                    onClickChangeUI(11)
-                                }
+                                ) -> onClickChangeUI(11)
 
                                 spokenText.contains("twelve", ignoreCase = true) || spokenText.contains(
                                     "12",
                                     ignoreCase = true
-                                ) -> {
-                                    onClickChangeUI(12)
-                                }
+                                ) -> onClickChangeUI(12)
 
-                                spokenText.contains("all lines", ignoreCase = true) -> {
-                                    onTestButtonClick()
-                                }
+                                spokenText.contains("all lines", ignoreCase = true) -> onTestButtonClick()
                             }
                         }
                     }
@@ -556,6 +556,7 @@ private fun TestTypeContent(
                 leftButtonOnClickResult = { onClickChangeUI(EChart.LEFT) },
                 rightButtonOnClickResult = { onClickChangeUI(EChart.RIGHT) },
                 downButtonOnClickResult = { onClickChangeUI(EChart.DOWN) },
+                rotationAngle = if (currentMode == TestModeEnum.Touch.displayName) null else rotation,
                 modifier = Modifier.fillMaxWidth()
                     .padding(8.dp)
             )
@@ -594,6 +595,9 @@ private fun TestModeContent(
             SDSButton(
                 onClick = { onButtonClick() },
                 text = textButton,
+                textStyle = SightUPTheme.textStyles.body.copy(
+                    fontWeight = FontWeight.Bold
+                ),
                 buttonStyle = ButtonStyle.OUTLINED,
                 modifier = Modifier
                     .fillMaxWidth()

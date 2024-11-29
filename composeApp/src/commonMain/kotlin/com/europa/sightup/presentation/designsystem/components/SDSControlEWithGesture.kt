@@ -96,6 +96,7 @@ fun SDSControlE(
     leftButtonOnClickResult: () -> Unit = {},
     rightButtonOnClickResult: () -> Unit = {},
     downButtonOnClickResult: () -> Unit = {},
+    rotationAngle: Float? = null,
     modifier: Modifier = Modifier,
 ) {
     val isClickedList = remember { mutableStateListOf(false, false, false, false) }
@@ -141,6 +142,12 @@ fun SDSControlE(
         Triple("Left", 180f, leftButtonOnClickResult),
         Triple("Up", 270f, upButtonOnClickResult)
     )
+
+    LaunchedEffect(rotationAngle) {
+        rotationAngle?.let {
+            rotationState = it
+        }
+    }
 
     Box(
         modifier = modifier
@@ -189,7 +196,7 @@ fun SDSControlE(
                 }
                 .graphicsLayer(
                     rotationZ = rotationState,
-                    transformOrigin = TransformOrigin(0.5f, 0.5f)
+                    transformOrigin = TransformOrigin.Center
                 )
         )
 
@@ -205,7 +212,7 @@ fun SDSControlE(
                 }
                 .graphicsLayer(
                     rotationZ = rotationState,
-                    transformOrigin = TransformOrigin(0.5f, 0.5f)
+                    transformOrigin = TransformOrigin.Center
                 )
                 .size(circleSize)
                 .border(

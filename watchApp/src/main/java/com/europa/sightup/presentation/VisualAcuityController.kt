@@ -99,34 +99,31 @@ fun VisualAcuityScreen() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         SDSControlEWear(
-                            upButtonOnClickResult = { wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "up", scope) },
+                            upButtonOnClickResult = {
+                                wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "up", scope)
+                                context.showToast("Up")
+                            },
                             downButtonOnClickResult = {
-                                wearMessageHelper.sendWearMessage(
-                                    MESSAGE_PATH_ACTIONS,
-                                    "down",
-                                    scope
-                                )
+                                wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "down", scope)
+                                context.showToast("Down")
                             },
                             leftButtonOnClickResult = {
-                                wearMessageHelper.sendWearMessage(
-                                    MESSAGE_PATH_ACTIONS,
-                                    "left",
-                                    scope
-                                )
+                                wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "left", scope)
+                                context.showToast("Left")
                             },
                             rightButtonOnClickResult = {
-                                wearMessageHelper.sendWearMessage(
-                                    MESSAGE_PATH_ACTIONS,
-                                    "right",
-                                    scope
-                                )
+                                wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "right", scope)
+                                context.showToast("Right")
                             },
                         )
-                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_xs))
+                        Spacer(Modifier.height(SightUPTheme.spacing.spacing_2xs))
                         SDSButtonWear(
                             text = "Cannot See",
                             buttonStyle = ButtonStyle.OUTLINED,
-                            onClick = { wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "cannot see", scope) },
+                            onClick = {
+                                wearMessageHelper.sendWearMessage(MESSAGE_PATH_ACTIONS, "cannot see", scope)
+                                context.showToast("cannot see")
+                            },
                             modifier = Modifier
                                 .defaultMinSize(minHeight = 32.dp),
                         )
