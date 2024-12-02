@@ -4,7 +4,10 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.europa.sightup.di.initializeKoin
 
 fun MainViewController() = ComposeUIViewController(
-    configure = { initializeKoin() }
+    configure = {
+        enforceStrictPlistSanityCheck = false
+        initializeKoin()
+    }
 ) {
     Init()
 }

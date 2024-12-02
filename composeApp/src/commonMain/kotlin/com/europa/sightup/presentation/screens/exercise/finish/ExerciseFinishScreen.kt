@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.DailyExerciseResponse
 import com.europa.sightup.platformspecific.StatusBarNavBarColors
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
@@ -37,6 +38,7 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
 import com.europa.sightup.utils.isUserLoggedIn
@@ -155,6 +157,9 @@ fun ExerciseFinishScreen(
                     bottom = SightUPTheme.spacing.spacing_md,
                 )
         )
+        if (getPlatform().name == IOS) {
+            Spacer(Modifier.height(SightUPTheme.sizes.size_12))
+        }
     }
 
     JoinInBottomSheet(

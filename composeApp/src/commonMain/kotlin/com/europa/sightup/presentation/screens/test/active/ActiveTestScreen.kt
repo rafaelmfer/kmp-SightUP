@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +44,7 @@ import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.data.remote.response.VisionTestTypes
 import com.europa.sightup.platformspecific.createWearMessageReceiver
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.AudioVisualizer
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.DistanceMessageCard
@@ -60,6 +62,8 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.ANDROID
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.slideInFromLeft
 import com.europa.sightup.utils.slideInFromRight
 import com.europa.sightup.utils.slideOutToLeft
@@ -167,7 +171,7 @@ fun ActiveTestScreen(
                 }
             }
         },
-
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, if (getPlatform().name == ANDROID) 0.dp else 12.dp),
         content = { paddingValues ->
             AnimatedContent(
                 targetState = testStarted,
@@ -193,6 +197,9 @@ fun ActiveTestScreen(
                         voiceRecognition = voiceRecognition,
                         modifier = Modifier.fillMaxSize()
                     )
+                }
+                if (getPlatform().name == IOS) {
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_24))
                 }
             }
         }

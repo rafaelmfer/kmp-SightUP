@@ -2,6 +2,7 @@ package com.europa.sightup.presentation.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -15,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.ANDROID
 import com.europa.sightup.utils.navigateToRootScreen
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -51,6 +54,7 @@ fun BottomNavBar(
 
     NavigationBar(
         modifier = Modifier,
+        windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, if (getPlatform().name == ANDROID) 0.dp else 12.dp),
         containerColor = SightUPTheme.sightUPColors.white
     ) {
         listBottomScreens.forEach { item ->

@@ -42,6 +42,7 @@ import chaintech.videoplayer.ui.video.VideoPlayerView
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
 import com.europa.sightup.platformspecific.getLocalFilePathFor
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.CardWithTestInstructions
 import com.europa.sightup.presentation.designsystem.components.ModeSelectionCard
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -57,6 +58,8 @@ import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.SightUPLineHeight
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.ANDROID
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.navigate
 import com.europa.sightup.utils.slideInFromLeft
@@ -64,7 +67,6 @@ import com.europa.sightup.utils.slideInFromRight
 import com.europa.sightup.utils.slideOutToLeft
 import com.europa.sightup.utils.slideOutToRight
 import io.github.alexzhirkevich.compottie.Compottie
-import io.github.alexzhirkevich.compottie.LottieCompositionResult
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
@@ -134,7 +136,8 @@ fun TutorialTestScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
+                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
+                .padding(bottom = if (getPlatform().name == IOS) SightUPTheme.spacing.spacing_sm else 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AnimatedContent(
@@ -318,21 +321,20 @@ private fun SecondStep(
     var showCamera by remember { mutableStateOf(false) }
     var hideLoading by remember { mutableStateOf(false) }
 
-    val composition: LottieCompositionResult = rememberLottieComposition {
+    val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
             Res.readBytes(animation).decodeToString()
         )
     }
 
     val progress by animateLottieCompositionAsState(
-        composition = composition.value,
+        composition = composition,
         speed = 1.2f,
         iterations = Compottie.IterateForever,
     )
 
     LaunchedEffect(composition) {
-        composition.await()
-        delay(1200L)
+        delay(500L)
         hideLoading = true
     }
 
@@ -361,16 +363,42 @@ private fun SecondStep(
                     .background(SightUPTheme.sightUPColors.background_default),
                 contentAlignment = Alignment.Center
             ) {
-                androidx.compose.animation.AnimatedVisibility(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    visible = composition.isComplete,
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.CenterVertically),
-                    exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically),
-                ) {
+                if (getPlatform().name == ANDROID) {
+                    androidx.compose.animation.AnimatedVisibility(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        visible = hideLoading,
+                        enter = fadeIn() + expandVertically(expandFrom = Alignment.CenterVertically),
+                        exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically),
+                    ) {
+                        Image(
+                            painter = rememberLottiePainter(
+                                composition = composition,
+                                progress = { progress },
+                            ),
+                            contentDescription = null,
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
+                    if (!hideLoading) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .padding(vertical = 120.dp)
+                                    .size(SightUPTheme.sizes.size_56)
+                                    .align(Alignment.Center)
+                            )
+                        }
+                    }
+                } else {
                     Image(
                         painter = rememberLottiePainter(
-                            composition = composition.value,
+                            composition = composition,
                             progress = { progress },
                         ),
                         contentDescription = null,
@@ -378,19 +406,6 @@ private fun SecondStep(
                         modifier = Modifier
                             .fillMaxWidth()
                     )
-                }
-                if (!hideLoading) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .padding(vertical = 120.dp)
-                                .size(SightUPTheme.sizes.size_56)
-                                .align(Alignment.Center)
-                        )
-                    }
                 }
             }
 

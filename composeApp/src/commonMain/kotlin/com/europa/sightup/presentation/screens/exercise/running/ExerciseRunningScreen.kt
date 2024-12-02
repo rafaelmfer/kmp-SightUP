@@ -46,6 +46,7 @@ import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.video.VideoPlayerView
 import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
 import com.europa.sightup.platformspecific.getLocalFilePathFor
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.SDSBadgeTime
 import com.europa.sightup.presentation.designsystem.components.SDSDialog
 import com.europa.sightup.presentation.designsystem.components.SDSTimer
@@ -57,6 +58,7 @@ import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.clickableWithRipple
 import com.europa.sightup.utils.goBackToExerciseHome
@@ -239,6 +241,10 @@ fun ExerciseRunningScreen(
                             .size(SightUPTheme.sizes.size_32)
                     )
                 }
+            }
+
+            if (getPlatform().name == IOS) {
+                Spacer(Modifier.height(SightUPTheme.sizes.size_12))
             }
         }
 

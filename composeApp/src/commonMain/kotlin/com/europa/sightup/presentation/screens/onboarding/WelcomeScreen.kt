@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.ButtonStyle
 import com.europa.sightup.presentation.designsystem.components.SDSBottomSheet
 import com.europa.sightup.presentation.designsystem.components.SDSButton
@@ -37,6 +38,7 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.UIState
 import kotlinx.coroutines.delay
@@ -182,7 +184,7 @@ fun MainWelcomeScreen(navController: NavController? = null) {
                     start = SightUPTheme.spacing.spacing_side_margin,
                     top = SightUPTheme.spacing.spacing_xs,
                     end = SightUPTheme.spacing.spacing_side_margin,
-                    bottom = SightUPTheme.spacing.spacing_lg,
+                    bottom = SightUPTheme.spacing.spacing_md,
                 )
         ) {
             Text(
@@ -217,6 +219,9 @@ fun MainWelcomeScreen(navController: NavController? = null) {
                     buttonStyle = ButtonStyle.PRIMARY
                 )
             }
+        }
+        if (getPlatform().name == IOS) {
+            Spacer(Modifier.height(SightUPTheme.sizes.size_12))
         }
     }
 }

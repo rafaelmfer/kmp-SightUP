@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.europa.sightup.data.remote.response.TestResponse
 import com.europa.sightup.platformspecific.audioplayer.CMPAudioPlayer
 import com.europa.sightup.platformspecific.getLocalFilePathFor
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.SDSCardTestBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.navigation.TestScreens
@@ -32,6 +33,7 @@ import com.europa.sightup.presentation.screens.test.active.ActiveTest
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.navigate
 import com.skydoves.landscapist.ImageOptions
@@ -114,6 +116,9 @@ fun IndividualTestScreen(
                         bottom = SightUPTheme.spacing.spacing_md,
                     )
             )
+            if (getPlatform().name == IOS) {
+                Spacer(Modifier.height(SightUPTheme.sizes.size_12))
+            }
         }
 
         CMPAudioPlayer(

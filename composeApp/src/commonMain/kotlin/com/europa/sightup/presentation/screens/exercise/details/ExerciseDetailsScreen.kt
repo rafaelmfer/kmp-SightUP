@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.toRoute
 import com.europa.sightup.platformspecific.ShareService
+import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.designsystem.components.SDSCardExerciseBottom
 import com.europa.sightup.presentation.designsystem.components.SDSTopBar
 import com.europa.sightup.presentation.designsystem.components.data.BottomSheetEnum
@@ -37,6 +38,7 @@ import com.europa.sightup.presentation.ui.theme.SightUPTheme
 import com.europa.sightup.presentation.ui.theme.layout.sizes
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.europa.sightup.presentation.ui.theme.typography.textStyles
+import com.europa.sightup.utils.IOS
 import com.europa.sightup.utils.ONE_FLOAT
 import com.europa.sightup.utils.goBackToExerciseHome
 import com.europa.sightup.utils.isUserLoggedIn
@@ -170,6 +172,9 @@ fun ExerciseDetailsScreen(
                         bottom = SightUPTheme.spacing.spacing_md,
                     )
             )
+        }
+        if (getPlatform().name == IOS) {
+            Spacer(Modifier.height(SightUPTheme.sizes.size_12))
         }
     }
 
