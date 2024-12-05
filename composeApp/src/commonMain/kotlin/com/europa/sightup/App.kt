@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -30,6 +31,7 @@ import com.europa.sightup.platformspecific.StatusBarNavBarColors
 import com.europa.sightup.platformspecific.getLocalFilePathFor
 import com.europa.sightup.presentation.AppNavHost
 import com.europa.sightup.presentation.ui.theme.SightUPTheme
+import com.europa.sightup.presentation.ui.theme.layout.SightUPBorder
 import com.europa.sightup.presentation.ui.theme.layout.spacing
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
@@ -110,14 +112,18 @@ fun AfterSplashScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SightUPTheme.sightUPColors.background_default),
+            .background(SightUPTheme.sightUPColors.background_default)
+            .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
         contentAlignment = Alignment.Center,
     ) {
         if (isPlayerVisible) {
             VideoPlayerView(
                 modifier = Modifier
-                    .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
                     .fillMaxWidth()
+                    .border(
+                        width = SightUPBorder.Width.sm,
+                        color = SightUPTheme.sightUPColors.background_default
+                    )
                     .aspectRatio(1f, true)
                     .fillMaxSize(),
                 url = getLocalFilePathFor("logo_animation.mp4"),

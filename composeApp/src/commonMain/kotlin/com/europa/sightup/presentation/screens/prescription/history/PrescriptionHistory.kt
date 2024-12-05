@@ -108,9 +108,9 @@ fun PrescriptionHistory(
                 val history = (state as UIState.Success<UserHistoryResponse>).data
 
                 val filteredHistory = when (selectedFilter) {
-                    "SightUP" -> history.tests.filter { it.appTest }
-                    "Clinic" -> history.tests.filter { !it.appTest }
-                    else -> history.tests
+                    "SightUP" -> history.tests.asReversed().filter { it.appTest }
+                    "Clinic" -> history.tests.asReversed().filter { !it.appTest }
+                    else -> history.tests.asReversed()
                 }
                 HistoryList(filteredHistory)
             }
