@@ -155,19 +155,24 @@ fun ActiveTestScreen(
             )
         },
         bottomBar = {
-            if (testStarted) {
-                if (perfectRange) {
-                    BottomModeBar(currentMode) { newMode -> currentMode = newMode }
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(SightUPTheme.sightUPColors.black.copy(0.3f))
-                            .zIndex(10f)
-                            .pointerInput(Unit) {}
-                    ) {
-                        BottomModeBar(currentMode) {   /* No-op to disable mode switching */ }
+            Column() {
+                if (testStarted) {
+                    if (perfectRange) {
+                        BottomModeBar(currentMode) { newMode -> currentMode = newMode }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(SightUPTheme.sightUPColors.black.copy(0.3f))
+                                .zIndex(10f)
+                                .pointerInput(Unit) {}
+                        ) {
+                            BottomModeBar(currentMode) {   /* No-op to disable mode switching */ }
+                        }
                     }
+                }
+                if (getPlatform().name == IOS) {
+                    Spacer(Modifier.height(SightUPTheme.sizes.size_24))
                 }
             }
         },
@@ -197,9 +202,6 @@ fun ActiveTestScreen(
                         voiceRecognition = voiceRecognition,
                         modifier = Modifier.fillMaxSize()
                     )
-                }
-                if (getPlatform().name == IOS) {
-                    Spacer(Modifier.height(SightUPTheme.sizes.size_24))
                 }
             }
         }

@@ -33,12 +33,6 @@ jobs:
         server-password: ${{ secrets.GITHUB_TOKEN }}
         overwrite-settings: true
 
-    - name: Create local.properties
-      run: |
-          echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
-          echo "BASE_URL_BACKEND_ANDROID_EMU=${{ secrets.BASE_URL_BACKEND_ANDROID_EMU }}" >> local.properties
-          echo "BASE_URL_BACKEND_IOS_EMU=${{ secrets.BASE_URL_BACKEND_IOS_EMU }}" >> local.properties
-
     - name: Refresh Gradle dependencies if requested
       if: contains(github.event.head_commit.message, '[refresh-dependencies]')
       run: ./gradlew --refresh-dependencies
@@ -82,12 +76,6 @@ jobs:
         server-username: ${{ secrets.GITHUB_ACTOR }}
         server-password: ${{ secrets.GITHUB_TOKEN }}
         overwrite-settings: true
-
-    - name: Create local.properties
-      run: |
-        echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
-        echo "BASE_URL_BACKEND_ANDROID_EMU=${{ secrets.BASE_URL_BACKEND_ANDROID_EMU }}" >> local.properties
-        echo "BASE_URL_BACKEND_IOS_EMU=${{ secrets.BASE_URL_BACKEND_IOS_EMU }}" >> local.properties
 
     - name: Refresh Gradle dependencies if requested
       if: contains(github.event.head_commit.message, '[refresh-dependencies]')

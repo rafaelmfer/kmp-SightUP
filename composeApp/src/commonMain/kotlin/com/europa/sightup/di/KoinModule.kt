@@ -5,7 +5,6 @@ import com.europa.sightup.data.network.NetworkClient
 import com.europa.sightup.data.remote.api.SightUpApiService
 import com.europa.sightup.data.remote.api.createSightUpApiService
 import com.europa.sightup.data.repository.SightUpRepository
-import com.europa.sightup.platformspecific.getPlatform
 import com.europa.sightup.presentation.screens.exercise.ExerciseViewModel
 import com.europa.sightup.presentation.screens.exercise.evaluation.ExerciseEvaluationResultViewModel
 import com.europa.sightup.presentation.screens.exercise.finish.ExerciseFinishScreenViewModel
@@ -18,7 +17,6 @@ import com.europa.sightup.presentation.screens.test.active.ActiveTestViewModel
 import com.europa.sightup.presentation.screens.test.result.TestResultViewModel
 import com.europa.sightup.presentation.screens.test.root.TestViewModel
 import com.europa.sightup.presentation.screens.test.tutorial.TutorialTestViewModel
-import com.europa.sightup.utils.ANDROID
 import io.ktor.client.HttpClient
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -33,7 +31,7 @@ val commonModule = module {
     single<HttpClient> { NetworkClient.provideHttpClient(kVaultStorage = get()) }
     single<SightUpApiService> {
         NetworkClient.provideKtorfit(
-            baseUrl = if (getPlatform().name == ANDROID) BuildConfigKMP.BASE_URL_BACKEND_ANDROID_EMU else BuildConfigKMP.BASE_URL_BACKEND_IOS_EMU,
+            baseUrl = BuildConfigKMP.BASE_URL,
             httpClient = get()
         ).createSightUpApiService()
     }

@@ -145,13 +145,17 @@ fun ExerciseRunningScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 48.dp)
-                .padding(horizontal = SightUPTheme.spacing.spacing_side_margin)
                 .alpha(alphaVideoView),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 84.dp),
+                    .padding(bottom = 84.dp)
+                    .border(
+                        width = SightUPBorder.Width.sm,
+                        color = SightUPTheme.sightUPColors.background_default,
+                    )
+                    .padding(horizontal = SightUPTheme.spacing.spacing_side_margin),
                 contentAlignment = Alignment.Center,
             ) {
                 VideoPlayerView(
@@ -434,7 +438,7 @@ fun ExerciseRunningScreen(
                     Spacer(Modifier.height(SightUPTheme.spacing.spacing_md))
                 }
             },
-            onPrimaryClick = { showDialog = false},
+            onPrimaryClick = { showDialog = false },
             buttonPrimaryText = "Continue",
             onSecondaryClick = {
                 navigateTo = true
