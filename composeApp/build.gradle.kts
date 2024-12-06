@@ -228,7 +228,6 @@ buildConfig {
         buildConfigField("APP_NAME", "SightUP")
         buildConfigField("APP_VERSION", project.android.defaultConfig.versionName)
         buildConfigField("WEB_CLIENT_ID", "456640147314-nuhont2kmvg9mqahlem851hkti0rjvs0.apps.googleusercontent.com")
-        buildConfigField("BASE_URL_BACKEND_ANDROID_EMU", localProperties.getProperty("BASE_URL_BACKEND_ANDROID_EMU"))
-        buildConfigField("BASE_URL_BACKEND_IOS_EMU", localProperties.getProperty("BASE_URL_BACKEND_IOS_EMU"))
+        buildConfigField("BASE_URL", "https://backendapis.sightup.ca/app/")
     }
 }
