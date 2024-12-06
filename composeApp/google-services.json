@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "456640147314",
+    "project_id": "sightup-3b463",
+    "storage_bucket": "sightup-3b463.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456640147314:android:259e74c3dafa896f2637eb",
+        "android_client_info": {
+          "package_name": "com.europa.sightup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456640147314-a25sa7n9oc189q5eg9039s68312vmuis.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.europa.sightup",
+            "certificate_hash": "ffb672d20b151c47158e6bfe4bc4c34fd2e68dd0"
+          }
+        },
+        {
+          "client_id": "456640147314-nuhont2kmvg9mqahlem851hkti0rjvs0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf6MvfRqINwgJb5v7Gn2jwvkds_vgZY7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456640147314-nuhont2kmvg9mqahlem851hkti0rjvs0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "456640147314-1seorhd2h4u251a77hkqllvqs861ufgb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.europa.sightup"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

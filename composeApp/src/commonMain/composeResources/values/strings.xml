@@ -1,3 +1,101 @@
 <resources>
     <string name="app_name">SightUP</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
+    <string name="save">Save</string>
+    <string name="start">Start</string>
+    <string name="close">Close</string>
+    <string name="continue_string">Continue</string>
+    <string name="complete">Complete</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+
+    <!-- Conditions   -->
+    <string name="eye_strain">Eye Strain</string>
+    <string name="dry_eyes">Dry Eyes</string>
+    <string name="red_eyes">Red Eyes</string>
+    <string name="irritated_eyes">Irritated Eyes</string>
+    <string name="itchy_eyes">Itchy Eyes</string>
+    <string name="watery_eyes">Watery Eyes</string>
+
+
+    <!-- Welcome -->
+    <string name="welcome_title">Welcome to SightUp</string>
+    <string name="welcome_content">Do you want to take your first vision test?</string>
+    <string name="welcome_later_button">Later</string>
+    <string name="welcome_take_test_button">Take Vision Test</string>
+
+    <string name="profile_note">* You can update it in your account at any time.</string>
+    <string name="profile_username_title">What is your username?</string>
+    <string name="profile_username_content">We’ll use the username to personalize your experience within the app.</string>
+    <string name="profile_username_hint">Type your username</string>
+
+    <string name="profile_title">Would you like to setup your profile?</string>
+    <string name="profile_body_one">Sharing detailed profile information enhances your experience with SightUP, allowing us to provide personalized, tailored support for your eye health.</string>
+    <string name="profile_setup_button">Setup now</string>"
+
+    <string name="profile_birthday_title">What is your birthday?</string>
+    <string name="profile_gender_title">What is your gender?</string>
+
+    <!-- Onboarding -->
+
+    <!-- Disclaimer Screen -->
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="disclaimer_content">SightUP does not replace professional eye exams. Always consult with a licensed eye care provider for accurate diagnosis and prescription needs.</string>
+    <string name="disclaimer_button">Let's Get Started</string>
+
+    <!-- Tutorial Screen   -->
+    <string name="tutorial_one_title">Checkup Daily Eye Condition</string>
+    <string name="tutorial_one_content">Monitor your eye health daily with quick assessments to detect potential issues early.</string>
+    <string name="tutorial_two_title">Vision Tests</string>
+    <string name="tutorial_two_content">Conduct convenient vision tests to track changes in eyesight without needing a clinic visit.</string>
+    <string name="tutorial_three_title">Vision History Tracker</string>
+    <string name="tutorial_three_content">Keep a record of your vision status over time, including naked eye, glasses, and contact lens use.</string>
+    <string name="tutorial_four_title">Personalized Eye Health Activities</string>
+    <string name="tutorial_four_content">Engage in tailored exercises designed to improve and maintain your vision health.</string>
+    <string name="tutorial_secondary_button">Skip All</string>
+    <string name="tutorial_primary_button">Next (%1$s/4)</string>
+    <string name="tutorial_secondary_button_last_step">Start as Guest</string>
+    <string name="tutorial_primary_button_last_step">Login / Signup</string>
+
+    <!-- Login & SignUp Screens -->
+    <string name="login_title">Login or Signup</string>
+    <string name="sign_up_title">Login</string>
+    <string name="sign_up_welcome">Welcome to SightUP</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password</string>
+
+
+    <!-- Exercise Details Screen -->
+    <string name="exercise_initial_tip">We will guide you using motion and sound.</string>
+    <string name="exercise_circular_tip">Remember to keep your head still and let your eyes do the work..</string>
+    <string name="exercise_blink_tip">Blink slowly and gently to avoid eye fatique.</string>
+    <string name="exercise_color_tip">It helps to boost your visual processing speed and sharpen color perception.</string>
+    <string name="exercise_stretching_tip">Try looking at a distant object for 20 seconds every 20 minutes to give your eyes a break.</string>
+
+    <!-- Test Screens -->
+    <string name="test_mode_title">Select Mode</string>
+    <string name="test_mode_subtitle">Choose the mode that suits you. Mode options will appear during the test and can be changed at any time.</string>
+    <string name="test_distance_instruction">Place yourself and your phone parallel and set the distance to 30 cm.</string>
+
+    <string name="test_right_eye">Let's start with right eye. Please cover your left eye. Take off your glasses if you are wearing.</string>
+    <string name="test_left_eye">Next is left eye. Please cover your right eye. Take off your glasses if you are wearing.</string>
+
+    <!-- Account -->
+    <string name="account">Account</string>
+    <string name="profile">Profile</string>
+    <string name="preferences">Preferences</string>
+    <string name="notifications">Notifications</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="logout">Logout</string>
+
 </resources>
