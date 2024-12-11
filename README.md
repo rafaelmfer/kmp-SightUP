@@ -7,7 +7,7 @@ SightUP is a comprehensive vision care mobile app (Android, iOS) designed to sim
 personalized daily eye care routine, helping users stay consistent with their eye health practices, together with its
 own wearable app (WearOS).
 
-See more on our [Website](https://sightup.ca) and our [Proposal](https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/SightUP_Proposal_Digital..pdf?alt=media&token=c07214ee-55c4-4987-850a-4c7f2f8ff74f)
+See more on our [Website](https://sightup.ca) and our [Proposal](https://firebasestorage.googleapis.com/v0/b/sightup-3b463.firebasestorage.app/o/SightUP_Proposal_Digital_V2.pdf?alt=media&token=41515c5a-e627-4173-aedd-2d05b8d19c52)
 
 ## 🚀 Features
 
