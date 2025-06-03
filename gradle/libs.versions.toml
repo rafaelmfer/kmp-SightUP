@@ -4,7 +4,7 @@ android-minSdk = "24"
 android-targetSdk = "34"
 
 agp = "8.5.2"
-kotlin = "2.0.20"
+kotlin = "2.1.21"
 
 # AndroidX Core
 core-ktx = "1.13.1"
@@ -12,14 +12,14 @@ core-splash-screen = "1.1.0-rc01"
 
 # Google
 googleGms = "4.4.2"
-googleKsp = "2.0.20-1.0.24"
+googleKsp = "2.1.20-1.0.31"
 
 # Design
 androidx-appcompat = "1.7.0"
 androidx-material = "1.12.0"
-androidx-constraintlayout = "2.2.0"
+androidx-constraintlayout = "2.2.1"
 androidx-lifecycle = "2.8.4"
-androidx-activityCompose = "1.9.3"
+androidx-activityCompose = "1.10.1"
 compose = "1.7.1"
 navigationCompose = "2.8.0-alpha10"
 constraintlayoutComposeMultiplatform = "0.5.0-alpha03-shaded-core"
@@ -38,7 +38,7 @@ coroutines = "1.9.0"
 
 # Ktorfit & Ktor - Network
 ktor = "3.0.0-rc-1" #Before: "2.3.12"
-ktorfitVersion = "2.1.0"
+ktorfitVersion = "2.5.1"
 
 # BuildConfig
 build-config = "5.5.0"
@@ -65,18 +65,18 @@ composeMultiplatformMediaPlayer = "1.0.26"
 
 ## Android
 # Camera Android
-cameraCore = "1.4.0"
+cameraCore = "1.4.2"
 faceDetection = "16.1.7"
 
 # Media3 Exoplayer
 media3Exoplayer = "1.4.1"
 
 ## Android Wearable
-playServicesWearable = "18.2.0"
-composeBom = "2024.11.00"
-composeMaterial = "1.0.0-alpha29"
-composeNavigation = "1.4.0"
-composeFoundation = "1.4.0"
+playServicesWearable = "19.0.0"
+composeBom = "2025.05.01"
+composeMaterial = "1.0.0-alpha37"
+composeNavigation = "1.4.1"
+composeFoundation = "1.4.1"
 wearToolingPreview = "1.0.0"
 
 
